@@ -6,7 +6,7 @@ modId = "collapsedlogicextension"
 version = "${file.jarVersion}"
 displayName = "Collapsed Logic Extension"
 displayURL = "https://github.com/Chae4ek/minecraft-collapsed-logic-extension"
-logoFile = "img/icon.png"
+logoFile = "logo.png"
 authors = "Mikhail P. & Alexey N."
 description = '''
 This mod adds the red stone control block to create complex mechanisms in simple ways.
