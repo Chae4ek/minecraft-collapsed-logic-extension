@@ -1,10 +1,9 @@
 package ru.omsu.collapsedlogicextension.items;
 
-import ru.omsu.collapsedlogicextension.blocks.CLEBlock;
+import java.util.function.Supplier;
 import ru.omsu.collapsedlogicextension.items.collapsedlogic.LogicFloppyDisk;
 
-import java.util.function.Supplier;
-
+/** Хранит все предметы мода */
 public enum CLEItemEnum {
     LOGIC_FLOPPY_DISK("logic_floppy_disk", LogicFloppyDisk::new);
 

@@ -4,8 +4,8 @@ import net.minecraft.item.Item;
 
 /** Этот класс используется для всех предметов этого мода */
 public abstract class CLEItem extends Item {
-    public CLEItem(Properties properties) {
+
+    public CLEItem(final Properties properties) {
         super(properties);
     }
-
 }
