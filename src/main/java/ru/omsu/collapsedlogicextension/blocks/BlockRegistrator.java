@@ -56,7 +56,8 @@ public class BlockRegistrator {
         final IForgeRegistry<Item> registry = event.getRegistry();
         for (final RegistryObject<Block> regBlock : BLOCKS.getEntries()) {
             final Block block = regBlock.get();
-            final BlockItem blockItem = new BlockItem(block, new Item.Properties());
+            final BlockItem blockItem =
+                    new BlockItem(block, new Item.Properties().group(CLEMod.CLEBLOCKS_TAB));
             final ResourceLocation resLocationBlock = block.getRegistryName();
 
             if (resLocationBlock == null) {
