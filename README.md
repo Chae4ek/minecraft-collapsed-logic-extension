@@ -9,7 +9,7 @@
 
 - [Краткое описание](#about)
 - [Инструменты](#api)
-- [Структура проекта](#uml)
+- [Компиляция](#compilation)
 - [Авторы](#authors)
 
 ### <a name="about">Что это и зачем это нужно?</a>
@@ -37,9 +37,14 @@
 Модификация разрабатывается с помощью Forge API, т.к. это наиболее популярный инструмент для
 разработки модов. Также он позволяет использовать другие моды совместно с этим.
 
-### <a name="uml">Структура проекта</a>
+### <a name="compilation">Компиляция</a>
 
-![Структура проекта](https://embed.creately.com/ZWu3azQTZjG?token=IwB4zPdpM7jm6YJn&type=svg)
+1. Выполнить `./gradlew build`
+2. Собранный мод будет лежать в *build/libs/CollapsedLogicExtension-\<version\>.jar*
+
+- Разработчики также могут проверить работоспособность клиента или сервера:
+    - `./gradlew runClient`
+    - `./gradlew runServer`
 
 ### <a name="authors">Авторы</a>
 
