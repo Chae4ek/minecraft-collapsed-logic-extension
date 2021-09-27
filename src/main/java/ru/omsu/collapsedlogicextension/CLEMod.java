@@ -12,8 +12,8 @@ public class CLEMod {
 
     public static final String MOD_ID = "collapsedlogicextension";
 
-    public static final ItemGroup CLE_BLOCKS_TAB = new CLEBlocksGroup(MOD_ID);
-    public static final ItemGroup CLE_ITEMS_TAB = new CLEItemsGroup(MOD_ID);
+    public static final ItemGroup CLE_BLOCKS_TAB = new CLEBlocksGroup(MOD_ID + ".blocks");
+    public static final ItemGroup CLE_ITEMS_TAB = new CLEItemsGroup(MOD_ID + ".items");
 
     public CLEMod() {
         BlockRegistrator.register();
