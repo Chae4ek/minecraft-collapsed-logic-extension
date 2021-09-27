@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.blocks.collapsedredstone;
+package ru.omsu.collapsedlogicextension.blocks.collapsedlogic;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;

@@ -1,7 +1,7 @@
 package ru.omsu.collapsedlogicextension.blocks;
 
 import java.util.function.Supplier;
-import ru.omsu.collapsedlogicextension.blocks.collapsedredstone.CollapsedLogicBlock;
+import ru.omsu.collapsedlogicextension.blocks.collapsedlogic.CollapsedLogicBlock;
 
 public enum CLEBlockEnum {
     COLLAPSED_LOGIC_BLOCK("collapsed_logic_block", CollapsedLogicBlock::new);
