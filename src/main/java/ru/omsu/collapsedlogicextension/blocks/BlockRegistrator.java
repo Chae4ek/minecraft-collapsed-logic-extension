@@ -57,7 +57,7 @@ public class BlockRegistrator {
         for (final RegistryObject<Block> regBlock : BLOCKS.getEntries()) {
             final Block block = regBlock.get();
             final BlockItem blockItem =
-                    new BlockItem(block, new Item.Properties().group(CLEMod.CLEBLOCKS_TAB));
+                    new BlockItem(block, new Item.Properties().group(CLEMod.CLE_BLOCKS_TAB));
             final ResourceLocation resLocationBlock = block.getRegistryName();
 
             if (resLocationBlock == null) {

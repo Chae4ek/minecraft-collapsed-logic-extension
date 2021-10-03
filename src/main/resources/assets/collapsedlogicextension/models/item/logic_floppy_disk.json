@@ -1,7 +1,6 @@
 {
   "parent": "item/generated",
-  "textures":
-  {
+  "textures": {
     "layer0": "collapsedlogicextension:item/logic_floppy_disk"
   }
 }

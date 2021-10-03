@@ -8,10 +8,6 @@ import ru.omsu.collapsedlogicextension.blocks.collapsedlogic.*;
 /** Хранит все блоки мода */
 public enum CLEBlockEnum {
     COLLAPSED_LOGIC_BLOCK("collapsed_logic_block", CollapsedLogicBlock::new),
-    //OPERATOR_AND("operator_and_block", OperatorAndBlock::new),
-    //OPERATOR_OR("operator_or_block", OperatorOrBlock::new),
-    //OPERATOR_XOR("operator_xor_block", OperatorXorBlock::new),
-    //OPERATOR_NOT("operator_not_block", OperatorNotBlock::new),
     LOGIC_WIRE("logic_wire", LogicWireBlock::new);
 
     /** Имя должно совпадать со всеми файлами ресурсов */
