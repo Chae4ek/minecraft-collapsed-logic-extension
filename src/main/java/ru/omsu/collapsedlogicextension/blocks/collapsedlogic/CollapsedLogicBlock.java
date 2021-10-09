@@ -3,17 +3,24 @@ package ru.omsu.collapsedlogicextension.blocks.collapsedlogic;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
+import ru.omsu.collapsedlogicextension.CLEMod;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlock;
+import ru.omsu.collapsedlogicextension.container.LogicBlockContainer;
 import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
 import ru.omsu.collapsedlogicextension.tileentity.TileEntityRegistrator;
 
@@ -46,12 +53,20 @@ public class CollapsedLogicBlock extends CLEBlock {
             final BlockRayTraceResult hit) {
         if(!worldIn.isRemote){
             TileEntity te = worldIn.getTileEntity(pos);
-            System.err.println(te.getType().getRegistryName().getPath());
-            if(te instanceof LogicBlockTileEntity){
-                NetworkHooks.openGui((ServerPlayerEntity) player, (LogicBlockTileEntity)te, pos);
-                return ActionResultType.SUCCESS;
+            NetworkHooks.openGui((ServerPlayerEntity) player, new INamedContainerProvider() {
+                @Override
+                public ITextComponent getDisplayName() {
+                    return new TranslationTextComponent("container." + CLEMod.MOD_ID + "collapsed_logic_block");
+                }
+
+                @Nullable
+                @Override
+                public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
+                    return new LogicBlockContainer(windowId, playerInventory, (LogicBlockTileEntity) te);
+                }
+            }, pos);
+            return ActionResultType.SUCCESS;
             }
-        }
         return ActionResultType.PASS;
     }
 

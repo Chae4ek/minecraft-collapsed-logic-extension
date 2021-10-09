@@ -12,7 +12,7 @@ import ru.omsu.collapsedlogicextension.CLEMod;
 
 public class ContainerRegistrator {
 
-    private static final DeferredRegister<ContainerType<? extends Container>> CONTAINERS = DeferredRegister
+    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister
             .create(ForgeRegistries.CONTAINERS, CLEMod.MOD_ID);
     public static final RegistryObject<ContainerType<?>> COLLAPSED_LOGIC_BLOCK_CONTAINER =
             CONTAINERS.register("collapsed_logic_block",

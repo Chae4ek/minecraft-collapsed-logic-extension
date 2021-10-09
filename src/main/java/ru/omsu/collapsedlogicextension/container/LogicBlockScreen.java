@@ -42,7 +42,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     @Override
     protected void init() {
         super.init();
-        this.addButton(new UploadButton(16, 16, ));
+       // this.addButton(new UploadButton(16, 16, ));
     }
 
     @Override

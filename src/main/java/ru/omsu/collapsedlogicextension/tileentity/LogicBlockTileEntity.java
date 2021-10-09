@@ -48,7 +48,7 @@ public class LogicBlockTileEntity extends LockableLootTileEntity {
 
     @Override
     public int getSizeInventory() {
-        return 0;
+        return items.size();
     }
 
     @Override
