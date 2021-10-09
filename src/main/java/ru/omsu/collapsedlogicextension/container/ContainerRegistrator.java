@@ -1,10 +1,9 @@
-package ru.omsu.collapsedlogicextension.blocks.container;
+package ru.omsu.collapsedlogicextension.container;
 
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.RegistryObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -13,18 +12,11 @@ import ru.omsu.collapsedlogicextension.CLEMod;
 
 public class ContainerRegistrator {
 
-    private static List<RegistryObject<ContainerType<?>>> registryContainers;
-
-    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister
+    private static final DeferredRegister<ContainerType<? extends Container>> CONTAINERS = DeferredRegister
             .create(ForgeRegistries.CONTAINERS, CLEMod.MOD_ID);
-
-    static {
-        registryContainers = new ArrayList<>();
-
-        for(CLEContainerType containerType : CLEContainerType.values()){
-            registryContainers.add(CONTAINERS.register(containerType.getRegistryName(), containerType.getConstructor()));
-        }
-    }
+    public static final RegistryObject<ContainerType<?>> COLLAPSED_LOGIC_BLOCK_CONTAINER =
+            CONTAINERS.register("collapsed_logic_block",
+                    () -> IForgeContainerType.create(LogicBlockContainer::new));
 
     public static void register() {
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());

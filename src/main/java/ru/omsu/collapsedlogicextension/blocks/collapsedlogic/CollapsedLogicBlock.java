@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -15,8 +14,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlock;
-import ru.omsu.collapsedlogicextension.blocks.te.LogicBoard;
-import ru.omsu.collapsedlogicextension.tileentity.CLETileEntityEnum;
+import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
+import ru.omsu.collapsedlogicextension.tileentity.TileEntityRegistrator;
 
 import javax.annotation.Nullable;
 
@@ -45,11 +44,11 @@ public class CollapsedLogicBlock extends CLEBlock {
             final PlayerEntity player,
             final Hand handIn,
             final BlockRayTraceResult hit) {
-        // TODO: тут должно открываться GUI, но оно почемуто не открывается
         if(!worldIn.isRemote){
             TileEntity te = worldIn.getTileEntity(pos);
-            if(te instanceof LogicBoard){
-                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) te, pos);
+            System.err.println(te.getType().getRegistryName().getPath());
+            if(te instanceof LogicBlockTileEntity){
+                NetworkHooks.openGui((ServerPlayerEntity) player, (LogicBlockTileEntity)te, pos);
                 return ActionResultType.SUCCESS;
             }
         }
@@ -69,6 +68,6 @@ public class CollapsedLogicBlock extends CLEBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return CLETileEntityEnum.COLLAPSED_LOGIC_BLOCK_TILE_ENTITY.getConstructor().get().create();
+        return TileEntityRegistrator.COLLAPSED_LOGIC_BLOCK_TILE_ENTITY.get().create();
     }
 }

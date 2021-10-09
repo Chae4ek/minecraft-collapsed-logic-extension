@@ -1,12 +1,15 @@
-package ru.omsu.collapsedlogicextension.blocks.container;
+package ru.omsu.collapsedlogicextension.container;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import ru.omsu.collapsedlogicextension.CLEMod;
 
+@OnlyIn(Dist.CLIENT)
 public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(CLEMod.MOD_ID, "gui/collapsed_logic_block_gui.png");
@@ -34,6 +37,12 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         this.font.drawString(this.title.getFormattedText(), 8.0f, 8.0f, 4210752);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.addButton(new UploadButton(16, 16, ));
     }
 
     @Override

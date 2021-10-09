@@ -1,30 +1,30 @@
-package ru.omsu.collapsedlogicextension.blocks.container;
+package ru.omsu.collapsedlogicextension.container;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlockEnum;
-import ru.omsu.collapsedlogicextension.blocks.te.LogicBoard;
+import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
 
 import java.util.Objects;
 
 public class LogicBlockContainer extends Container {
 
-    private LogicBoard tileBoard;
+    private LogicBlockTileEntity te;
 
     private IWorldPosCallable canInteractWithCallable;
 
-    public LogicBlockContainer(final int id, final PlayerInventory inv, final LogicBoard tileBoard){
-        super(CLEContainerType.COLLAPSED_LOGIC_BLOCK.getConstructor().get(), id);
+    public LogicBlockContainer(final int id, final PlayerInventory inv, final LogicBlockTileEntity tileBoard){
+        super(ContainerRegistrator.COLLAPSED_LOGIC_BLOCK_CONTAINER.get(), id);
 
-        this.tileBoard = tileBoard;
+        this.te = tileBoard;
 
         this.canInteractWithCallable = IWorldPosCallable.of(tileBoard.getWorld(), tileBoard.getPos());
 
@@ -41,12 +41,12 @@ public class LogicBlockContainer extends Container {
         this(id, inv, getTileEntity(inv, buffer));
     }
 
-    private static LogicBoard getTileEntity(final PlayerInventory inv, final PacketBuffer buffer){
+    private static LogicBlockTileEntity getTileEntity(final PlayerInventory inv, final PacketBuffer buffer){
         Objects.requireNonNull(inv);
         Objects.requireNonNull(buffer);
         final TileEntity tileAtPos = inv.player.world.getTileEntity(buffer.readBlockPos());
-        if(tileAtPos instanceof LogicBoard){
-            return (LogicBoard) tileAtPos;
+        if(tileAtPos instanceof LogicBlockTileEntity){
+            return (LogicBlockTileEntity) tileAtPos;
         }
         throw new IllegalStateException("Tile entity invalid: " + tileAtPos);
     }
@@ -56,4 +56,28 @@ public class LogicBlockContainer extends Container {
         return Container.isWithinUsableDistance(canInteractWithCallable, playerIn, CLEBlockEnum.COLLAPSED_LOGIC_BLOCK.getConstructor().get());
     }
 
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if(slot != null && slot.getHasStack()){
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
+            if(index < 36 && !this.mergeItemStack(stack1, LogicBlockTileEntity.getSlots(), this.inventorySlots.size(), true)){
+                return ItemStack.EMPTY;
+            }
+            if(!this.mergeItemStack(stack1, 0, this.inventorySlots.size(), false)){
+                return ItemStack.EMPTY;
+            }
+            if(stack1.isEmpty()){
+                slot.putStack(ItemStack.EMPTY);
+            }
+            else{
+                slot.onSlotChanged();
+            }
+
+
+        }
+        return super.transferStackInSlot(playerIn, index);
+    }
 }
