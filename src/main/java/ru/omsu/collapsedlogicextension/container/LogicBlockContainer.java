@@ -9,32 +9,31 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlockEnum;
 import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
 public class LogicBlockContainer extends Container {
 
-    private LogicBlockTileEntity te;
+    private final LogicBlockTileEntity te;
 
-    private IWorldPosCallable canInteractWithCallable;
 
-    public LogicBlockContainer(final int id, final PlayerInventory inv, final LogicBlockTileEntity tileBoard){
+    public LogicBlockContainer(final int id, final PlayerInventory inv, final LogicBlockTileEntity te){
         super(ContainerRegistrator.COLLAPSED_LOGIC_BLOCK_CONTAINER.get(), id);
 
-        this.te = tileBoard;
+        this.te = te;
 
-        this.canInteractWithCallable = IWorldPosCallable.of(tileBoard.getWorld(), tileBoard.getPos());
-
-        //пояс игрока
         for(int i = 0; i < 9; i++){
             this.addSlot(new Slot(inv, i, 48+18*i, 168));
         }
 
         //выходной слот
-        this.addSlot(new SlotItemHandler((IItemHandler) this.getInventory(), 10, 15, 168));
+        //this.addSlot(new SlotItemHandler(new ItemStackHandler(), 10, 15, 168));
     }
 
     public LogicBlockContainer(final int id, final PlayerInventory inv, final PacketBuffer buffer) {
@@ -51,18 +50,12 @@ public class LogicBlockContainer extends Container {
         throw new IllegalStateException("Tile entity invalid: " + tileAtPos);
     }
 
-    @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return Container.isWithinUsableDistance(canInteractWithCallable, playerIn, CLEBlockEnum.COLLAPSED_LOGIC_BLOCK.getConstructor().get());
-    }
-
+    @ParametersAreNonnullByDefault
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if(slot != null && slot.getHasStack()){
             ItemStack stack1 = slot.getStack();
-            stack = stack1.copy();
             if(index < 36 && !this.mergeItemStack(stack1, LogicBlockTileEntity.getSlots(), this.inventorySlots.size(), true)){
                 return ItemStack.EMPTY;
             }
@@ -76,8 +69,14 @@ public class LogicBlockContainer extends Container {
                 slot.onSlotChanged();
             }
 
-
         }
         return super.transferStackInSlot(playerIn, index);
+    }
+
+    @ParametersAreNonnullByDefault
+    @Override
+    public boolean canInteractWith(PlayerEntity playerIn) {
+        //TODO: разобраться почему te.getWorld() == null, такое не должно быть
+        return isWithinUsableDistance(IWorldPosCallable.of(te.getWorld(), te.getPos()), playerIn, CLEBlockEnum.COLLAPSED_LOGIC_BLOCK.getConstructor().get());
     }
 }

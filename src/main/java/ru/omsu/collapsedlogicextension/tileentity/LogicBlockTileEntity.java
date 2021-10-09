@@ -3,19 +3,24 @@ package ru.omsu.collapsedlogicextension.tileentity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import ru.omsu.collapsedlogicextension.CLEMod;
 import ru.omsu.collapsedlogicextension.container.LogicBlockContainer;
 
-public class LogicBlockTileEntity extends LockableLootTileEntity {
+import javax.annotation.Nullable;
 
-    private static int slots = 10;
+public class LogicBlockTileEntity extends LockableLootTileEntity implements INamedContainerProvider{
+
+    private static int slots = 1;
 
     protected NonNullList<ItemStack> items = NonNullList.withSize(slots, ItemStack.EMPTY);
 
@@ -49,6 +54,12 @@ public class LogicBlockTileEntity extends LockableLootTileEntity {
     @Override
     public int getSizeInventory() {
         return items.size();
+    }
+
+    @Nullable
+    @Override
+    public World getWorld() {
+        return super.getWorld();
     }
 
     @Override
