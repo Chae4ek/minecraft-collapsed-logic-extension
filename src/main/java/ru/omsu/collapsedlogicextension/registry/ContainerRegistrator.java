@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.container;
+package ru.omsu.collapsedlogicextension.registry;
 
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -8,6 +8,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import ru.omsu.collapsedlogicextension.CLEMod;
+import ru.omsu.collapsedlogicextension.container.LogicBlockContainer;
 
 public class ContainerRegistrator {
 

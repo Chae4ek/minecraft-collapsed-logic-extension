@@ -7,8 +7,7 @@ import ru.omsu.collapsedlogicextension.blocks.collapsedlogic.*;
 
 /** Хранит все блоки мода */
 public enum CLEBlockEnum {
-    COLLAPSED_LOGIC_BLOCK("collapsed_logic_block", CollapsedLogicBlock::new),
-    LOGIC_WIRE("logic_wire", LogicWireBlock::new);
+    COLLAPSED_LOGIC_BLOCK("collapsed_logic_block", CollapsedLogicBlock::new);
 
     /** Имя должно совпадать со всеми файлами ресурсов */
     private final String registryName;

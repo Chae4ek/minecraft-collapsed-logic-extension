@@ -22,7 +22,7 @@ import ru.omsu.collapsedlogicextension.CLEMod;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlock;
 import ru.omsu.collapsedlogicextension.container.LogicBlockContainer;
 import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
-import ru.omsu.collapsedlogicextension.tileentity.TileEntityRegistrator;
+import ru.omsu.collapsedlogicextension.registry.TileEntityRegistrator;
 
 import javax.annotation.Nullable;
 
@@ -51,22 +51,13 @@ public class CollapsedLogicBlock extends CLEBlock {
             final PlayerEntity player,
             final Hand handIn,
             final BlockRayTraceResult hit) {
-        if(!worldIn.isRemote){
+        if(!worldIn.isRemote) {
             TileEntity te = worldIn.getTileEntity(pos);
-            NetworkHooks.openGui((ServerPlayerEntity) player, new INamedContainerProvider() {
-                @Override
-                public ITextComponent getDisplayName() {
-                    return new TranslationTextComponent("container." + CLEMod.MOD_ID + "collapsed_logic_block");
-                }
-
-                @Nullable
-                @Override
-                public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-                    return new LogicBlockContainer(windowId, playerInventory, (LogicBlockTileEntity) te);
-                }
-            }, pos);
-            return ActionResultType.SUCCESS;
+            if (te instanceof LogicBlockTileEntity) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) te, pos);
+                return ActionResultType.SUCCESS;
             }
+        }
         return ActionResultType.PASS;
     }
 

@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.blocks;
+package ru.omsu.collapsedlogicextension.registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import ru.omsu.collapsedlogicextension.CLEMod;
+import ru.omsu.collapsedlogicextension.blocks.CLEBlockEnum;
 import ru.omsu.collapsedlogicextension.exceptions.CLEErrorEnum;
 import ru.omsu.collapsedlogicextension.exceptions.CLEException;
 

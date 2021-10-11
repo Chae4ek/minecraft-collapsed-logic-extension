@@ -8,13 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlockEnum;
+import ru.omsu.collapsedlogicextension.registry.ContainerRegistrator;
 import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 

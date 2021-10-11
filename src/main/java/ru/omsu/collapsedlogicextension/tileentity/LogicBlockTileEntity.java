@@ -9,12 +9,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import ru.omsu.collapsedlogicextension.CLEMod;
 import ru.omsu.collapsedlogicextension.container.LogicBlockContainer;
+import ru.omsu.collapsedlogicextension.registry.TileEntityRegistrator;
 
 import javax.annotation.Nullable;
 

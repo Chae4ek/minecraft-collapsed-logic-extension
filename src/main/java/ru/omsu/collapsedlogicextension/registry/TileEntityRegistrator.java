@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.tileentity;
+package ru.omsu.collapsedlogicextension.registry;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -9,6 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import ru.omsu.collapsedlogicextension.CLEMod;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlockEnum;
+import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
 
 public class TileEntityRegistrator {
 

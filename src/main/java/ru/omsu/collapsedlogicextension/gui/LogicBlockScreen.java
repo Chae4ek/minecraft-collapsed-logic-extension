@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.container;
+package ru.omsu.collapsedlogicextension.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -8,6 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import ru.omsu.collapsedlogicextension.CLEMod;
+import ru.omsu.collapsedlogicextension.container.LogicBlockContainer;
 
 @OnlyIn(Dist.CLIENT)
 public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
@@ -40,12 +41,6 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     }
 
     @Override
-    protected void init() {
-        super.init();
-       // this.addButton(new UploadButton(16, 16, ));
-    }
-
-    @Override
     public boolean shouldCloseOnEsc() {
         return true;
     }
@@ -57,8 +52,4 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
         this.renderHoveredToolTip(mouseX, mouseY);
     }
 
-    @Override
-    public void renderBackground() {
-        super.renderBackground();
-    }
 }

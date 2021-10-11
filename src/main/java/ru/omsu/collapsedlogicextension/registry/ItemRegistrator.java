@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.items;
+package ru.omsu.collapsedlogicextension.registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import ru.omsu.collapsedlogicextension.CLEMod;
+import ru.omsu.collapsedlogicextension.items.CLEItemEnum;
 
 /** Регистрирует все предметы мода */
 public class ItemRegistrator {

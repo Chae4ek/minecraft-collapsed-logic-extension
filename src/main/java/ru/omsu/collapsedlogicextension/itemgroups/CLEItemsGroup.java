@@ -2,7 +2,7 @@ package ru.omsu.collapsedlogicextension.itemgroups;
 
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import ru.omsu.collapsedlogicextension.items.ItemRegistrator;
+import ru.omsu.collapsedlogicextension.registry.ItemRegistrator;
 
 /** Вкладка в инвентаре креатива для предметов мода */
 public class CLEItemsGroup extends ItemGroup {
