@@ -15,7 +15,7 @@ public class ContainerRegistrator {
     private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister
             .create(ForgeRegistries.CONTAINERS, CLEMod.MOD_ID);
 
-    public static final RegistryObject<ContainerType<LogicBlockContainer>> COLLAPSED_LOGIC_BLOCK_CONTAINER =
+    public static final RegistryObject<ContainerType<LogicBlockContainer>> COLLAPSED_LOGIC_BLOCK =
             CONTAINERS.register("collapsed_logic_block",
                     () -> IForgeContainerType.create(LogicBlockContainer::new));
 

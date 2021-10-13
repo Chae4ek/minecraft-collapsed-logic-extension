@@ -8,72 +8,80 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.items.SlotItemHandler;
 import ru.omsu.collapsedlogicextension.blocks.CLEBlockEnum;
 import ru.omsu.collapsedlogicextension.registry.ContainerRegistrator;
 import ru.omsu.collapsedlogicextension.tileentity.LogicBlockTileEntity;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class LogicBlockContainer extends Container {
 
-    private final LogicBlockTileEntity te;
+    public LogicBlockTileEntity tileEntity;
+    private IWorldPosCallable canInteractWithCallable;
 
+    // Server Constructor
+    public LogicBlockContainer(final int windowID, final PlayerInventory playerInv,
+                                   final LogicBlockTileEntity tile) {
+        super(ContainerRegistrator.COLLAPSED_LOGIC_BLOCK.get(), windowID);
 
-    public LogicBlockContainer(final int id, final PlayerInventory inv, final LogicBlockTileEntity te){
-        super(ContainerRegistrator.COLLAPSED_LOGIC_BLOCK_CONTAINER.get(), id);
+        this.tileEntity = tile;
+        this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
 
-        this.te = te;
+        this.addSlot(new SlotItemHandler(tile.getInventory(), 1, 15, 168));
 
-        for(int i = 0; i < 9; i++){
-            this.addSlot(new Slot(inv, i, 48+18*i, 168));
-        }
-
-        //выходной слот
-        //this.addSlot(new SlotItemHandler(new ItemStackHandler(), 10, 15, 168));
     }
 
-    public LogicBlockContainer(final int id, final PlayerInventory inv, final PacketBuffer buffer) {
-        this(id, inv, getTileEntity(inv, buffer));
+    // Client Constructor
+    public LogicBlockContainer(final int windowID, final PlayerInventory playerInv, final PacketBuffer data) {
+        this(windowID, playerInv, getTileEntity(playerInv, data));
     }
 
-    private static LogicBlockTileEntity getTileEntity(final PlayerInventory inv, final PacketBuffer buffer){
-        Objects.requireNonNull(inv);
-        Objects.requireNonNull(buffer);
-        final TileEntity tileAtPos = inv.player.world.getTileEntity(buffer.readBlockPos());
-        if(tileAtPos instanceof LogicBlockTileEntity){
+    private static LogicBlockTileEntity getTileEntity(final PlayerInventory playerInv, final PacketBuffer data) {
+        Objects.requireNonNull(playerInv, "playerInv cannot be null");
+        Objects.requireNonNull(data, "data cannot be null");
+        final TileEntity tileAtPos = playerInv.player.world.getTileEntity(data.readBlockPos());
+        if (tileAtPos instanceof LogicBlockTileEntity) {
             return (LogicBlockTileEntity) tileAtPos;
         }
-        throw new IllegalStateException("Tile entity invalid: " + tileAtPos);
+        throw new IllegalStateException("TileEntity is not correct " + tileAtPos);
     }
 
-    @ParametersAreNonnullByDefault
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        Slot slot = this.inventorySlots.get(index);
-        if(slot != null && slot.getHasStack()){
-            ItemStack stack1 = slot.getStack();
-            if(index < 36 && !this.mergeItemStack(stack1, LogicBlockTileEntity.getSlots(), this.inventorySlots.size(), true)){
-                return ItemStack.EMPTY;
-            }
-            if(!this.mergeItemStack(stack1, 0, this.inventorySlots.size(), false)){
-                return ItemStack.EMPTY;
-            }
-            if(stack1.isEmpty()){
-                slot.putStack(ItemStack.EMPTY);
-            }
-            else{
-                slot.onSlotChanged();
-            }
-
-        }
-        return super.transferStackInSlot(playerIn, index);
-    }
-
-    @ParametersAreNonnullByDefault
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        //TODO: разобраться почему te.getWorld() == null, такое не должно быть
-        return isWithinUsableDistance(IWorldPosCallable.of(te.getWorld(), te.getPos()), playerIn, CLEBlockEnum.COLLAPSED_LOGIC_BLOCK.getConstructor().get());
+        return isWithinUsableDistance(canInteractWithCallable, playerIn, CLEBlockEnum.COLLAPSED_LOGIC_BLOCK.getConstructor().get());
     }
+
+    @Nonnull
+    @Override
+    public ItemStack transferStackInSlot(final PlayerEntity player, final int index) {
+        ItemStack returnStack = ItemStack.EMPTY;
+        final Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            final ItemStack slotStack = slot.getStack();
+            returnStack = slotStack.copy();
+
+            final int containerSlots = this.inventorySlots.size() - player.inventory.mainInventory.size();
+            if (index < containerSlots) {
+                if (!mergeItemStack(slotStack, containerSlots, this.inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!mergeItemStack(slotStack, 0, containerSlots, false)) {
+                return ItemStack.EMPTY;
+            }
+            if (slotStack.getCount() == 0) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+            if (slotStack.getCount() == returnStack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+            slot.onTake(player, slotStack);
+        }
+        return returnStack;
+    }
+
+
 }

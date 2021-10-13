@@ -1,7 +1,9 @@
 package ru.omsu.collapsedlogicextension;
 
 import net.minecraft.item.ItemGroup;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import ru.omsu.collapsedlogicextension.registry.BlockRegistrator;
 import ru.omsu.collapsedlogicextension.registry.ContainerRegistrator;
 import ru.omsu.collapsedlogicextension.itemgroups.CLEBlocksGroup;
@@ -18,9 +20,13 @@ public class CLEMod {
     public static final ItemGroup CLE_ITEMS_TAB = new CLEItemsGroup(MOD_ID + ".items");
 
     public CLEMod() {
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         BlockRegistrator.register();
         ItemRegistrator.register();
-        TileEntityRegistrator.register();
+
+        TileEntityRegistrator.TILE_ENTITY_TYPES.register(modEventBus);
+
         ContainerRegistrator.register();
     }
 }
