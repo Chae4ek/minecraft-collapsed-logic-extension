@@ -1,9 +1,9 @@
 package ru.omsu.collapsedlogicextension.util;
 
-import net.minecraft.util.IntReferenceHolder;
-
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
+
+import net.minecraft.util.IntReferenceHolder;
 
 public class FunctionalIntReferenceHolder extends IntReferenceHolder {
 

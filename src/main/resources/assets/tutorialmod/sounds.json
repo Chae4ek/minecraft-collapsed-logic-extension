@@ -1,0 +1,22 @@
+{
+	"entity.example_entity.ambient": {
+		"category": "entity",
+		"subtitle": "entity.example_entity.ambient",
+		"sounds": [
+			{
+				"name": "tutorialmod:entity/entity.example_entity.ambient",
+				"stream": true
+			}
+		]
+	},
+	"disc.promises": {
+		"category": "disc",
+		"subtitle": "promises",
+		"sounds": [
+			{
+				"name": "tutorialmod:disc/promises",
+				"stream": true
+			}
+		]
+	}
+}
