@@ -30,7 +30,7 @@ public class BlockRegistrator {
     public static final List<RegistryObject<Block>> registryBlocks;
 
     private static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, CLEMod.MOD_ID);
+        DeferredRegister.create(ForgeRegistries.BLOCKS, CLEMod.MOD_ID);
 
     static {
         registryBlocks = new ArrayList<>();
@@ -58,7 +58,7 @@ public class BlockRegistrator {
         for (final RegistryObject<Block> regBlock : BLOCKS.getEntries()) {
             final Block block = regBlock.get();
             final BlockItem blockItem =
-                    new BlockItem(block, new Item.Properties().group(CLEMod.CLE_BLOCKS_TAB));
+                new BlockItem(block, new Item.Properties().group(CLEMod.CLE_BLOCKS_TAB));
             final ResourceLocation resLocationBlock = block.getRegistryName();
 
             if (resLocationBlock == null) {
