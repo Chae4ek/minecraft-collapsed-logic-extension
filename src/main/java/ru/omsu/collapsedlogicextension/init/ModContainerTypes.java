@@ -14,6 +14,6 @@ public class ModContainerTypes {
 	public static final DeferredRegister<ContainerType<?>> CONTAINER_TYPES = new DeferredRegister<>(
 			ForgeRegistries.CONTAINERS, CLEMod.MOD_ID);
 
-	public static final RegistryObject<ContainerType<LogicBlockContainer>> EXAMPLE_FURNACE = CONTAINER_TYPES
-			.register("example_furnace", () -> IForgeContainerType.create(LogicBlockContainer::new));
+	public static final RegistryObject<ContainerType<LogicBlockContainer>> LOGIC_BLOCK = CONTAINER_TYPES
+			.register("logic_block", () -> IForgeContainerType.create(LogicBlockContainer::new));
 }

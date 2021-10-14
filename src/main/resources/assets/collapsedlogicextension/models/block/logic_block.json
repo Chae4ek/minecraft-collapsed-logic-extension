@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "collapsedlogicextension:blocks/logic_block_top",
+        "front": "collapsedlogicextension:blocks/logic_block_front",
+        "side": "collapsedlogicextension:blocks/logic_block_side"
+    }
+}

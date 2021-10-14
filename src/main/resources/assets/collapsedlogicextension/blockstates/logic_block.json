@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "collapsedlogicextension:block/logic_block"
+        }
+    }
+}

@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "tutorialmod:blocks/example_furnace_top",
-        "front": "tutorialmod:blocks/example_furnace_front",
-        "side": "tutorialmod:blocks/example_furnace_side"
-    }
-}

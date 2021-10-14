@@ -6,11 +6,11 @@ issueTrackerURL="http://my.issue.tracker/"
 
 [[mods]]
 
-modId="tutorialmod"
+modId="collapsedlogicextension"
 
 version="1.0"
 
-displayName="Tutorial Mod"
+displayName="Collapsed Logic Extension"
 
 updateJSONURL="http://myurl.me/"
 
@@ -38,7 +38,7 @@ description='''
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 
-[[dependencies.tutorialmod]]
+[[dependencies.collapsedlogicextension]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.15.2]"

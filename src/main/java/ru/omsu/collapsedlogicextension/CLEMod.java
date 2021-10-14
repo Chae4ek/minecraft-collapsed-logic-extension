@@ -19,18 +19,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @SuppressWarnings("deprecation")
-@Mod("tutorialmod")
+@Mod("collapsedlogicextension")
 @Mod.EventBusSubscriber(modid = CLEMod.MOD_ID, bus = Bus.MOD)
 public class CLEMod {
 
 	public static final Logger LOGGER = LogManager.getLogger();
-	public static final String MOD_ID = "tutorialmod";
+	public static final String MOD_ID = "collapsedlogicextension";
 	public static CLEMod instance;
 
 	public CLEMod() {
@@ -60,17 +58,6 @@ public class CLEMod {
 		LOGGER.debug("Registered BlockItems!");
 	}
 
-	@SubscribeEvent
-	public static void onServerStarting(FMLServerStartingEvent event) {
-
-	}
-
-	@SubscribeEvent
-	public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
-		// This doesnt work anymore
-		// TutorialOreGen.generateOre();
-	}
-
 	public static class TutorialItemGroup extends ItemGroup {
 		public static final ItemGroup instance = new TutorialItemGroup(ItemGroup.GROUPS.length, "tutorialtab");
 
@@ -80,7 +67,7 @@ public class CLEMod {
 
 		@Override
 		public ItemStack createIcon() {
-			return new ItemStack(BlockInit.EXAMPLE_BLOCK.get());
+			return new ItemStack(BlockInit.LOGIC_BLOCK.get());
 		}
 	}
 }

@@ -13,7 +13,7 @@ public class ModTileEntityTypes {
 	public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = new DeferredRegister<>(
 			ForgeRegistries.TILE_ENTITIES, CLEMod.MOD_ID);
 
-	public static final RegistryObject<TileEntityType<LogicBlockTileEntity>> EXAMPLE_FURNACE = TILE_ENTITY_TYPES
-			.register("example_furnace", () -> TileEntityType.Builder
-					.create(LogicBlockTileEntity::new, BlockInit.EXAMPLE_FURNACE.get()).build(null));
+	public static final RegistryObject<TileEntityType<LogicBlockTileEntity>> LOGIC_BLOCK = TILE_ENTITY_TYPES
+			.register("logic_block", () -> TileEntityType.Builder
+					.create(LogicBlockTileEntity::new, BlockInit.LOGIC_BLOCK.get()).build(null));
 }

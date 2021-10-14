@@ -2,7 +2,6 @@ package ru.omsu.collapsedlogicextension.tileentity;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
@@ -44,7 +43,7 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
 	}
 
 	public LogicBlockTileEntity() {
-		this(ModTileEntityTypes.EXAMPLE_FURNACE.get());
+		this(ModTileEntityTypes.LOGIC_BLOCK.get());
 	}
 
 	@Override
@@ -136,7 +135,8 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
 		BlockPos pos = this.pos.east().south();
 		for(int y = 0; y < 6; y++){
 			for(int x = 0; x < 9; x++){
-				if(this.world.getBlockState(pos).isSolid()){
+				if((this.world.getBlockState(pos).isSolid() || this.world.getBlockState(pos).isTransparent()
+					&& this.world.getBlockState(pos.down()).getBlock() != Blocks.AIR)){
 					return new StringTextComponent("Unable to place scheme!");
 				}
 				pos = Math.abs(pos.getX() - this.pos.east().south().getX()) > 1 ? pos.east() : pos.west();
