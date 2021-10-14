@@ -1,6 +1,5 @@
 {
-  "itemGroup.collapsedlogicextension.blocks": "CLE Blocks",
-  "itemGroup.collapsedlogicextension.items": "CLE Items",
-  "block.collapsedlogicextension.collapsed_logic_block": "Collapsed Logic Block",
-  "item.collapsedlogicextension.logic_floppy_disk": "Logic Floppy Disk"
+	"itemGroup.tutorialtab": "Collapsed Logic Extension",
+	"block.collapsedlogicextension.logic_block": "Logic Block",
+	"container.collapsedlogicextension.logic_block": "Logic Block"
 }

@@ -16,6 +16,6 @@ public class ClientEventBusSubscriber {
 
 	@SubscribeEvent
 	public static void clientSetup(FMLClientSetupEvent event) {
-		ScreenManager.registerFactory(ModContainerTypes.EXAMPLE_FURNACE.get(), LogicBlockScreen::new);
+		ScreenManager.registerFactory(ModContainerTypes.LOGIC_BLOCK.get(), LogicBlockScreen::new);
 	}
 }

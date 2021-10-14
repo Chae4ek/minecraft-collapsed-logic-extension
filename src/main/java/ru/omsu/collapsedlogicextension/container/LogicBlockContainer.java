@@ -26,7 +26,7 @@ public class LogicBlockContainer extends Container {
 	// Server Constructor
 	public LogicBlockContainer(final int windowID, final PlayerInventory playerInv,
 							   final LogicBlockTileEntity tile) {
-		super(ModContainerTypes.EXAMPLE_FURNACE.get(), windowID);
+		super(ModContainerTypes.LOGIC_BLOCK.get(), windowID);
 
 		this.tileEntity = tile;
 		this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
@@ -53,7 +53,7 @@ public class LogicBlockContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn) {
-		return isWithinUsableDistance(canInteractWithCallable, playerIn, BlockInit.EXAMPLE_FURNACE.get());
+		return isWithinUsableDistance(canInteractWithCallable, playerIn, BlockInit.LOGIC_BLOCK.get());
 	}
 
 	@Nonnull
