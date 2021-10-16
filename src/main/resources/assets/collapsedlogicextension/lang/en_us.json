@@ -1,5 +1,5 @@
 {
-	"itemGroup.tutorialtab": "Collapsed Logic Extension",
-	"block.collapsedlogicextension.logic_block": "Logic Block",
-	"container.collapsedlogicextension.logic_block": "Logic Block"
+  "itemGroup.collapsedlogicextension": "Collapsed Logic Extension",
+  "block.collapsedlogicextension.logic_block": "Logic Block",
+  "container.collapsedlogicextension.logic_block": "Logic Block"
 }

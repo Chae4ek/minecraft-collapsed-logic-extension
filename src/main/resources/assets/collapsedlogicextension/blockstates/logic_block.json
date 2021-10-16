@@ -1,7 +1,7 @@
 {
-    "variants": {
-        "": {
-            "model": "collapsedlogicextension:block/logic_block"
-        }
+  "variants": {
+    "": {
+      "model": "collapsedlogicextension:block/logic_block"
     }
+  }
 }
