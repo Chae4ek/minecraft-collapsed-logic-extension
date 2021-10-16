@@ -69,16 +69,16 @@ public class ModInit {
 
     /** Регистратор предметов */
     private static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, ModInit.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     /** Регистратор блоков */
     private static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, ModInit.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     /** Регистратор контейнеров блоков */
     private static final DeferredRegister<ContainerType<?>> CONTAINER_TYPES =
-            DeferredRegister.create(ForgeRegistries.CONTAINERS, ModInit.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
     /** Регистратор tile entities */
     private static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES =
-            DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, ModInit.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
     static {
         for (final ModObjectEnum modObject : ModObjectEnum.values()) {
@@ -153,7 +153,7 @@ public class ModInit {
         for (final RegistryObject<Block> regBlock : BLOCKS.getEntries()) {
             final Block block = regBlock.get();
             final BlockItem blockItem =
-                    new BlockItem(block, new Item.Properties().group(ModInit.MOD_GROUP));
+                    new BlockItem(block, new Item.Properties().group(MOD_GROUP));
             blockItem.setRegistryName(block.getRegistryName());
             registry.register(blockItem);
         }
@@ -200,7 +200,7 @@ public class ModInit {
 
     /** Регистрация GUI только для клиента */
     @OnlyIn(Dist.CLIENT)
-    @EventBusSubscriber(modid = ModInit.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
     public static class ClientEventBusSubscriber {
 
         @OnlyIn(Dist.CLIENT)
