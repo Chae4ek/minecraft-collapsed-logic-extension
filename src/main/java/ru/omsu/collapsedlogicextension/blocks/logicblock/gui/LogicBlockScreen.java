@@ -10,14 +10,23 @@ import net.minecraft.util.text.StringTextComponent;
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockContainer;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockTileEntity;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
+
+import java.awt.*;
 
 /** Отрисовка GUI блока */
 public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
 
     private static final ResourceLocation TEXTURE =
             new ResourceLocation(ModInit.MOD_ID, "textures/gui/collapsed_logic_block_gui.png");
+    private static final ResourceLocation FIELD =
+            new ResourceLocation(ModInit.MOD_ID, "textures/gui/board/field.png");
     private final LogicBlockTileEntity tileEntity;
     private ITextComponent buildSchemeStatus = new StringTextComponent("");
+
+    private LogicBoardEntity boardTileEntity; //логическая сущность 2д доски
+
+    Tool selectedTool = Tool.ERASER;
 
     public LogicBlockScreen(
             final LogicBlockContainer screenContainer,
@@ -30,8 +39,8 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
         ySize = 192;
 
         tileEntity = screenContainer.getTileEntity();
+        boardTileEntity = new LogicBoardEntity();
 
-        System.err.println("LOGIC BLOCK ~~SCREEN~~ CREATED");
     }
 
     @Override
@@ -45,12 +54,6 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     @Override
     protected void init() {
         super.init();
-        /**
-         * xIn yIn - координаты по гуи width height - размер кнопки x(y)TexStartIn - координаты
-         * кнопки в атласе текстур(в TEXTURE крч) yDifTextIn - на сколько надо сдвинуться по y чтобы
-         * поймать текстуру кнопки в наведенном состоянии то есть кнопка в обычном и заряженном
-         * состоянии находятся друг под другом
-         */
         addButton(
                 new ImageButton(
                         guiLeft + 34,
@@ -61,26 +64,48 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                         194,
                         19,
                         TEXTURE,
-                        button -> buildSchemeStatus = tileEntity.buildScheme()));
+                        button -> buildSchemeStatus = tileEntity.buildScheme(boardTileEntity)));
 
         int i = 0;
 
-        // TODO: сделать более адекватно
-        for (int x = 0; x < 134; x += 20) {
+        int xTool = 0;
+
+        for(Tool tool : Tool.values()){
             addButton(
                     new ImageButton(
-                            guiLeft + 235,
-                            guiTop + 4 + 19 * i,
-                            20,
+                            guiLeft + 225,
+                            guiTop + 18 + 18 * i,
+                            19,
                             18,
-                            22 + x,
-                            194,
+                            21 + xTool,
+                            193,
                             19,
                             TEXTURE,
-                            null));
+                            button -> selectedTool = tool));
             i++;
+            xTool+=19;
         }
-        // TODO: нарисовать поле тож циклом
+
+        int xStart = 5;
+        int yStart = 18;
+
+        for(int y = 0; y < 9; y++){
+            for(int x = 0; x < 13; x++){
+                int finalX = x;
+                int finalY = y;
+                addButton(new FieldButton(
+                        guiLeft+xStart+x*16,
+                        guiTop+yStart+y*16,
+                        0,
+                        0,
+                        FIELD,
+                        button -> {
+                            ((FieldButton)button).setTexture(selectedTool.getX(), selectedTool.getY());
+                            boardTileEntity.updateBoard(selectedTool, finalX, finalY);
+                        }
+                )); //cells[x][y].changeConfig(selectedTool);
+            }
+        }
     }
 
     @Override
@@ -88,6 +113,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         font.drawString(title.getFormattedText(), 8.0f, 8.0f, 0x404040);
         font.drawString(buildSchemeStatus.getFormattedText(), 57, 170, 0x404040);
+        font.drawStringWithShadow(selectedTool.getType(), 150, 7, Color.MAGENTA.getRGB());
     }
 
     @Override

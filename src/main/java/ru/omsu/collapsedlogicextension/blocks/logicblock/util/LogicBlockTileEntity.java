@@ -1,6 +1,9 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.util;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -26,6 +29,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.ModInit.ModObjectEnum;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
 
 public class LogicBlockTileEntity extends TileEntity implements INamedContainerProvider {
 
@@ -132,13 +136,13 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
                 cap, LazyOptional.of(() -> inventory));
     }
 
-    public ITextComponent buildScheme() {
+    public ITextComponent buildScheme(LogicBoardEntity entity) {
         BlockPos pos = this.pos.east().south();
-        for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < 9; x++) {
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 13; x++) {
                 if ((world.getBlockState(pos).isSolid()
                         || world.getBlockState(pos).isTransparent()
-                                && world.getBlockState(pos.down()).getBlock() != Blocks.AIR)) {
+                                && world.isAirBlock(pos.down()))) {
                     return new StringTextComponent("Unable to place scheme!");
                 }
                 pos =
@@ -148,6 +152,18 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
             }
             pos = pos.south();
         }
-        return new StringTextComponent("Able to place scheme");
+        pos = this.pos.east().south();
+        for (int y = 0; y < 9; y++) {
+            BlockPos anotherPos = pos;
+            for (int x = 0; x < 13; x++) {
+                Block block = entity.getBlock(x, y);
+                if(block!=null) {
+                    world.setBlockState(anotherPos, block.getDefaultState());
+                }
+                anotherPos = anotherPos.east();
+            }
+            pos = pos.south();
+        }
+        return new StringTextComponent("Scheme was built!");
     }
 }
