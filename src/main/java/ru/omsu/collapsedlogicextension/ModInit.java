@@ -32,6 +32,7 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import ru.omsu.collapsedlogicextension.blocks.Markup;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.LogicBlock;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.gui.LogicBlockScreen;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockContainer;
@@ -167,7 +168,13 @@ public class ModInit {
                 LogicBlock::new,
                 LogicBlockContainer::new,
                 LogicBlockScreen::new,
-                LogicBlockTileEntity::new);
+                LogicBlockTileEntity::new),
+        MARKUP("markup",
+                null,
+                Markup::new,
+                null,
+                null,
+                null);
 
         /** Регистрируемое имя должно совпадать со всеми файлами ресурсов */
         private final String registryName;

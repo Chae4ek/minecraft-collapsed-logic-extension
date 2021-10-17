@@ -29,6 +29,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.ModInit.ModObjectEnum;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.LogicBlock;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
 
 public class LogicBlockTileEntity extends TileEntity implements INamedContainerProvider {
@@ -136,13 +137,14 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
     }
 
     public ITextComponent buildScheme(LogicBoardEntity entity) {
+        //TODO: реализовать строительство схемы в зависимости от BlockState блока (чтобы красиво)
         BlockPos pos = this.pos.east().south();
         for (int y = 0; y < 9; y++) {
             BlockPos anotherPos = pos;
             for (int x = 0; x < 13; x++) {
                 if (world.getBlockState(anotherPos.down()).getBlock() == Blocks.AIR || world.getBlockState(anotherPos).isSolid()
                         || world.getBlockState(anotherPos).isTransparent()) {
-                    return new StringTextComponent("Unable to place scheme!");
+                    return new StringTextComponent("Placing problem at (" + anotherPos.getX() + " ," + anotherPos.getZ() + ")");
                 }
                 anotherPos = anotherPos.east();
             }
@@ -160,6 +162,6 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
             }
             pos = pos.south();
         }
-        return new StringTextComponent("Scheme was built!");
+        return new StringTextComponent("Operation complete!");
     }
 }

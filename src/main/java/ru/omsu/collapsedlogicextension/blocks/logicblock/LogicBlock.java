@@ -1,7 +1,9 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock;
 
+import net.minecraft.block.BedrockBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -9,14 +11,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -25,15 +26,20 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.ModInit.ModObjectEnum;
+import ru.omsu.collapsedlogicextension.blocks.Markup;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.ExampleItemHandler;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockTileEntity;
 
+import javax.annotation.Nullable;
+
 public class LogicBlock extends Block {
 
-    private final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public LogicBlock() {
         super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE));
+
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -56,6 +62,18 @@ public class LogicBlock extends Block {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder);
+        builder.add(FACING);
+    }
+
     @Override
     public void onBlockPlacedBy(
             final World worldIn,
@@ -70,8 +88,17 @@ public class LogicBlock extends Block {
                 ((LogicBlockTileEntity) tile).setCustomName(stack.getDisplayName());
             }
         }
+        /**тут добавляется разметка*/
+        Markup markup = new Markup();
+        BlockPos blockPos = pos.add(1, 0, 1);
+        worldIn.setBlockState(blockPos, markup.getDefaultState());
+        blockPos = blockPos.add(13, 0, 0);
+        worldIn.setBlockState(blockPos, markup.getDefaultState());
+        blockPos = blockPos.add(0, 0, 9);
+        worldIn.setBlockState(blockPos, markup.getDefaultState());
+        blockPos = blockPos.add(-13, 0, 0);
+        worldIn.setBlockState(blockPos, markup.getDefaultState());
     }
-
     @Override
     public boolean hasComparatorInputOverride(final BlockState state) {
         return true;
@@ -126,5 +153,14 @@ public class LogicBlock extends Block {
         if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
             worldIn.removeTileEntity(pos);
         }
+        /**тут убирается разметка*/
+        BlockPos blockPos = pos.add(1, 0, 1);
+        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
+        blockPos = blockPos.add(13, 0, 0);
+        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
+        blockPos = blockPos.add(0, 0, 9);
+        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
+        blockPos = blockPos.add(-13, 0, 0);
+        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
     }
 }
