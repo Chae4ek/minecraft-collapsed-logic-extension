@@ -100,10 +100,10 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                         0,
                         FIELD,
                         button -> {
-                            ((FieldButton)button).setTexture(selectedTool.getX(), selectedTool.getY());
+                            ((FieldButton)button).setTexture(selectedTool);
                             boardTileEntity.updateBoard(selectedTool, finalX, finalY);
                         }
-                )); //cells[x][y].changeConfig(selectedTool);
+                ));
             }
         }
     }

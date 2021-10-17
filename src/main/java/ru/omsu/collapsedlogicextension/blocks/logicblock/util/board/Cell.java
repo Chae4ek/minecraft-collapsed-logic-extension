@@ -18,6 +18,10 @@ public abstract class Cell {
     void deactivate(Direction from, Direction to){
     }
 
+    void rotate(){
+    }
+
+
     public Tool getType() {
         return type;
     }

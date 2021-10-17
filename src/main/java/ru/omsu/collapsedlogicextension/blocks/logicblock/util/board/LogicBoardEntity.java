@@ -17,7 +17,9 @@ public class LogicBoardEntity {
     }
 
     public void updateBoard(Tool tool, int x, int y){
-        cells[y][x].setType(tool);
+        if(tool!=Tool.ROTATION) {
+            cells[y][x].setType(tool);
+        }
     }
 
     public Block getBlock(int x, int y){

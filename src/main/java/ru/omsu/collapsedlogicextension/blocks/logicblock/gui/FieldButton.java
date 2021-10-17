@@ -22,8 +22,6 @@ public class FieldButton extends Button {
      * @param yIn координата на гуи
      * @param xTexStartIn координата на атласе
      * @param yTexStartIn координата на атласе
-     * @param xDiffTextIn координата наведенного состояния на атласе
-     * @param yDiffTextIn координата наведенного состояния на атласе
      * */
     public FieldButton(int xIn, int yIn, int xTexStartIn, int yTexStartIn, ResourceLocation resourceLocationIn, Button.IPressable onPressIn) {
         super(xIn, yIn, 16, 16, "", onPressIn);
@@ -38,9 +36,18 @@ public class FieldButton extends Button {
         this.x = xIn;
         this.y = yIn;
     }
-    public void setTexture(int xText, int yText){
-        this.xTexStart = xText;
-        this.yTexStart = yText;
+    public void setTexture(Tool tool){
+        if(tool == Tool.ROTATION){
+            rotate();
+        }
+        else {
+            this.xTexStart = tool.getX();
+            this.yTexStart = tool.getY();
+        }
+    }
+
+    public void rotate(){
+        yTexStart = (yTexStart + 17) % 68;
     }
 
     public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
@@ -67,4 +74,5 @@ public class FieldButton extends Button {
         this.xDiffText = selectedTool.getX();
         this.yDiffText = selectedTool.getY();
     }
+
 }

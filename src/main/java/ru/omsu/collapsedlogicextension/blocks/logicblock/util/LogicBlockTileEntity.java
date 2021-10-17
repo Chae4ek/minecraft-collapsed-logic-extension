@@ -41,7 +41,6 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
 
         inventory = new ExampleItemHandler(2);
 
-        System.err.println("LOGIC BLOCK ~~TILE ENTITY~~ CREATED");
     }
 
     public LogicBlockTileEntity() {
@@ -82,7 +81,7 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
         if (compound.contains("CustomName", Constants.NBT.TAG_STRING)) {
             customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
-
+        //TODO: прочитать матрицу доски и передать в сущность доски
         final NonNullList<ItemStack> inv =
                 NonNullList.<ItemStack>withSize(inventory.getSlots(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, inv);
@@ -95,7 +94,7 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
         if (customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
         }
-
+        //TODO: записать матрицу доски либо интов, либо стрингов
         ItemStackHelper.saveAllItems(compound, inventory.toNonNullList());
 
         return compound;
@@ -139,16 +138,13 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
     public ITextComponent buildScheme(LogicBoardEntity entity) {
         BlockPos pos = this.pos.east().south();
         for (int y = 0; y < 9; y++) {
+            BlockPos anotherPos = pos;
             for (int x = 0; x < 13; x++) {
-                if ((world.getBlockState(pos).isSolid()
-                        || world.getBlockState(pos).isTransparent()
-                                && world.isAirBlock(pos.down()))) {
+                if (world.getBlockState(anotherPos.down()).getBlock() == Blocks.AIR || world.getBlockState(anotherPos).isSolid()
+                        || world.getBlockState(anotherPos).isTransparent()) {
                     return new StringTextComponent("Unable to place scheme!");
                 }
-                pos =
-                        Math.abs(pos.getX() - this.pos.east().south().getX()) > 1
-                                ? pos.east()
-                                : pos.west();
+                anotherPos = anotherPos.east();
             }
             pos = pos.south();
         }
