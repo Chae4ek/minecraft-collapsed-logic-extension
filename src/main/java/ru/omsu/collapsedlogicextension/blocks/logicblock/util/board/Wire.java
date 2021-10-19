@@ -16,6 +16,10 @@ public class Wire extends Cell {
         directions = new HashMap<>(4);
     }
 
+    public Wire() {
+        this(0, 0);
+    }
+
     @Override
     public void activate(Direction from, Direction to) {
         directions.replace(from, true);
@@ -32,7 +36,12 @@ public class Wire extends Cell {
         directions.put(direction, false);
     }
 
+    //TODO: прописать
     public void removeDirection(Direction direction){
         directions.remove(direction);
+    }
+
+    public Map<Direction, Boolean> getDirections() {
+        return directions;
     }
 }

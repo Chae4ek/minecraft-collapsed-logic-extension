@@ -1,9 +1,6 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock;
 
-import net.minecraft.block.BedrockBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -20,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -36,8 +34,15 @@ public class LogicBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
+    private final int[][] angles = new int[4][2];
+
     public LogicBlock() {
         super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE));
+
+        angles[0] = new int[]{1, 1};
+        angles[1] = new int[]{0, 9};
+        angles[2] = new int[]{13, 0};
+        angles[3] = new int[]{0, -9};
 
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }
@@ -90,14 +95,16 @@ public class LogicBlock extends Block {
         }
         /**тут добавляется разметка*/
         Markup markup = new Markup();
-        BlockPos blockPos = pos.add(1, 0, 1);
-        worldIn.setBlockState(blockPos, markup.getDefaultState());
-        blockPos = blockPos.add(13, 0, 0);
-        worldIn.setBlockState(blockPos, markup.getDefaultState());
-        blockPos = blockPos.add(0, 0, 9);
-        worldIn.setBlockState(blockPos, markup.getDefaultState());
-        blockPos = blockPos.add(-13, 0, 0);
-        worldIn.setBlockState(blockPos, markup.getDefaultState());
+
+        BlockPos blockPos = pos;
+
+        for(int[] angle : angles){
+            blockPos = blockPos.add(angle[0], 0, angle[1]);
+
+            if(worldIn.getBlockState(blockPos).getBlock() == Blocks.AIR) {
+                worldIn.setBlockState(blockPos, markup.getDefaultState());
+            }
+        }
     }
     @Override
     public boolean hasComparatorInputOverride(final BlockState state) {
@@ -154,13 +161,15 @@ public class LogicBlock extends Block {
             worldIn.removeTileEntity(pos);
         }
         /**тут убирается разметка*/
-        BlockPos blockPos = pos.add(1, 0, 1);
-        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
-        blockPos = blockPos.add(13, 0, 0);
-        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
-        blockPos = blockPos.add(0, 0, 9);
-        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
-        blockPos = blockPos.add(-13, 0, 0);
-        worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
+        BlockPos blockPos = pos;
+
+        for(int[] angle : angles){
+            blockPos = blockPos.add(angle[0], 0, angle[1]);
+
+            System.err.println(worldIn.getBlockState(blockPos).getBlock() + " " + blockPos);
+            if(!worldIn.getBlockState(blockPos).isSolid()) {
+                worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
+            }
+        }
     }
 }

@@ -93,7 +93,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
             for(int x = 0; x < 13; x++){
                 int finalX = x;
                 int finalY = y;
-                addButton(new FieldButton(
+                addButton(new FieldButton(selectedTool,
                         guiLeft+xStart+x*16,
                         guiTop+yStart+y*16,
                         0,
@@ -101,7 +101,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                         FIELD,
                         button -> {
                             ((FieldButton)button).setTexture(selectedTool);
-                            boardTileEntity.updateBoard(selectedTool, finalX, finalY);
+                            ((FieldButton)button).setCell(boardTileEntity.updateBoard(selectedTool, finalX, finalY));
                         }
                 ));
             }

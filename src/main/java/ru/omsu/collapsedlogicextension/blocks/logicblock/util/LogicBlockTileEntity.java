@@ -137,8 +137,8 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
     }
 
     public ITextComponent buildScheme(LogicBoardEntity entity) {
-        //TODO: реализовать строительство схемы в зависимости от BlockState блока (чтобы красиво)
-        BlockPos pos = this.pos.east().south();
+        //TODO: реализовать строительство схемы в зависимости от BlockState блока
+        BlockPos pos = this.pos.offset(Direction.SOUTH).east().south();
         for (int y = 0; y < 9; y++) {
             BlockPos anotherPos = pos;
             for (int x = 0; x < 13; x++) {
@@ -150,7 +150,7 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
             }
             pos = pos.south();
         }
-        pos = this.pos.east().south();
+        pos = this.pos.offset(Direction.SOUTH).east().south();
         for (int y = 0; y < 9; y++) {
             BlockPos anotherPos = pos;
             for (int x = 0; x < 13; x++) {

@@ -1,10 +1,14 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.util.board;
 
+import net.minecraft.block.Block;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.gui.Tool;
 
 public abstract class Cell {
 
-    protected int x, y;
+    //TODO весь enum Tool перенести вот сюда, таким образом мы избавимся от енума
+    protected int x, y; //координаты поля
+    protected Block block; //блок который пародирует клетка
+    protected int xTex, yTex; //координаты клетки поля на атласе
     protected Tool type;
 
     public Cell(int x, int y){
