@@ -1,7 +1,5 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.util.board;
 
-import net.minecraft.client.gui.widget.button.ImageButton;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +9,7 @@ public class Wire extends Cell {
 
     private Map<Direction, Boolean> directions;
 
-    public Wire(int x, int y){
+    public Wire(int x, int y) {
         super(x, y);
         directions = new HashMap<>(4);
     }
@@ -32,12 +30,12 @@ public class Wire extends Cell {
         directions.replace(to, false);
     }
 
-    public void addDirection(Direction direction){
+    public void addDirection(Direction direction) {
         directions.put(direction, false);
     }
 
-    //TODO: прописать
-    public void removeDirection(Direction direction){
+    // TODO: прописать
+    public void removeDirection(Direction direction) {
         directions.remove(direction);
     }
 

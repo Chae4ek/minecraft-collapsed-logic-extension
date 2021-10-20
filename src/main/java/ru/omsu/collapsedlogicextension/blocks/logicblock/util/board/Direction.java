@@ -1,14 +1,14 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.util.board;
 
 public enum Direction {
-    NORTH(0),
-    WEST(3),
-    EAST(1),
-    SOUTH(2);
+    UP(0),
+    RIGHT(1),
+    DOWN(2),
+    LEFT(3);
 
-    private int meta;
+    private final int meta;
 
-    Direction(int meta){
+    Direction(final int meta) {
         this.meta = meta;
     }
 

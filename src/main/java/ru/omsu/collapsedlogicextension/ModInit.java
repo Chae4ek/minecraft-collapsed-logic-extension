@@ -169,12 +169,7 @@ public class ModInit {
                 LogicBlockContainer::new,
                 LogicBlockScreen::new,
                 LogicBlockTileEntity::new),
-        MARKUP("markup",
-                null,
-                Markup::new,
-                null,
-                null,
-                null);
+        MARKUP("markup", null, Markup::new, null, null, null);
 
         /** Регистрируемое имя должно совпадать со всеми файлами ресурсов */
         private final String registryName;

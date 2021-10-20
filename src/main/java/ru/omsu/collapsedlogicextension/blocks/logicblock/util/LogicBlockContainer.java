@@ -30,7 +30,6 @@ public class LogicBlockContainer extends Container {
 
         // Save Slot
         addSlot(new SlotItemHandler(tile.getInventory(), 0, 15, 168));
-
     }
 
     // Client Constructor

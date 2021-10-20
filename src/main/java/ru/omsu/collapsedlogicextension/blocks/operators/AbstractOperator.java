@@ -13,6 +13,4 @@ public class AbstractOperator extends RedstoneDiodeBlock {
     protected int getDelay(BlockState state) {
         return 0;
     }
-
-
 }

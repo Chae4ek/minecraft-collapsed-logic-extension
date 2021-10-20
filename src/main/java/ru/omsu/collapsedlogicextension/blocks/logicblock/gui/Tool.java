@@ -2,17 +2,9 @@ package ru.omsu.collapsedlogicextension.blocks.logicblock.gui;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Cell;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.EmptyCell;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Wire;
-
-import java.util.function.Supplier;
 
 public enum Tool {
-    /**
-     * первое поле это идентификатор
-     * второе и третье это координаты на атласе
-     */
+    /** первое поле это идентификатор второе и третье это координаты на атласе */
     ERASER(null, "ERASER", 0),
     OPERATOR_AND(Blocks.REDSTONE_WIRE, "AND", 17),
     OPERATOR_OR(Blocks.REDSTONE_WIRE, "OR", 34),
@@ -24,7 +16,8 @@ public enum Tool {
     private final String type;
     private final Block block;
     private final int xText;
-    Tool(Block block, String type, int xText){
+
+    Tool(Block block, String type, int xText) {
         this.type = type;
         this.xText = xText;
         this.block = block;

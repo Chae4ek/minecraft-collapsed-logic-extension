@@ -1,6 +1,7 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import java.awt.Color;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,8 +13,6 @@ import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockContaine
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockTileEntity;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
 
-import java.awt.*;
-
 /** Отрисовка GUI блока */
 public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
 
@@ -24,7 +23,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     private final LogicBlockTileEntity tileEntity;
     private ITextComponent buildSchemeStatus = new StringTextComponent("");
 
-    private LogicBoardEntity boardTileEntity; //логическая сущность 2д доски
+    private final LogicBoardEntity boardTileEntity; // логическая сущность 2д доски
 
     Tool selectedTool = Tool.ERASER;
 
@@ -40,7 +39,6 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
 
         tileEntity = screenContainer.getTileEntity();
         boardTileEntity = new LogicBoardEntity();
-
     }
 
     @Override
@@ -70,7 +68,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
 
         int xTool = 0;
 
-        for(Tool tool : Tool.values()){
+        for (final Tool tool : Tool.values()) {
             addButton(
                     new ImageButton(
                             guiLeft + 225,
@@ -83,27 +81,31 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                             TEXTURE,
                             button -> selectedTool = tool));
             i++;
-            xTool+=19;
+            xTool += 19;
         }
 
-        int xStart = 5;
-        int yStart = 18;
+        final int xStart = 5;
+        final int yStart = 18;
 
-        for(int y = 0; y < 9; y++){
-            for(int x = 0; x < 13; x++){
-                int finalX = x;
-                int finalY = y;
-                addButton(new FieldButton(selectedTool,
-                        guiLeft+xStart+x*16,
-                        guiTop+yStart+y*16,
-                        0,
-                        0,
-                        FIELD,
-                        button -> {
-                            ((FieldButton)button).setTexture(selectedTool);
-                            ((FieldButton)button).setCell(boardTileEntity.updateBoard(selectedTool, finalX, finalY));
-                        }
-                ));
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 13; x++) {
+                final int finalX = x;
+                final int finalY = y;
+                addButton(
+                        new FieldButton(
+                                selectedTool,
+                                guiLeft + xStart + x * 16,
+                                guiTop + yStart + y * 16,
+                                0,
+                                0,
+                                FIELD,
+                                button -> {
+                                    ((FieldButton) button).setTexture(selectedTool);
+                                    ((FieldButton) button)
+                                            .setCell(
+                                                    boardTileEntity.updateBoard(
+                                                            selectedTool, finalX, finalY));
+                                }));
             }
         }
     }
