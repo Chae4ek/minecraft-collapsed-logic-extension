@@ -10,6 +10,9 @@ import net.minecraft.util.text.StringTextComponent;
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockContainer;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockTileEntity;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Cell;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Direction;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.EmptyCell;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
 
 import java.awt.*;
@@ -24,7 +27,11 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     private final LogicBlockTileEntity tileEntity;
     private ITextComponent buildSchemeStatus = new StringTextComponent("");
 
-    private LogicBoardEntity boardTileEntity; //логическая сущность 2д доски
+    private LogicBoardEntity boardTileEntity;
+
+    private int xOut, yOut; //координаты аутпута
+
+    Cell selected;
 
     Tool selectedTool = Tool.ERASER;
 
@@ -41,6 +48,9 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
         tileEntity = screenContainer.getTileEntity();
         boardTileEntity = new LogicBoardEntity();
 
+        this.xOut = -1;
+        this.yOut = -1;
+
     }
 
     @Override
@@ -54,6 +64,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     @Override
     protected void init() {
         super.init();
+        //uploader
         addButton(
                 new ImageButton(
                         guiLeft + 34,
@@ -70,6 +81,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
 
         int xTool = 0;
 
+        //tools
         for(Tool tool : Tool.values()){
             addButton(
                     new ImageButton(
@@ -86,22 +98,43 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
             xTool+=19;
         }
 
+        //activator/deactivator
+        addButton(
+                new ImageButton(
+                        guiLeft+230,
+                        guiTop+167,
+                        20,
+                        18,
+                        155,
+                        193,
+                        19,
+                        TEXTURE,
+                        button -> boardTileEntity.activateScheme(xOut, yOut)
+                        ));
+
         int xStart = 5;
         int yStart = 18;
 
+        //field
         for(int y = 0; y < 9; y++){
             for(int x = 0; x < 13; x++){
                 int finalX = x;
                 int finalY = y;
                 addButton(new FieldButton(selectedTool,
+                        finalX,
+                        finalY,
                         guiLeft+xStart+x*16,
                         guiTop+yStart+y*16,
                         0,
                         0,
                         FIELD,
                         button -> {
+                            if(selectedTool == Tool.OPERATOR_INPUT){
+                                xOut = finalX;
+                                yOut = finalY;
+                            }
                             ((FieldButton)button).setTexture(selectedTool);
-                            ((FieldButton)button).setCell(boardTileEntity.updateBoard(selectedTool, finalX, finalY));
+                            boardTileEntity.updateBoard(selectedTool, finalX, finalY);
                         }
                 ));
             }

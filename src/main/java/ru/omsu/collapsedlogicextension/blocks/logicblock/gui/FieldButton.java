@@ -3,12 +3,10 @@ package ru.omsu.collapsedlogicextension.blocks.logicblock.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Cell;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Direction;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Wire;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
 
 import java.util.Map;
 
@@ -16,11 +14,14 @@ import java.util.Map;
  * где угодно на атласе*/
 public class FieldButton extends Button {
     private final ResourceLocation resourceLocation;
+
+    private int xField, yField;
+
     private int xTexStart;
     private int yTexStart;
     private final int textureWidth;
     private final int textureHeight;
-    private Cell cell;
+
     private Tool tool;
 
     /**
@@ -29,7 +30,7 @@ public class FieldButton extends Button {
      * @param xTexStartIn координата на атласе
      * @param yTexStartIn координата на атласе
      * */
-    public FieldButton(Tool tool, int xIn, int yIn, int xTexStartIn, int yTexStartIn,
+    public FieldButton(Tool tool, int xField, int yField, int xIn, int yIn, int xTexStartIn, int yTexStartIn,
                        ResourceLocation resourceLocationIn, Button.IPressable onPressIn) {
         super(xIn, yIn, 16, 16, "", onPressIn);
         this.textureWidth = 256;
@@ -38,11 +39,10 @@ public class FieldButton extends Button {
         this.yTexStart = yTexStartIn;
         this.resourceLocation = resourceLocationIn;
 
-        this.tool = tool;
-    }
+        this.xField = xField;
+        this.yField = yField;
 
-    public void setCell(Cell cell) {
-        this.cell = cell;
+        this.tool = tool;
     }
 
     public void setTexture(Tool tool){
@@ -68,13 +68,12 @@ public class FieldButton extends Button {
         int y = this.yTexStart;
         if (this.isHovered()) {
             //TODO: сделать адекватный hover
-            x += 0;
+            //x += 0;
         }
 
         blit(this.x, this.y, (float)x, (float)y, this.width, this.height, this.textureWidth, this.textureHeight);
-        if(cell!=null && tool!=null &&
-                tool == Tool.LOGIC_WIRE && cell.getType() == Tool.LOGIC_WIRE){
-            renderWire((Wire) cell);
+        if(tool!=null && tool == Tool.LOGIC_WIRE){
+            renderWire(xField, yField);
         }
         RenderSystem.enableDepthTest();
     }
@@ -83,12 +82,21 @@ public class FieldButton extends Button {
     @Override
     public void playDownSound(SoundHandler p_playDownSound_1_) {}
 
-    public void renderWire(Wire wire){
-        for(Map.Entry<Direction, Boolean> entry : wire.getDirections().entrySet()){
+    public void renderWire(int x, int y){
+
+        Map<Direction, Boolean> directionMap = getDirections(x, y);
+
+        for(Map.Entry<Direction, Boolean> entry : directionMap.entrySet()){
             blit(this.x, this.y, tool.getX()+17+(entry.getValue() ? 17 : 0),
                     entry.getKey().getMeta()*17,
                     this.width, this.height,
                     this.textureWidth, this.textureHeight);
         }
     }
+
+    private Map<Direction, Boolean> getDirections(int x, int y){
+        return LogicBoardEntity.getDirections(x, y);
+    }
+
+
 }

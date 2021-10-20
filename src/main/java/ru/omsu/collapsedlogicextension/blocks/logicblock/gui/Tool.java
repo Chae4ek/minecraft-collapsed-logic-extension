@@ -13,13 +13,15 @@ public enum Tool {
      * первое поле это идентификатор
      * второе и третье это координаты на атласе
      */
+    //TODO убрать все это в классы
     ERASER(null, "ERASER", 0),
     OPERATOR_AND(Blocks.REDSTONE_WIRE, "AND", 17),
     OPERATOR_OR(Blocks.REDSTONE_WIRE, "OR", 34),
     OPERATOR_XOR(Blocks.REDSTONE_WIRE, "XOR", 51),
     OPERATOR_NOT(Blocks.REDSTONE_WIRE, "NOT", 68),
     LOGIC_WIRE(Blocks.REDSTONE_WIRE, "WIRE", 85),
-    ROTATION(null, "ROTATION", 0);
+    ROTATION(null, "ROTATION", 0),
+    OPERATOR_INPUT(null, "STARTER", 136);
 
     private final String type;
     private final Block block;

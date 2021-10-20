@@ -17,14 +17,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.ModInit.ModObjectEnum;
-import ru.omsu.collapsedlogicextension.blocks.Markup;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.ExampleItemHandler;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockTileEntity;
 
@@ -93,18 +91,6 @@ public class LogicBlock extends Block {
                 ((LogicBlockTileEntity) tile).setCustomName(stack.getDisplayName());
             }
         }
-        /**тут добавляется разметка*/
-        Markup markup = new Markup();
-
-        BlockPos blockPos = pos;
-
-        for(int[] angle : angles){
-            blockPos = blockPos.add(angle[0], 0, angle[1]);
-
-            if(worldIn.getBlockState(blockPos).getBlock() == Blocks.AIR) {
-                worldIn.setBlockState(blockPos, markup.getDefaultState());
-            }
-        }
     }
     @Override
     public boolean hasComparatorInputOverride(final BlockState state) {
@@ -159,17 +145,6 @@ public class LogicBlock extends Block {
 
         if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
             worldIn.removeTileEntity(pos);
-        }
-        /**тут убирается разметка*/
-        BlockPos blockPos = pos;
-
-        for(int[] angle : angles){
-            blockPos = blockPos.add(angle[0], 0, angle[1]);
-
-            System.err.println(worldIn.getBlockState(blockPos).getBlock() + " " + blockPos);
-            if(!worldIn.getBlockState(blockPos).isSolid()) {
-                worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState());
-            }
         }
     }
 }

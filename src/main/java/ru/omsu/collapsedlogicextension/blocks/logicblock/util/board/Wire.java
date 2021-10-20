@@ -16,20 +16,16 @@ public class Wire extends Cell {
         directions = new HashMap<>(4);
     }
 
-    public Wire() {
-        this(0, 0);
-    }
-
     @Override
-    public void activate(Direction from, Direction to) {
-        directions.replace(from, true);
-        directions.replace(to, true);
+    public void activate(Direction from) {
+        for(Map.Entry<Direction, Boolean> entry : directions.entrySet()){
+            directions.replace(entry.getKey(), true);
+        }
     }
 
     @Override
     public void deactivate(Direction from, Direction to) {
         directions.replace(from, false);
-        directions.replace(to, false);
     }
 
     public void addDirection(Direction direction){
@@ -40,6 +36,8 @@ public class Wire extends Cell {
     public void removeDirection(Direction direction){
         directions.remove(direction);
     }
+
+    public void removeAllDirections() {directions.clear();}
 
     public Map<Direction, Boolean> getDirections() {
         return directions;

@@ -23,8 +23,7 @@ public abstract class Accumulator extends Cell {
     public void deactivate(Direction from, Direction to) {
         inputs.replace(from, false);
     }
-    /**по часовой на 90 градусов*/
-    public void rotate(){
 
-    }
+    /**по часовой на 90 градусов*/
+    public void rotate(){}
 }
