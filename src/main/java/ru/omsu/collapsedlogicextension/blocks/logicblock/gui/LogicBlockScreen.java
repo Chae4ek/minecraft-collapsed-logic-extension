@@ -1,19 +1,19 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockContainer;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.LogicBlockTileEntity;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Cell;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Direction;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.EmptyCell;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.State;
 
 import java.awt.*;
 
@@ -25,15 +25,14 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     private static final ResourceLocation FIELD =
             new ResourceLocation(ModInit.MOD_ID, "textures/gui/board/field.png");
     private final LogicBlockTileEntity tileEntity;
-    private ITextComponent buildSchemeStatus = new StringTextComponent("");
 
     private LogicBoardEntity boardTileEntity;
 
-    private int xOut, yOut; //координаты аутпута
+    private int xOut, yOut;
 
-    Cell selected;
+    private Tool currentTool = Tool.ERASER;
 
-    Tool selectedTool = Tool.ERASER;
+    private State currentState = null;
 
     public LogicBlockScreen(
             final LogicBlockContainer screenContainer,
@@ -64,18 +63,6 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     @Override
     protected void init() {
         super.init();
-        //uploader
-        addButton(
-                new ImageButton(
-                        guiLeft + 34,
-                        guiTop + 167,
-                        20,
-                        18,
-                        0,
-                        194,
-                        19,
-                        TEXTURE,
-                        button -> buildSchemeStatus = tileEntity.buildScheme(boardTileEntity)));
 
         int i = 0;
 
@@ -93,24 +80,10 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                             193,
                             19,
                             TEXTURE,
-                            button -> selectedTool = tool));
+                            button -> currentTool = tool));
             i++;
             xTool+=19;
         }
-
-        //activator/deactivator
-        addButton(
-                new ImageButton(
-                        guiLeft+230,
-                        guiTop+167,
-                        20,
-                        18,
-                        155,
-                        193,
-                        19,
-                        TEXTURE,
-                        button -> boardTileEntity.activateScheme(xOut, yOut)
-                        ));
 
         int xStart = 5;
         int yStart = 18;
@@ -120,7 +93,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
             for(int x = 0; x < 13; x++){
                 int finalX = x;
                 int finalY = y;
-                addButton(new FieldButton(selectedTool,
+                addButton(new FieldButton(
                         finalX,
                         finalY,
                         guiLeft+xStart+x*16,
@@ -129,24 +102,39 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                         0,
                         FIELD,
                         button -> {
-                            if(selectedTool == Tool.OPERATOR_INPUT){
-                                xOut = finalX;
-                                yOut = finalY;
+                            if(currentTool!=Tool.ROTATION) {
+                                ((FieldButton) button).setTexture(boardTileEntity.updateBoard(currentTool, finalX, finalY));
                             }
-                            ((FieldButton)button).setTexture(selectedTool);
-                            boardTileEntity.updateBoard(selectedTool, finalX, finalY);
+                            else{
+                                boardTileEntity.rotate(finalX, finalY);
+                                ((FieldButton)button).rotate();
+                            }
                         }
                 ));
             }
         }
+
+        //activateScheme
+        addButton(
+                new ImageButton(
+                        guiLeft-13,
+                        guiTop+81,
+                        21,
+                        18,
+                        155,
+                        193,
+                        19,
+                        TEXTURE,
+                        (button) -> boardTileEntity.activateScheme()
+                )
+        );
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(final int mouseX, final int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         font.drawString(title.getFormattedText(), 8.0f, 8.0f, 0x404040);
-        font.drawString(buildSchemeStatus.getFormattedText(), 57, 170, 0x404040);
-        font.drawStringWithShadow(selectedTool.getType(), 150, 7, Color.MAGENTA.getRGB());
+        font.drawStringWithShadow(currentTool.getConstructor().get().getType(), 150, 7, Color.RED.getRGB());
     }
 
     @Override
@@ -155,4 +143,5 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
         super.render(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
     }
+
 }

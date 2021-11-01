@@ -1,45 +1,72 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.util.board;
 
-import net.minecraft.client.gui.widget.button.ImageButton;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class Wire extends Cell {
+public class Wire implements State {
 
-    boolean isActivated;
+    private boolean isActive;
 
-    private Map<Direction, Boolean> directions;
+    private Map<Integer, Boolean> directions;
 
-    public Wire(int x, int y){
-        super(x, y);
+    public Wire() {
+        this.isActive = false;
         directions = new HashMap<>(4);
     }
 
     @Override
     public void activate(Direction from) {
-        for(Map.Entry<Direction, Boolean> entry : directions.entrySet()){
-            directions.replace(entry.getKey(), true);
+        isActive = true;
+        for(Map.Entry<Integer, Boolean> entry : directions.entrySet()){
+            entry.setValue(true);
         }
     }
 
     @Override
-    public void deactivate(Direction from, Direction to) {
-        directions.replace(from, false);
+    public void deactivate(Direction from) {
+        isActive = false;
+        for(Map.Entry<Integer, Boolean> entry : directions.entrySet()){
+            entry.setValue(false);
+        }
     }
 
-    public void addDirection(Direction direction){
-        directions.put(direction, false);
+    @Override
+    public void addDirection(Direction direction) {
+        directions.put(direction.getMeta(), isActive);
     }
 
-    //TODO: прописать
-    public void removeDirection(Direction direction){
-        directions.remove(direction);
+    @Override
+    public void removeDirection(Direction direction) {
+        directions.remove(direction.getMeta());
     }
 
-    public void removeAllDirections() {directions.clear();}
-
-    public Map<Direction, Boolean> getDirections() {
+    @Override
+    public Map<Integer, Boolean> getDirections() {
         return directions;
     }
+
+    @Override
+    public int getXTex() {
+        return 85;
+    }
+
+    @Override
+    public String getType() {
+        return "WIRE";
+    }
+
+    @Override
+    public boolean isConnectableFrom(Direction direction) { return true; }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isActiveAt(Direction direction) {
+        return isActive;
+    }
+
 }
+

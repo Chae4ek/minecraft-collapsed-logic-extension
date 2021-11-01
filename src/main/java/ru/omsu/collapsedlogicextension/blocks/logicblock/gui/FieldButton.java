@@ -1,12 +1,15 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Direction;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
+
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Accumulator;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Cell;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Wire;
 
 import java.util.Map;
 
@@ -22,7 +25,7 @@ public class FieldButton extends Button {
     private final int textureWidth;
     private final int textureHeight;
 
-    private Tool tool;
+    private Cell cell;
 
     /**
      * @param xIn координата на гуи
@@ -30,7 +33,7 @@ public class FieldButton extends Button {
      * @param xTexStartIn координата на атласе
      * @param yTexStartIn координата на атласе
      * */
-    public FieldButton(Tool tool, int xField, int yField, int xIn, int yIn, int xTexStartIn, int yTexStartIn,
+    public FieldButton(int xField, int yField, int xIn, int yIn, int xTexStartIn, int yTexStartIn,
                        ResourceLocation resourceLocationIn, Button.IPressable onPressIn) {
         super(xIn, yIn, 16, 16, "", onPressIn);
         this.textureWidth = 256;
@@ -42,22 +45,25 @@ public class FieldButton extends Button {
         this.xField = xField;
         this.yField = yField;
 
-        this.tool = tool;
+        this.cell = new Cell();
+
     }
 
-    public void setTexture(Tool tool){
-        if(tool == Tool.ROTATION){
+    public void setTexture(Cell cell){
+        if(cell.getState() == null){
             rotate();
         }
         else {
-            this.xTexStart = tool.getX();
+            this.xTexStart = cell.getState().getXTex();
             this.yTexStart = 0;
+            this.cell = cell;
         }
-        this.tool = tool;
     }
 
     public void rotate(){
-        yTexStart = (yTexStart + 17) % 68;
+        if(cell.getState() instanceof Accumulator) {
+            yTexStart = (yTexStart + 17) % 68;
+        }
     }
 
     public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
@@ -70,10 +76,12 @@ public class FieldButton extends Button {
             //TODO: сделать адекватный hover
             //x += 0;
         }
-
+        if (cell.getState() instanceof Wire && cell.getState().isActive()){
+            y += 17;
+        }
         blit(this.x, this.y, (float)x, (float)y, this.width, this.height, this.textureWidth, this.textureHeight);
-        if(tool!=null && tool == Tool.LOGIC_WIRE){
-            renderWire(xField, yField);
+        if(cell.getState() instanceof Wire){
+            renderWires();
         }
         RenderSystem.enableDepthTest();
     }
@@ -82,21 +90,17 @@ public class FieldButton extends Button {
     @Override
     public void playDownSound(SoundHandler p_playDownSound_1_) {}
 
-    public void renderWire(int x, int y){
+    private void renderWires(){
 
-        Map<Direction, Boolean> directionMap = getDirections(x, y);
+        Map<Integer, Boolean> directionMap = cell.getState().getDirections();
 
-        for(Map.Entry<Direction, Boolean> entry : directionMap.entrySet()){
-            blit(this.x, this.y, tool.getX()+17+(entry.getValue() ? 17 : 0),
-                    entry.getKey().getMeta()*17,
+        for(Map.Entry<Integer, Boolean> entry : directionMap.entrySet()){
+            blit(this.x, this.y, xTexStart+17+(entry.getValue() ? 17 : 0),
+                    entry.getKey()*17,
                     this.width, this.height,
                     this.textureWidth, this.textureHeight);
         }
-    }
 
-    private Map<Direction, Boolean> getDirections(int x, int y){
-        return LogicBoardEntity.getDirections(x, y);
     }
-
 
 }

@@ -32,15 +32,8 @@ public class LogicBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private final int[][] angles = new int[4][2];
-
     public LogicBlock() {
         super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE));
-
-        angles[0] = new int[]{1, 1};
-        angles[1] = new int[]{0, 9};
-        angles[2] = new int[]{13, 0};
-        angles[3] = new int[]{0, -9};
 
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }

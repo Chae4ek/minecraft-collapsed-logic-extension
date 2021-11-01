@@ -135,33 +135,4 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
         return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(
                 cap, LazyOptional.of(() -> inventory));
     }
-
-    public ITextComponent buildScheme(LogicBoardEntity entity) {
-        //TODO: реализовать строительство схемы в зависимости от BlockState блока
-        BlockPos pos = this.pos.offset(Direction.SOUTH).east().south();
-        for (int y = 0; y < 9; y++) {
-            BlockPos anotherPos = pos;
-            for (int x = 0; x < 13; x++) {
-                if (world.getBlockState(anotherPos.down()).getBlock() == Blocks.AIR || world.getBlockState(anotherPos).isSolid()
-                        || world.getBlockState(anotherPos).isTransparent()) {
-                    return new StringTextComponent("Placing problem at (" + anotherPos.getX() + " ," + anotherPos.getZ() + ")");
-                }
-                anotherPos = anotherPos.east();
-            }
-            pos = pos.south();
-        }
-        pos = this.pos.offset(Direction.SOUTH).east().south();
-        for (int y = 0; y < 9; y++) {
-            BlockPos anotherPos = pos;
-            for (int x = 0; x < 13; x++) {
-                Block block = entity.getBlock(x, y);
-                if(block!=null) {
-                    world.setBlockState(anotherPos, block.getDefaultState());
-                }
-                anotherPos = anotherPos.east();
-            }
-            pos = pos.south();
-        }
-        return new StringTextComponent("Operation complete!");
-    }
 }
