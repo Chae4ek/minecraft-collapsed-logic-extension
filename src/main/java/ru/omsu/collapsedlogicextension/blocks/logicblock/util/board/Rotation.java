@@ -1,6 +1,6 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.util.board;
 
-public class EmptyCell implements State{
+public class Rotation implements State{
 
     @Override
     public int getXTex() {
@@ -9,7 +9,7 @@ public class EmptyCell implements State{
 
     @Override
     public String getType() {
-        return "ERASER";
+        return "Rotation";
     }
 
 }

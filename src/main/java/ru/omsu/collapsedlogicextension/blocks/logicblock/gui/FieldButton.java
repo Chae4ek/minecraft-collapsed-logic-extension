@@ -1,110 +1,106 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
+
+import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Accumulator;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Cell;
-import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Direction;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.Wire;
 
-/**
- * Отличие этого класса от ImageButton в том, что координату текстуры наведенной кнопки мы можем
- * ловить где угодно на атласе
- */
+import java.util.Map;
+
+/**Отличие этого класса от ImageButton в том, что координату текстуры наведенной кнопки мы можем ловить
+ * где угодно на атласе*/
 public class FieldButton extends Button {
     private final ResourceLocation resourceLocation;
+
+    private int xField, yField;
+
     private int xTexStart;
     private int yTexStart;
     private final int textureWidth;
     private final int textureHeight;
+
     private Cell cell;
-    private Tool tool;
 
     /**
      * @param xIn координата на гуи
      * @param yIn координата на гуи
      * @param xTexStartIn координата на атласе
      * @param yTexStartIn координата на атласе
-     */
-    public FieldButton(
-            final Tool tool,
-            final int xIn,
-            final int yIn,
-            final int xTexStartIn,
-            final int yTexStartIn,
-            final ResourceLocation resourceLocationIn,
-            final Button.IPressable onPressIn) {
+     * */
+    public FieldButton(int xField, int yField, int xIn, int yIn, int xTexStartIn, int yTexStartIn,
+                       ResourceLocation resourceLocationIn, Button.IPressable onPressIn) {
         super(xIn, yIn, 16, 16, "", onPressIn);
-        textureWidth = 256;
-        textureHeight = 256;
-        xTexStart = xTexStartIn;
-        yTexStart = yTexStartIn;
-        resourceLocation = resourceLocationIn;
+        this.textureWidth = 256;
+        this.textureHeight = 256;
+        this.xTexStart = xTexStartIn;
+        this.yTexStart = yTexStartIn;
+        this.resourceLocation = resourceLocationIn;
 
-        this.tool = tool;
+        this.xField = xField;
+        this.yField = yField;
+
+        this.cell = new Cell();
+
     }
 
-    public void setCell(final Cell cell) {
-        this.cell = cell;
-    }
-
-    public void setTexture(final Tool tool) {
-        if (tool == Tool.ROTATION) {
+    public void setTexture(Cell cell){
+        if(cell.getState() == null){
             rotate();
-        } else {
-            xTexStart = tool.getX();
-            yTexStart = 0;
         }
-        this.tool = tool;
+        else {
+            this.xTexStart = cell.getState().getXTex();
+            this.yTexStart = 0;
+            this.cell = cell;
+        }
     }
 
-    public void rotate() {
-        yTexStart = (yTexStart + 17) % 68;
+    public void rotate(){
+        if(cell.getState() instanceof Accumulator) {
+            yTexStart = (yTexStart + 17) % 68;
+        }
     }
 
-    @Override
-    public void renderButton(
-            final int p_renderButton_1_,
-            final int p_renderButton_2_,
-            final float p_renderButton_3_) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bindTexture(resourceLocation);
+    public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+        Minecraft minecraft = Minecraft.getInstance();
+        minecraft.getTextureManager().bindTexture(this.resourceLocation);
         RenderSystem.disableDepthTest();
-        int x = xTexStart;
-        final int y = yTexStart;
-        if (isHovered()) {
-            // TODO: сделать адекватный hover
-            x += 0;
+        int x = this.xTexStart;
+        int y = this.yTexStart;
+        if (this.isHovered()) {
+            //TODO: сделать адекватный hover
+            //x += 0;
         }
-
-        blit(this.x, this.y, (float) x, (float) y, width, height, textureWidth, textureHeight);
-        if (cell != null
-                && tool != null
-                && tool == Tool.LOGIC_WIRE
-                && cell.getType() == Tool.LOGIC_WIRE) {
-            renderWire((Wire) cell);
+        if (cell.getState() instanceof Wire && cell.getState().isActive()){
+            y += 17;
+        }
+        blit(this.x, this.y, (float)x, (float)y, this.width, this.height, this.textureWidth, this.textureHeight);
+        if(cell.getState() instanceof Wire){
+            renderWires();
         }
         RenderSystem.enableDepthTest();
     }
 
-    /** звук не играем)) */
+    /**звук не играем))*/
     @Override
-    public void playDownSound(final SoundHandler p_playDownSound_1_) {}
+    public void playDownSound(SoundHandler p_playDownSound_1_) {}
 
-    public void renderWire(final Wire wire) {
-        for (final Map.Entry<Direction, Boolean> entry : wire.getDirections().entrySet()) {
-            blit(
-                    x,
-                    y,
-                    tool.getX() + 17 + (entry.getValue() ? 17 : 0),
-                    entry.getKey().getMeta() * 17,
-                    width,
-                    height,
-                    textureWidth,
-                    textureHeight);
+    private void renderWires(){
+
+        Map<Integer, Boolean> directionMap = cell.getState().getDirections();
+
+        for(Map.Entry<Integer, Boolean> entry : directionMap.entrySet()){
+            blit(this.x, this.y, xTexStart+17+(entry.getValue() ? 17 : 0),
+                    entry.getKey()*17,
+                    this.width, this.height,
+                    this.textureWidth, this.textureHeight);
         }
+
     }
+
 }

@@ -1,9 +1,9 @@
 package ru.omsu.collapsedlogicextension.blocks.logicblock.util;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import mcp.MethodsReturnNonnullByDefault;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -29,10 +29,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import ru.omsu.collapsedlogicextension.ModInit;
 import ru.omsu.collapsedlogicextension.ModInit.ModObjectEnum;
+import ru.omsu.collapsedlogicextension.blocks.logicblock.LogicBlock;
 import ru.omsu.collapsedlogicextension.blocks.logicblock.util.board.LogicBoardEntity;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class LogicBlockTileEntity extends TileEntity implements INamedContainerProvider {
 
     private final ExampleItemHandler inventory;
@@ -42,6 +41,7 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
         super(tileEntityTypeIn);
 
         inventory = new ExampleItemHandler(2);
+
     }
 
     public LogicBlockTileEntity() {
@@ -54,13 +54,22 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
         return new LogicBlockContainer(windowID, playerInv, this);
     }
 
+    public ITextComponent getName() {
+        return customName != null ? customName : getDefaultName();
+    }
+
     private ITextComponent getDefaultName() {
         return new TranslationTextComponent("container." + ModInit.MOD_ID + ".logic_block");
     }
 
     @Override
     public ITextComponent getDisplayName() {
-        return customName != null ? customName : getDefaultName();
+        return getName();
+    }
+
+    @Nullable
+    public ITextComponent getCustomName() {
+        return customName;
     }
 
     public void setCustomName(final ITextComponent name) {
@@ -73,9 +82,9 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
         if (compound.contains("CustomName", Constants.NBT.TAG_STRING)) {
             customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
-        // TODO: прочитать матрицу доски и передать в сущность доски
+        //TODO: прочитать матрицу доски и передать в сущность доски
         final NonNullList<ItemStack> inv =
-                NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
+                NonNullList.<ItemStack>withSize(inventory.getSlots(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, inv);
         inventory.setNonNullList(inv);
     }
@@ -86,7 +95,7 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
         if (customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
         }
-        // TODO: записать матрицу доски либо интов, либо стрингов
+        //TODO: записать матрицу доски либо интов, либо стрингов
         ItemStackHelper.saveAllItems(compound, inventory.toNonNullList());
 
         return compound;
@@ -125,40 +134,5 @@ public class LogicBlockTileEntity extends TileEntity implements INamedContainerP
     public <T> LazyOptional<T> getCapability(final Capability<T> cap, final Direction side) {
         return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(
                 cap, LazyOptional.of(() -> inventory));
-    }
-
-    public ITextComponent buildScheme(final LogicBoardEntity entity) {
-        // TODO: реализовать строительство схемы в зависимости от BlockState блока
-        BlockPos pos = this.pos.offset(Direction.SOUTH).east().south();
-        for (int y = 0; y < 9; y++) {
-            BlockPos anotherPos = pos;
-            for (int x = 0; x < 13; x++) {
-                if (world.getBlockState(anotherPos.down()).getBlock() == Blocks.AIR
-                        || world.getBlockState(anotherPos).isSolid()
-                        || world.getBlockState(anotherPos).isTransparent()) {
-                    return new StringTextComponent(
-                            "Placing problem at ("
-                                    + anotherPos.getX()
-                                    + " ,"
-                                    + anotherPos.getZ()
-                                    + ")");
-                }
-                anotherPos = anotherPos.east();
-            }
-            pos = pos.south();
-        }
-        pos = this.pos.offset(Direction.SOUTH).east().south();
-        for (int y = 0; y < 9; y++) {
-            BlockPos anotherPos = pos;
-            for (int x = 0; x < 13; x++) {
-                final Block block = entity.getBlock(x, y);
-                if (block != null) {
-                    world.setBlockState(anotherPos, block.getDefaultState());
-                }
-                anotherPos = anotherPos.east();
-            }
-            pos = pos.south();
-        }
-        return new StringTextComponent("Operation complete!");
     }
 }

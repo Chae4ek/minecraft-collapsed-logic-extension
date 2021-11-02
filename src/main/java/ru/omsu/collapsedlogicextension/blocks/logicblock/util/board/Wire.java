@@ -3,43 +3,70 @@ package ru.omsu.collapsedlogicextension.blocks.logicblock.util.board;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Wire extends Cell {
+public class Wire implements State {
 
-    boolean isActivated;
+    private boolean isActive;
 
-    private Map<Direction, Boolean> directions;
+    private Map<Integer, Boolean> directions;
 
-    public Wire(int x, int y) {
-        super(x, y);
+    public Wire() {
+        this.isActive = false;
         directions = new HashMap<>(4);
     }
 
-    public Wire() {
-        this(0, 0);
+    @Override
+    public void activate(Direction from) {
+        isActive = true;
+        for(Map.Entry<Integer, Boolean> entry : directions.entrySet()){
+            entry.setValue(true);
+        }
     }
 
     @Override
-    public void activate(Direction from, Direction to) {
-        directions.replace(from, true);
-        directions.replace(to, true);
+    public void deactivate(Direction from) {
+        isActive = false;
+        for(Map.Entry<Integer, Boolean> entry : directions.entrySet()){
+            entry.setValue(false);
+        }
     }
 
     @Override
-    public void deactivate(Direction from, Direction to) {
-        directions.replace(from, false);
-        directions.replace(to, false);
-    }
-
     public void addDirection(Direction direction) {
-        directions.put(direction, false);
+        directions.put(direction.getMeta(), isActive);
     }
 
-    // TODO: прописать
+    @Override
     public void removeDirection(Direction direction) {
-        directions.remove(direction);
+        directions.remove(direction.getMeta());
     }
 
-    public Map<Direction, Boolean> getDirections() {
+    @Override
+    public Map<Integer, Boolean> getDirections() {
         return directions;
     }
+
+    @Override
+    public int getXTex() {
+        return 85;
+    }
+
+    @Override
+    public String getType() {
+        return "WIRE";
+    }
+
+    @Override
+    public boolean isConnectableFrom(Direction direction) { return true; }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isActiveAt(Direction direction) {
+        return isActive;
+    }
+
 }
+
