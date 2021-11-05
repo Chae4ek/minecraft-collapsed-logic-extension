@@ -5,17 +5,22 @@ import static ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.boar
 import ru.omsu.collapsedlogicextension.util.api.Serializer;
 import ru.omsu.collapsedlogicextension.util.api.Serializer.Serializable;
 
-/** класс занимается логикой борды */
-public class LogicBoard implements Serializable {
+public class Board implements Serializable {
 
     private Cell[][] cells = new Cell[9][13];
+    private boolean schemeActive;
 
-    public LogicBoard() {
+    public Board() {
         for (int yPos = 0; yPos < 9; yPos++) {
             for (int xPos = 0; xPos < 13; xPos++) {
                 cells[yPos][xPos] = new Cell();
             }
         }
+    }
+
+    public boolean canConnectRedstone(final net.minecraft.util.Direction side) {
+        // TODO: сделать включение/отключение сторон блока
+        return true;
     }
 
     public Cell getCell(final int x, final int y) {
@@ -64,50 +69,35 @@ public class LogicBoard implements Serializable {
 
     /** начало в клетке (0, 4) */
     public void activateScheme() {
-        if (cells[4][0].getState().isActive()) {
-            cells[4][0].getState().deactivate(Direction.EAST);
-            deactivateNeighbors(0, 4);
-        } else {
-            cells[4][0].getState().activate(Direction.EAST);
-            activateNeighbors(0, 4);
-        }
-    }
-    /** метод рекурсивный */
-    private void activateNeighbors(final int x, final int y) {
-        for (final Direction direction : Direction.values()) {
-            if (notBorder(x + direction.getX(), y + direction.getY())) {
-                if (cells[y][x].getState().isConnectableFrom(direction)
-                        && cells[y + direction.getY()][x + direction.getX()]
-                                .getState()
-                                .isConnectableFrom(direction)
-                        && !cells[y + direction.getY()][x + direction.getX()]
-                                .getState()
-                                .isActiveAt(direction)) {
-                    cells[y + direction.getY()][x + direction.getX()]
-                            .getState()
-                            .activate(direction);
-                    activateNeighbors(x + direction.getX(), y + direction.getY());
-                }
+        schemeActive = !schemeActive;
+        activateNeighbors(0, 4, Direction.EAST, schemeActive);
+        for (int yPos = 0; yPos < 9; yPos++) {
+            for (int xPos = 0; xPos < 13; xPos++) {
+                cells[yPos][xPos].unmark();
             }
         }
     }
-    /** и этот */
-    private void deactivateNeighbors(final int x, final int y) {
+
+    /** метод рекурсивный */
+    private void activateNeighbors(
+            final int x, final int y, final Direction from, final boolean activeStatus) {
+        System.out.println(x + " " + y);
+        cells[y][x].getState().activate(from, activeStatus);
+        cells[y][x].mark();
         for (final Direction direction : Direction.values()) {
-            if (notBorder(x + direction.getX(), y + direction.getY())) {
-                if (cells[y][x].getState().isConnectableFrom(direction)
+            if (direction != oppositeOf(from)
+                    && notBorder(x + direction.getX(), y + direction.getY())) {
+
+                if (!cells[y + direction.getY()][x + direction.getX()].isMarked()
+                        && cells[y][x].getState().isConnectableFrom(direction)
                         && cells[y + direction.getY()][x + direction.getX()]
                                 .getState()
-                                .isConnectableFrom(direction)
-                        && cells[y + direction.getY()][x + direction.getX()]
-                                .getState()
-                                .isActiveAt(oppositeOf(direction))
-                        && cells[y][x].getState().isActiveAt(direction)) {
-                    cells[y + direction.getY()][x + direction.getX()]
-                            .getState()
-                            .deactivate(direction);
-                    deactivateNeighbors(x + direction.getX(), y + direction.getY());
-                    updateNeighbors(x + direction.getX(), y + direction.getY());
+                                .isConnectableFrom(oppositeOf(direction))) {
+                    activateNeighbors(
+                            x + direction.getX(),
+                            y + direction.getY(),
+                            direction,
+                            cells[y][x].getState().isActiveAt(oppositeOf(direction)));
                 }
             }
         }

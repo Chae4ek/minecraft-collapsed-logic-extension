@@ -5,9 +5,7 @@ import java.util.Map;
 
 public interface State {
 
-    default void activate(final Direction from) {}
-
-    default void deactivate(final Direction from) {}
+    default void activate(final Direction from, final boolean isActive) {}
 
     default void addDirection(final Direction direction) {}
 
@@ -18,14 +16,6 @@ public interface State {
     }
 
     default boolean isConnectableFrom(final Direction direction) {
-        return false;
-    }
-
-    default boolean isLogical() {
-        return false;
-    }
-
-    default boolean isActive() {
         return false;
     }
 

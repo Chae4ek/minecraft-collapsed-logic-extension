@@ -123,4 +123,13 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
             block.onBlockReplace(worldIn, pos, state, newState);
         }
     }
+
+    @Override
+    public boolean canConnectRedstone(
+            final BlockState state,
+            final IBlockReader world,
+            final BlockPos pos,
+            @Nullable final Direction side) {
+        return block.canConnectRedstone(world, pos, state, side);
+    }
 }

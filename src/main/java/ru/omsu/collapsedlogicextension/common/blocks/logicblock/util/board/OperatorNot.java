@@ -6,23 +6,12 @@ public class OperatorNot extends Accumulator {
         super();
         directions.put(output, true);
         directions.put(Direction.oppositeOf(output), false);
-        isOutputActive = true;
     }
 
     @Override
-    public void activate(final Direction from) {
-        directions.replace(from, true);
-        directions.replace(Direction.oppositeOf(from), false);
-        isOutputActive = false;
-        System.out.println("Activated " + directions);
-    }
-
-    @Override
-    public void deactivate(final Direction from) {
-        directions.replace(from, false);
-        directions.replace(Direction.oppositeOf(from), true);
-        isOutputActive = true;
-        System.out.println("Deactivated " + directions);
+    public void activate(final Direction from, final boolean isInputActive) {
+        directions.replace(from, isInputActive);
+        directions.replace(Direction.oppositeOf(from), !isInputActive);
     }
 
     @Override
@@ -36,7 +25,7 @@ public class OperatorNot extends Accumulator {
     }
 
     @Override
-    public boolean isConnectableFrom(final Direction direction) {
-        return directions.containsKey(direction);
+    public boolean isActiveAt(final Direction direction) {
+        return directions.get(direction);
     }
 }

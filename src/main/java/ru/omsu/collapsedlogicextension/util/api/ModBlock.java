@@ -1,10 +1,13 @@
 package ru.omsu.collapsedlogicextension.util.api;
 
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
@@ -80,6 +83,23 @@ public abstract class ModBlock<E extends ModBlock<E>> {
             final BlockPos pos,
             final BlockState state,
             final BlockState newState) {}
+
+    /** @return true, если блок может присоединиться к редстоуну */
+    public boolean canConnectRedstone(
+            final IBlockReader world,
+            final BlockPos pos,
+            final BlockState state,
+            @Nullable final Direction side) {
+        return side != null && state.canProvidePower();
+    }
+
+    /** @return tile entity этого объекта, если он есть, иначе крашнется игра */
+    @Unsafe
+    @SuppressWarnings("unchecked")
+    public final <T extends ModTileEntity<T>> T getModTileEntityForThis(
+            final IBlockReader world, final BlockPos pos) {
+        return ((TileEntityAdapter<T>) world.getTileEntity(pos)).tileEntity;
+    }
 
     /**
      * @return физический (майнкрафтовский) tile entity этого объекта, если он есть, иначе крашнется

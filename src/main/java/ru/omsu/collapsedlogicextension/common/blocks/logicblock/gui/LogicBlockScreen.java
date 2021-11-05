@@ -4,7 +4,7 @@ import java.awt.Color;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.ResourceLocation;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.LogicBlockTileEntity;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.LogicBoard;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Board;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Tool;
 import ru.omsu.collapsedlogicextension.init.ModInit;
 import ru.omsu.collapsedlogicextension.util.adapter.ContainerScreenAdapter;
@@ -19,16 +19,16 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
     private static final ResourceLocation FIELD_BUTTON_TEXTURE =
             new ResourceLocation(ModInit.MOD_ID, "textures/gui/board/field.png");
 
-    private final LogicBoard logicBoard;
+    private final Board board;
 
     // TODO: зачем это?
     // private final State currentState = null;
-    // TODO: перенести в logicBoard
+    // TODO: перенести в board
     private Tool currentTool = Tool.ERASER;
 
     public LogicBlockScreen(final ContainerScreenAdapter<LogicBlockScreen> containerScreenAdapter) {
         super(containerScreenAdapter, 256, 192);
-        logicBoard = this.<LogicBlockTileEntity>getModTileEntity().logicBoard;
+        board = this.<LogicBlockTileEntity>getModTileEntity().board;
     }
 
     @Override
@@ -74,14 +74,14 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
                                     if (currentTool != Tool.ROTATION) {
                                         ((FieldButton) button)
                                                 .setTexture(
-                                                        logicBoard.updateBoard(
+                                                        board.updateBoard(
                                                                 currentTool, finalX, finalY));
                                     } else {
-                                        logicBoard.rotate(finalX, finalY);
+                                        board.rotate(finalX, finalY);
                                         ((FieldButton) button).rotate();
                                     }
                                 });
-                fieldButton.setTexture(logicBoard.getCell(x, y));
+                fieldButton.setTexture(board.getCell(x, y));
                 addButton(fieldButton);
             }
         }
@@ -97,7 +97,7 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
                         193,
                         19,
                         GUI_BACKGROUND_TEXTURE,
-                        button -> logicBoard.activateScheme()));
+                        button -> board.activateScheme()));
     }
 
     @Override

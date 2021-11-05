@@ -5,9 +5,8 @@ import java.util.Map;
 
 public class Wire implements State {
 
-    private boolean isActive;
-
     private final Map<Integer, Boolean> directions;
+    private boolean isActive;
 
     public Wire() {
         isActive = false;
@@ -15,18 +14,10 @@ public class Wire implements State {
     }
 
     @Override
-    public void activate(final Direction from) {
-        isActive = true;
+    public void activate(final Direction from, final boolean isActive) {
+        this.isActive = isActive;
         for (final Map.Entry<Integer, Boolean> entry : directions.entrySet()) {
-            entry.setValue(true);
-        }
-    }
-
-    @Override
-    public void deactivate(final Direction from) {
-        isActive = false;
-        for (final Map.Entry<Integer, Boolean> entry : directions.entrySet()) {
-            entry.setValue(false);
+            entry.setValue(isActive);
         }
     }
 
@@ -58,11 +49,6 @@ public class Wire implements State {
     @Override
     public boolean isConnectableFrom(final Direction direction) {
         return true;
-    }
-
-    @Override
-    public boolean isActive() {
-        return isActive;
     }
 
     @Override

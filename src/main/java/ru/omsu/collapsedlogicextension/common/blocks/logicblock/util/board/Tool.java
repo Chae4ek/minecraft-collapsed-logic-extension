@@ -1,14 +1,6 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board;
 
 import java.util.function.Supplier;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.EmptyCell;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.OperatorAnd;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.OperatorNot;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.OperatorOr;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.OperatorXor;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Rotation;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.State;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Wire;
 
 public enum Tool {
     ERASER(EmptyCell::new),

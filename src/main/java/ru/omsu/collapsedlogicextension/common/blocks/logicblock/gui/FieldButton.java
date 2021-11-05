@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Accumulator;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Cell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Direction;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Wire;
 
 /**
@@ -80,7 +81,7 @@ public class FieldButton extends Button {
             // TODO: сделать адекватный hover
             // x += 0;
         }
-        if (cell.getState() instanceof Wire && cell.getState().isActive()) {
+        if (cell.getState() instanceof Wire && cell.getState().isActiveAt(Direction.NORTH)) {
             y += 17;
         }
         blit(this.x, this.y, (float) x, (float) y, width, height, textureWidth, textureHeight);

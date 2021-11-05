@@ -2,7 +2,6 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public abstract class Accumulator implements State {
 
@@ -19,7 +18,7 @@ public abstract class Accumulator implements State {
     @Override
     public void rotate() {
         output = Direction.rotate(output);
-
+        System.out.println(directions);
         final Map<Boolean, Direction> reversedMap = reverse(directions);
 
         for (final Map.Entry<Boolean, Direction> entry : reversedMap.entrySet()) {
@@ -31,45 +30,17 @@ public abstract class Accumulator implements State {
     }
 
     @Override
-    public void activate(final Direction from) {
-        if (from != output) {
-            directions.replace(from, true);
-        }
-    }
-
-    @Override
-    public void deactivate(final Direction from) {
-        if (from != output) {
-            directions.replace(from, false);
-        }
-    }
-
-    public boolean allInputsActive() {
-        for (final Map.Entry<Direction, Boolean> entry : directions.entrySet()) {
-            if (entry.getKey() != output && !entry.getValue()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean allInputsNotActive() {
-        for (final Map.Entry<Direction, Boolean> entry : directions.entrySet()) {
-            if (entry.getKey() != output && entry.getValue()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public boolean isConnectableFrom(final Direction direction) {
-        return direction != Direction.oppositeOf(output);
+        return directions.containsKey(direction);
     }
 
     @Override
-    public boolean isActive() {
-        return directions.containsValue(true);
+    public Map<Integer, Boolean> getDirections() {
+        final Map<Integer, Boolean> map = new HashMap<>();
+        for (final Map.Entry<Direction, Boolean> entry : directions.entrySet()) {
+            map.put(entry.getKey().getMeta(), entry.getValue());
+        }
+        return map;
     }
 
     @Override
@@ -77,13 +48,10 @@ public abstract class Accumulator implements State {
         return directions.get(direction);
     }
 
-    @Override
-    public boolean isLogical() {
-        return true;
-    }
-
-    private <T, V> Map<V, T> reverse(final Map<T, V> map) {
-        return map.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+    private <K, V> HashMap<V, K> reverse(final Map<K, V> map) {
+        final HashMap<V, K> rev = new HashMap<>();
+        for (final Map.Entry<K, V> entry : map.entrySet())
+            rev.put(entry.getValue(), entry.getKey());
+        return rev;
     }
 }
