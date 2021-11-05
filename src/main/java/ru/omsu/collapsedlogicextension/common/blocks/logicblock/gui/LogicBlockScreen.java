@@ -36,9 +36,6 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
 
     @Override
     public void init() {
-        final int guiLeft = getGuiLeftPosition();
-        final int guiTop = getGuiTopPosition();
-
         int i = 0;
         int xTool = 0;
 
@@ -46,8 +43,8 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
         for (final Tool tool : Tool.values()) {
             addButton(
                     new ImageButton(
-                            guiLeft + 225,
-                            guiTop + 18 + 18 * i,
+                            225,
+                            18 + 18 * i,
                             19,
                             18,
                             21 + xTool,
@@ -69,8 +66,8 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
                 final int finalY = y;
                 addButton(
                         new FieldButton(
-                                guiLeft + finalX,
-                                guiTop + finalY,
+                                finalX,
+                                finalY,
                                 xStart + x * 16,
                                 yStart + y * 16,
                                 0,
@@ -93,8 +90,8 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
         // activateScheme
         addButton(
                 new ImageButton(
-                        guiLeft - 13,
-                        guiTop + 81,
+                        -13,
+                        81,
                         21,
                         18,
                         155,

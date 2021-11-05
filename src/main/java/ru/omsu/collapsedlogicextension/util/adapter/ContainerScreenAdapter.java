@@ -34,14 +34,6 @@ public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
         containerScreen.init();
     }
 
-    public int getGuiLeftPosition() {
-        return guiLeft;
-    }
-
-    public int getGuiTopPosition() {
-        return guiTop;
-    }
-
     @Override
     protected void drawGuiContainerBackgroundLayer(
             final float partialTicks, final int mouseX, final int mouseY) {
@@ -69,6 +61,8 @@ public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
     }
 
     public void addNewButton(final Widget widget) {
+        widget.x += guiLeft;
+        widget.y += guiTop;
         addButton(widget);
     }
 }

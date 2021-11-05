@@ -29,16 +29,6 @@ public abstract class ModContainerScreen<E extends ModContainerScreen<E>> {
      */
     public abstract void init();
 
-    /** @return отступ слева для GUI */
-    public final int getGuiLeftPosition() {
-        return containerScreenAdapter.getGuiLeftPosition();
-    }
-
-    /** @return отступ сверху для GUI */
-    public final int getGuiTopPosition() {
-        return containerScreenAdapter.getGuiTopPosition();
-    }
-
     /** @return ширина GUI */
     public final int getWidth() {
         return width;
