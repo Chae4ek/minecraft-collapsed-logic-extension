@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.common.blocks.logicblock.gui;
+package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board;
 
 import java.util.function.Supplier;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.EmptyCell;

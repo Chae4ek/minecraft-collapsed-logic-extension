@@ -54,7 +54,7 @@ public class ContainerAdapter<E extends ModContainer<E>> extends Container {
      */
     @Unsafe
     @SuppressWarnings("unchecked")
-    private <T extends ModTileEntity<T>> TileEntityAdapter<T> getTileEntityAdapterForThis(
+    public <T extends ModTileEntity<T>> TileEntityAdapter<T> getTileEntityAdapterForThis(
             final PlayerInventory inventory, final PacketBuffer data) {
         if (tileEntityAdapter == null) {
             tileEntityAdapter =

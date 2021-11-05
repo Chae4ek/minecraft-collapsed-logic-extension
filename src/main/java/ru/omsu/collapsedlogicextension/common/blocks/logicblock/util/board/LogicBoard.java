@@ -2,19 +2,24 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board;
 
 import static ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board.Direction.oppositeOf;
 
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.gui.Tool;
+import ru.omsu.collapsedlogicextension.util.api.Serializer;
+import ru.omsu.collapsedlogicextension.util.api.Serializer.Serializable;
 
 /** класс занимается логикой борды */
-public class LogicBoardEntity {
+public class LogicBoard implements Serializable {
 
-    private static final Cell[][] cells = new Cell[9][13];
+    private Cell[][] cells = new Cell[9][13];
 
-    public LogicBoardEntity() {
+    public LogicBoard() {
         for (int yPos = 0; yPos < 9; yPos++) {
             for (int xPos = 0; xPos < 13; xPos++) {
                 cells[yPos][xPos] = new Cell();
             }
         }
+    }
+
+    public Cell getCell(final int x, final int y) {
+        return cells[y][x];
     }
 
     public Cell updateBoard(final Tool tool, final int x, final int y) {
@@ -106,5 +111,15 @@ public class LogicBoardEntity {
                 }
             }
         }
+    }
+
+    @Override
+    public String serialize() {
+        return Serializer.serialize(cells);
+    }
+
+    @Override
+    public void deserialize(final String data) {
+        cells = Serializer.deserialize(data, Cell[][].class);
     }
 }

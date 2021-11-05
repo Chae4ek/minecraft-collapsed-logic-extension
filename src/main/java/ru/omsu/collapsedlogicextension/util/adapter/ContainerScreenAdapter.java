@@ -9,6 +9,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
 import ru.omsu.collapsedlogicextension.util.api.ModContainerScreen;
+import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
+import ru.omsu.collapsedlogicextension.util.api.Unsafe;
 
 /** Перехватывает методы GUI клиента */
 @OnlyIn(Dist.CLIENT)
@@ -16,16 +18,25 @@ public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
         extends ContainerScreen<ContainerAdapter<?>> {
 
     private final E containerScreen;
+    private final ContainerAdapter<?> containerAdapter;
 
     public ContainerScreenAdapter(
             final ModObject<?, ?, ?, ?, E> modObject,
-            final ContainerAdapter<?> screenContainer,
+            final ContainerAdapter<?> containerAdapter,
             final PlayerInventory inv,
             final ITextComponent titleIn) {
-        super(screenContainer, inv, titleIn);
+        super(containerAdapter, inv, titleIn);
+        this.containerAdapter = containerAdapter;
         containerScreen = modObject.containerScreenFactory.create(this);
         xSize = containerScreen.getWidth();
         ySize = containerScreen.getHeight();
+    }
+
+    /** @return tile entity этого объекта, если он есть, иначе крашнется игра */
+    @Unsafe
+    @SuppressWarnings("unchecked")
+    public <T extends ModTileEntity<T>> T getModTileEntity() {
+        return (T) containerAdapter.getTileEntityAdapterForThis(null, null).tileEntity;
     }
 
     @Override

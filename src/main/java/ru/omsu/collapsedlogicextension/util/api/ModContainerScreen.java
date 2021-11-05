@@ -24,6 +24,12 @@ public abstract class ModContainerScreen<E extends ModContainerScreen<E>> {
         this.height = height;
     }
 
+    /** @return tile entity этого объекта, если он есть, иначе крашнется игра */
+    @Unsafe
+    public <T extends ModTileEntity<T>> T getModTileEntity() {
+        return containerScreenAdapter.getModTileEntity();
+    }
+
     /**
      * Вызывается при инициализации GUI. ДОЛЖЕН создавать элементы именно здесь, а не в конструкторе
      */
