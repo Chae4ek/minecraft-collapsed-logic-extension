@@ -1,37 +1,61 @@
-package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cells;
+package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
-import java.util.HashMap;
-import java.util.Map;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
 
-public class OperatorXor extends Accumulator {
+public class OperatorAnd extends CellState {
 
-    private Direction2D input1;
-    private Direction2D input2;
+    /*private final Direction2D input1;
+    private final Direction2D input2;
 
-    private boolean isFirstInputActive;
-    private boolean isSecondInputActive;
+    private final boolean isFirstInputActive;
+    private final boolean isSecondInputActive;*/
 
-    public OperatorXor() {
-        super();
-        input1 = Direction2D.RIGHT;
+    public OperatorAnd(final Cell parent) {
+        super(parent);
+        /*input1 = Direction2D.RIGHT;
         input2 = Direction2D.LEFT;
         isFirstInputActive = false;
-        isSecondInputActive = false;
+        isSecondInputActive = false;*/
     }
 
     @Override
+    public TextureRegion getTextureRegion() {
+        return null;
+    }
+
+    @Override
+    public CellState getRotated() {
+        return null;
+    }
+
+    @Override
+    public void activate(final Cell from, final Direction2D fromToThis) {}
+
+    @Override
+    public void deactivate(final Cell from, final Direction2D fromToThis) {}
+
+    @Override
+    public void deactivateAllForce() {}
+
+    @Override
+    public boolean isGenerator() {
+        return false;
+    }
+
+    /*@Override
     public void activate(final Direction2D from, final boolean isActive) {
         if (from == input1) {
             isFirstInputActive = isActive;
         } else if (from == input2) {
             isSecondInputActive = isActive;
         }
-        isOutputActive = isFirstInputActive ^ isSecondInputActive;
+        isOutputActive = isFirstInputActive && isSecondInputActive;
     }
 
     @Override
-    public void rotate() {
+    public void getRotated() {
         output = Direction2D.rotate(output);
         input1 = Direction2D.rotate(input1);
         input2 = Direction2D.rotate(input2);
@@ -63,11 +87,11 @@ public class OperatorXor extends Accumulator {
 
     @Override
     public int getXTex() {
-        return 51;
+        return 17;
     }
 
     @Override
     public String getType() {
-        return "OPERATOR XOR";
-    }
+        return "OPERATOR AND";
+    }*/
 }

@@ -1,6 +1,7 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools;
 
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
 
 public class Rotator implements Tool {
@@ -12,9 +13,8 @@ public class Rotator implements Tool {
     }
 
     @Override
-    public Cell apply(final Cell cell) {
-        cell.rotate();
-        return cell;
+    public CellState apply(final Cell cell) {
+        return cell.getRotated();
     }
 
     @Override

@@ -1,12 +1,14 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraftforge.common.util.Constants;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 
-public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
+public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity>
+        implements ITickableTileEntity {
 
     public final Board board;
 
@@ -26,5 +28,10 @@ public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
     public CompoundNBT write(final CompoundNBT compound) {
         compound.putString("Board", board.serialize());
         return compound;
+    }
+
+    @Override
+    public void tick() {
+        board.update();
     }
 }
