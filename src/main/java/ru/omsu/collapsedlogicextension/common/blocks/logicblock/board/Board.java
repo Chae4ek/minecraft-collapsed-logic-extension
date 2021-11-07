@@ -53,7 +53,7 @@ public class Board implements Serializable {
     }
 
     public void switchSchemeActive() {
-        if (activator.isActive()) activator.activate(nullCell, Direction2D.RIGHT);
+        if (!activator.isActive()) activator.activate(nullCell, Direction2D.RIGHT);
         else activator.deactivate(nullCell, Direction2D.RIGHT);
     }
 
