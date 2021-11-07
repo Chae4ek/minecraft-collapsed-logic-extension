@@ -63,7 +63,9 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
     public ITextComponent getDisplayName() {
         return customName != null
                 ? customName
-                : new TranslationTextComponent("container." + ModInit.MOD_ID + ".logic_block");
+                : (customName =
+                        new TranslationTextComponent(
+                                "container." + ModInit.MOD_ID + ".logic_block"));
     }
 
     public void setCustomName(final ITextComponent name) {

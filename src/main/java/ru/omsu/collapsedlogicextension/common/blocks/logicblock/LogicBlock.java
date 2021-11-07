@@ -8,7 +8,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.LogicBlockTileEntity;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 
@@ -46,6 +46,6 @@ public class LogicBlock extends ModBlock<LogicBlock> {
         return side != null
                 && this.<LogicBlockTileEntity>getModTileEntityForThis(world, pos)
                         .board
-                        .canConnectRedstone(side);
+                        .canConnectRedstone(Direction3D.convert(side));
     }
 }

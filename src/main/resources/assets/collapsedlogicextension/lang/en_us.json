@@ -1,5 +1,12 @@
 {
   "itemGroup.collapsedlogicextension": "Collapsed Logic Extension",
   "block.collapsedlogicextension.logic_block": "Logic Block",
-  "container.collapsedlogicextension.logic_block": "Logic Block"
+  "container.collapsedlogicextension.logic_block": "Logic Block",
+  "block.collapsedlogicextension.logic_block.eraser": "Eraser",
+  "block.collapsedlogicextension.logic_block.operator_and": "Operator AND",
+  "block.collapsedlogicextension.logic_block.operator_or": "Operator OR",
+  "block.collapsedlogicextension.logic_block.operator_xor": "Operator XOR",
+  "block.collapsedlogicextension.logic_block.operator_not": "Operator NOT",
+  "block.collapsedlogicextension.logic_block.wire": "Wire",
+  "block.collapsedlogicextension.logic_block.rotator": "Rotator"
 }

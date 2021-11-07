@@ -1,9 +1,11 @@
-package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.board;
+package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cells;
 
 import java.util.HashMap;
 import java.util.Map;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 
-public class Wire implements State {
+public class Wire extends Cell {
 
     private final Map<Integer, Boolean> directions;
     private boolean isActive;
@@ -14,7 +16,7 @@ public class Wire implements State {
     }
 
     @Override
-    public void activate(final Direction from, final boolean isActive) {
+    public void activate(final Direction2D from, final boolean isActive) {
         this.isActive = isActive;
         for (final Map.Entry<Integer, Boolean> entry : directions.entrySet()) {
             entry.setValue(isActive);
@@ -22,13 +24,13 @@ public class Wire implements State {
     }
 
     @Override
-    public void addDirection(final Direction direction) {
-        directions.put(direction.getMeta(), isActive);
+    public void addDirection(final Direction2D direction2D) {
+        directions.put(direction2D.getMeta(), isActive);
     }
 
     @Override
-    public void removeDirection(final Direction direction) {
-        directions.remove(direction.getMeta());
+    public void removeDirection(final Direction2D direction2D) {
+        directions.remove(direction2D.getMeta());
     }
 
     @Override
@@ -47,12 +49,12 @@ public class Wire implements State {
     }
 
     @Override
-    public boolean isConnectableFrom(final Direction direction) {
+    public boolean isConnectableFrom(final Direction2D direction2D) {
         return true;
     }
 
     @Override
-    public boolean isActiveAt(final Direction direction) {
+    public boolean isActiveAt(final Direction2D direction2D) {
         return isActive;
     }
 }

@@ -1,9 +1,9 @@
 package ru.omsu.collapsedlogicextension.init;
 
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlock;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.gui.LogicBlockScreen;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.LogicBlockContainer;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.LogicBlockTileEntity;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockContainer;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockScreen;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockTileEntity;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock.ModBlockFactory;
 import ru.omsu.collapsedlogicextension.util.api.ModContainer;

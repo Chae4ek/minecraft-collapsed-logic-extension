@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util;
+package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.IWorldPosCallable;
