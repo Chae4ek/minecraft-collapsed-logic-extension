@@ -1,14 +1,12 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraftforge.common.util.Constants;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 
-public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity>
-        implements ITickableTileEntity {
+public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
 
     public final Board board;
 

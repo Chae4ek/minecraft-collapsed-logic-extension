@@ -1,10 +1,11 @@
 package ru.omsu.collapsedlogicextension.util.api;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 
 /** Основной класс для всех tile entities мода */
-public abstract class ModTileEntity<E extends ModTileEntity<E>> {
+public abstract class ModTileEntity<E extends ModTileEntity<E>> implements ITickableTileEntity {
 
     private final TileEntityAdapter<E> tileEntityAdapter;
 

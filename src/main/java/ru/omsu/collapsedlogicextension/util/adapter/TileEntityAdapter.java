@@ -8,6 +8,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
@@ -30,7 +31,7 @@ import ru.omsu.collapsedlogicextension.util.api.Unsafe;
 
 /** Перехватывает методы физического tile entity */
 public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
-        implements INamedContainerProvider {
+        implements INamedContainerProvider, ITickableTileEntity {
 
     public final E tileEntity;
 
@@ -119,5 +120,10 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
     public <T> LazyOptional<T> getCapability(final Capability<T> cap, final Direction side) {
         return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(
                 cap, LazyOptional.of(() -> slots));
+    }
+
+    @Override
+    public void tick() {
+        tileEntity.tick();
     }
 }
