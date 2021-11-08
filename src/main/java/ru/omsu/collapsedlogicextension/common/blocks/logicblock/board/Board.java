@@ -6,9 +6,11 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.EmptyCell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools.Tool;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.BakedTexture;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
+import ru.omsu.collapsedlogicextension.util.api.Exclude;
 import ru.omsu.collapsedlogicextension.util.api.Serializer;
 import ru.omsu.collapsedlogicextension.util.api.Serializer.Serializable;
 
@@ -68,6 +70,7 @@ public class Board implements Serializable {
     }
 
     public void update() {
+        System.out.println("here");
         if (!deferredEvents.isEmpty()) {
             final List<Runnable> deferredEvents = this.deferredEvents;
             this.deferredEvents = new ArrayList<>(); // fast clear
@@ -79,7 +82,10 @@ public class Board implements Serializable {
 
         public final int x;
         public final int y;
+
+        @Exclude
         private final Board board;
+
         private CellState cellState = new EmptyCell(this);
 
         private Cell(final Board board, final int x, final int y) {
@@ -94,8 +100,8 @@ public class Board implements Serializable {
         }
 
         /** @return текстура клетки */
-        public TextureRegion getTextureRegion() {
-            return cellState.getTextureRegion();
+        public BakedTexture getTextureRegion() {
+            return cellState.getTexture();
         }
 
         /** @return новое состояние клетки, повернутой против часовой стрелки на 90 градусов */
@@ -127,6 +133,10 @@ public class Board implements Serializable {
         /** @return true, если клетка генерирует ток */
         public boolean isGenerator() {
             return cellState.isGenerator();
+        }
+
+        public boolean canBeConnectedFrom(Direction2D direction){
+            return cellState.canBeConnectedFrom(direction);
         }
     }
 }

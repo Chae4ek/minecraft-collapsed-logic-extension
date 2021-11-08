@@ -1,19 +1,20 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.BakedTexture;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
 
 public class EmptyCell extends CellState {
 
-    private static final TextureRegion texture = new TextureRegion(0, 0);
+    private static final BakedTexture texture = new BakedTexture(0, 0);
 
     public EmptyCell(final Cell parent) {
         super(parent);
     }
 
     @Override
-    public TextureRegion getTextureRegion() {
+    public BakedTexture getTexture() {
         return texture;
     }
 
@@ -33,6 +34,11 @@ public class EmptyCell extends CellState {
 
     @Override
     public boolean isGenerator() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeConnectedFrom(Direction2D direction) {
         return false;
     }
 }

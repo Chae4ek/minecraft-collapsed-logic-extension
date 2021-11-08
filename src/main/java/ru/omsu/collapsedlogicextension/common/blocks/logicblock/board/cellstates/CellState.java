@@ -1,11 +1,14 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.BakedTexture;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
+import ru.omsu.collapsedlogicextension.util.api.Exclude;
 
 public abstract class CellState {
 
+    @Exclude
     protected final Cell parent;
     protected boolean isActive;
 
@@ -14,7 +17,7 @@ public abstract class CellState {
     }
 
     /** @return текстура клетки */
-    public abstract TextureRegion getTextureRegion();
+    public abstract BakedTexture getTexture();
 
     /** @return новое состояние клетки, повернутой против часовой стрелки на 90 градусов */
     public abstract CellState getRotated();
@@ -35,4 +38,6 @@ public abstract class CellState {
 
     /** @return true, если клетка генерирует ток */
     public abstract boolean isGenerator();
+
+    public abstract boolean canBeConnectedFrom(Direction2D direction);
 }

@@ -1,8 +1,10 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.BakedTexture;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
 
@@ -22,13 +24,21 @@ public class Wire extends CellState {
     }
 
     @Override
-    public TextureRegion getTextureRegion() {
-        return null; // TODO: возвращать правильную текстуру (возможно с поворотом)
+    public BakedTexture getTexture() {
+        Set<TextureRegion> parts = new HashSet<>();
+        for(Direction2D direction : connections){
+            if(parent.getCell(direction).canBeConnectedFrom(direction.opposite())) {
+                parts.add(new TextureRegion(102 + (isActive ? 17 : 0), 17 * direction.texShift));
+            }
+        }
+        return new BakedTexture(
+                new TextureRegion(85, isActive ? 17 : 0), parts
+        );
     }
 
     @Override
     public CellState getRotated() {
-        return this; // TODO (?)
+        return this;
     }
 
     @Override
@@ -68,5 +78,10 @@ public class Wire extends CellState {
     @Override
     public boolean isGenerator() {
         return false;
+    }
+
+    @Override
+    public boolean canBeConnectedFrom(Direction2D direction) {
+        return true;
     }
 }

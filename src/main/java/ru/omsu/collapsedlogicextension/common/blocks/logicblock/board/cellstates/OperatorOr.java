@@ -1,6 +1,7 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.BakedTexture;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
 
@@ -21,7 +22,7 @@ public class OperatorOr extends CellState {
     }
 
     @Override
-    public TextureRegion getTextureRegion() {
+    public BakedTexture getTexture() {
         return null;
     }
 
@@ -41,6 +42,11 @@ public class OperatorOr extends CellState {
 
     @Override
     public boolean isGenerator() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeConnectedFrom(Direction2D direction) {
         return false;
     }
 
