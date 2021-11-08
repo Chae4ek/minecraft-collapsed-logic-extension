@@ -11,21 +11,24 @@ public class Activator extends EmptyCell {
 
     @Override
     public void activate(final Cell from, final Direction2D fromToThis) {
+        forceActivate();
+    }
+
+    @Override
+    public void forceActivate() {
         isActive = true;
-        final Cell cell = parent.getCell(Direction2D.RIGHT);
-        if (!cell.isActive()) cell.activate(parent, Direction2D.RIGHT);
+        parent.getCell(Direction2D.RIGHT).activate(parent, Direction2D.RIGHT);
     }
 
     @Override
     public void deactivate(final Cell from, final Direction2D fromToThis) {
-        deactivateAllForce();
+        forceDeactivate();
     }
 
     @Override
-    public void deactivateAllForce() {
+    public void forceDeactivate() {
         isActive = false;
-        final Cell cell = parent.getCell(Direction2D.RIGHT);
-        if (cell.isActive()) cell.deactivate(parent, Direction2D.RIGHT);
+        parent.getCell(Direction2D.RIGHT).deactivate(parent, Direction2D.RIGHT);
     }
 
     @Override

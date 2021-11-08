@@ -8,15 +8,15 @@ public enum Direction2D {
 
     public final int xShift;
     public final int yShift;
-    public final int texShift;
+    public final int id;
 
-    Direction2D(final int xShift, final int yShift, final int texShift) {
+    Direction2D(final int xShift, final int yShift, final int id) {
         this.xShift = xShift;
         this.yShift = yShift;
-        this.texShift = texShift;
+        this.id = id;
     }
 
-    public Direction2D opposite(){
-        return Direction2D.values()[(this.texShift + 2)%4];
+    public Direction2D opposite() {
+        return values()[(id + 2) % 4];
     }
 }

@@ -6,8 +6,6 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.Set;
-
 /**
  * Отличие этого класса от ImageButton в том, что координату текстуры наведенной кнопки мы можем
  * ловить где угодно на атласе
@@ -18,7 +16,7 @@ public class FieldButton extends Button {
     private final int textureWidth;
     private final int textureHeight;
 
-    private BakedTexture texture;
+    private CombinedTextureRegions texture;
 
     /**
      * @param xIn координата на гуи
@@ -36,11 +34,11 @@ public class FieldButton extends Button {
         super(xIn, yIn, 16, 16, "", onPressIn);
         textureWidth = 256;
         textureHeight = 256;
-        texture = new BakedTexture(xTexStartIn, yTexStartIn);
+        texture = new CombinedTextureRegions(xTexStartIn, yTexStartIn);
         resourceLocation = resourceLocationIn;
     }
 
-    public void setTexture(final BakedTexture texture) {
+    public void setTexture(final CombinedTextureRegions texture) {
         this.texture = texture;
     }
 
@@ -52,10 +50,17 @@ public class FieldButton extends Button {
         if (isHovered()) {
             // TODO: сделать адекватный hover
         }
-        blit(x, y, texture.getBase().x, texture.getBase().y, width, height, textureWidth, textureHeight);
 
-        for(TextureRegion textureRegion : texture.getParts()){
-            blit(x, y, textureRegion.x, textureRegion.y, width, height, textureWidth, textureHeight);
+        for (final TextureRegion textureRegion : texture.getParts()) {
+            blit(
+                    x,
+                    y,
+                    textureRegion.x,
+                    textureRegion.y,
+                    width,
+                    height,
+                    textureWidth,
+                    textureHeight);
         }
 
         RenderSystem.enableDepthTest();

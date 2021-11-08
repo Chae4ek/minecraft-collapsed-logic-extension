@@ -1,15 +1,12 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.BakedTexture;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
-import ru.omsu.collapsedlogicextension.util.api.Exclude;
 
 public abstract class CellState {
 
-    @Exclude
-    protected final Cell parent;
+    protected final transient Cell parent;
     protected boolean isActive;
 
     public CellState(final Cell parent) {
@@ -17,7 +14,7 @@ public abstract class CellState {
     }
 
     /** @return текстура клетки */
-    public abstract BakedTexture getTexture();
+    public abstract CombinedTextureRegions getTexture();
 
     /** @return новое состояние клетки, повернутой против часовой стрелки на 90 градусов */
     public abstract CellState getRotated();
@@ -25,19 +22,23 @@ public abstract class CellState {
     /** Активирует клетку */
     public abstract void activate(Cell from, Direction2D fromToThis);
 
+    /** Активирует клетку, даже если она уже активирована */
+    public abstract void forceActivate();
+
     /** Деактивирует клетку */
     public abstract void deactivate(Cell from, Direction2D fromToThis);
+
+    /** Деактивирует клетку, даже если она уже деактивирована */
+    public abstract void forceDeactivate();
 
     /** @return true, если клетка активирована */
     public final boolean isActive() {
         return isActive;
     }
 
-    /** Деактивирует все свои активные направления и саму клетку */
-    public abstract void deactivateAllForce();
-
     /** @return true, если клетка генерирует ток */
     public abstract boolean isGenerator();
 
-    public abstract boolean canBeConnectedFrom(Direction2D direction);
+    /** @return true, если клетка может быть соединена с клеткой в указанном направлении */
+    public abstract boolean canBeConnected(Direction2D fromToThis);
 }

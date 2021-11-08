@@ -6,23 +6,20 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.EmptyCell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools.Tool;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.BakedTexture;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
-import ru.omsu.collapsedlogicextension.util.api.Exclude;
-import ru.omsu.collapsedlogicextension.util.api.Serializer;
 import ru.omsu.collapsedlogicextension.util.api.Serializer.Serializable;
 
 public class Board implements Serializable {
 
-    private final Cell nullCell = new Cell(this, -100, -100);
+    private final Cell emptyCell = new Cell(this, -100, -100);
 
     // TODO: изменить на клетки-входы редстоун сигнала (?)
     /** Фантомная клетка для активации начальной */
     private final Cell activator = new Cell(this, 0, 4);
 
-    private Cell[][] cells = new Cell[9][13];
+    private final Cell[][] cells = new Cell[9][13];
     private List<Runnable> deferredEvents = new ArrayList<>();
 
     public Board() {
@@ -47,7 +44,9 @@ public class Board implements Serializable {
     }
 
     public Cell getCell(final int x, final int y) {
-        return x < 0 || y < 0 || x >= cells[0].length || y >= cells.length ? nullCell : cells[y][x];
+        return x < 0 || y < 0 || x >= cells[0].length || y >= cells.length
+                ? emptyCell
+                : cells[y][x];
     }
 
     private Cell getCell(final Cell from, final Direction2D fromTo) {
@@ -55,18 +54,20 @@ public class Board implements Serializable {
     }
 
     public void switchSchemeActive() {
-        if (!activator.isActive()) activator.activate(nullCell, Direction2D.RIGHT);
-        else activator.deactivate(nullCell, Direction2D.RIGHT);
+        if (!activator.isActive()) activator.forceActivate();
+        else activator.forceDeactivate();
     }
 
     @Override
     public String serialize() {
-        return Serializer.serialize(cells);
+        // TODO: нестабильно. нужны состояния
+        return ""; // Serializer.serialize(cells);
     }
 
     @Override
     public void deserialize(final String data) {
-        cells = Serializer.deserialize(data, Cell[][].class);
+        // TODO: нестабильно. нужны состояния
+        // cells = Serializer.deserialize(data, Cell[][].class);
     }
 
     public void update() {
@@ -82,8 +83,6 @@ public class Board implements Serializable {
 
         public final int x;
         public final int y;
-
-        @Exclude
         private final Board board;
 
         private CellState cellState = new EmptyCell(this);
@@ -100,7 +99,7 @@ public class Board implements Serializable {
         }
 
         /** @return текстура клетки */
-        public BakedTexture getTextureRegion() {
+        public CombinedTextureRegions getTextureRegion() {
             return cellState.getTexture();
         }
 
@@ -111,8 +110,9 @@ public class Board implements Serializable {
 
         /** Устанавливает новое состояние этой клетке */
         public void setCellState(final CellState newCellState) {
-            cellState.deactivateAllForce();
+            final CellState old = cellState;
             cellState = newCellState;
+            if (old.isActive()) old.forceActivate();
         }
 
         /** Активирует клетку */
@@ -120,9 +120,19 @@ public class Board implements Serializable {
             board.deferredEvents.add(() -> cellState.activate(from, fromToThis));
         }
 
+        /** Активирует клетку, даже если она уже активирована */
+        public void forceActivate() {
+            board.deferredEvents.add(cellState::forceActivate);
+        }
+
         /** Деактивирует клетку */
         public void deactivate(final Cell from, final Direction2D fromToThis) {
             board.deferredEvents.add(() -> cellState.deactivate(from, fromToThis));
+        }
+
+        /** Деактивирует клетку, даже если она уже деактивирована */
+        public void forceDeactivate() {
+            board.deferredEvents.add(cellState::forceDeactivate);
         }
 
         /** @return true, если клетка активирована */
@@ -135,8 +145,9 @@ public class Board implements Serializable {
             return cellState.isGenerator();
         }
 
-        public boolean canBeConnectedFrom(Direction2D direction){
-            return cellState.canBeConnectedFrom(direction);
+        /** @return true, если клетка может быть соединена с клеткой в указанном направлении */
+        public boolean canBeConnected(final Direction2D fromToThis) {
+            return cellState.canBeConnected(fromToThis);
         }
     }
 }

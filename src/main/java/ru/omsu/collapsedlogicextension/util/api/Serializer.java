@@ -1,12 +1,11 @@
 package ru.omsu.collapsedlogicextension.util.api;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /** Содержит методы для общего использования без необходимости создавать Gson */
 public class Serializer {
 
-    private static final Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy()).create();
+    private static final Gson gson = new Gson();
 
     public static <T> String serialize(final T object) {
         return gson.toJson(object);
