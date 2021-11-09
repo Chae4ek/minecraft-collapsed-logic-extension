@@ -44,16 +44,12 @@ public class RenderHelper {
         WorldVertexBufferUploader.draw(bufferbuilder);
     }
 
-    public void draw(
-            final float xTexture,
-            final float yTexture,
-            final int textureWidth,
-            final int textureHeight) {
+    public void draw(final TextureRegion texture, final int textureWidth, final int textureHeight) {
         if (!isDrawing) throw new IllegalArgumentException("begin() must be called before draw()");
-        final float minU = xTexture / (float) textureWidth;
-        final float maxU = (xTexture + (float) width) / (float) textureWidth;
-        final float minV = yTexture / (float) textureHeight;
-        final float maxV = (yTexture + (float) height) / (float) textureHeight;
+        final float minU = (float) texture.x / (float) textureWidth;
+        final float maxU = ((float) texture.x + (float) width) / (float) textureWidth;
+        final float minV = (float) texture.y / (float) textureHeight;
+        final float maxV = ((float) texture.y + (float) height) / (float) textureHeight;
         bufferbuilder.pos(x, y$plus$height, blitOffset).tex(minU, maxV).endVertex();
         bufferbuilder.pos(x$plus$width, y$plus$height, blitOffset).tex(maxU, maxV).endVertex();
         bufferbuilder.pos(x$plus$width, y, blitOffset).tex(maxU, minV).endVertex();
