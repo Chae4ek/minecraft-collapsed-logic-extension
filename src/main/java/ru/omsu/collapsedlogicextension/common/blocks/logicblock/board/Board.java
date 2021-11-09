@@ -121,8 +121,8 @@ public class Board implements Serializable {
             board.update();
             for (final Direction2D direction : Direction2D.values()) {
                 final Cell cell = getCell(direction);
-                if (cell.isActive()) cell.cellState.forceActivate();
-                else cell.cellState.forceDeactivate();
+                if (cell.isActive()) board.deferredEvents.add(() -> cell.cellState.forceActivate());
+                else board.deferredEvents.add(() -> cell.cellState.forceDeactivate());
             }
         }
 
