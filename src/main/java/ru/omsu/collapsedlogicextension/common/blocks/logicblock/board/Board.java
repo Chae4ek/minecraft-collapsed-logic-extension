@@ -1,7 +1,7 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.function.Supplier;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Activator;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
@@ -21,7 +21,7 @@ public class Board implements Serializable {
     private final Cell activator = new Cell(this, -1, 4);
 
     private final Cell[][] cells = new Cell[9][13];
-    private List<Runnable> deferredEvents = new ArrayList<>();
+    private final Queue<Runnable> deferredEvents = new ArrayDeque<>();
 
     public Board() {
         activator.cellState = new Activator(activator);
@@ -78,11 +78,7 @@ public class Board implements Serializable {
 
     /** Обновляет доску с каждым игровым тиком */
     public void update() {
-        if (!deferredEvents.isEmpty()) {
-            final List<Runnable> deferredEvents = this.deferredEvents;
-            this.deferredEvents = new ArrayList<>(); // fast clear
-            for (final Runnable event : deferredEvents) event.run();
-        }
+        for (int i = deferredEvents.size(); i > 0; --i) deferredEvents.poll().run();
     }
 
     public static final class Cell {
