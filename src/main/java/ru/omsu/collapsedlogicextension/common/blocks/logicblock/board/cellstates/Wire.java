@@ -1,7 +1,8 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
@@ -19,7 +20,7 @@ public class Wire extends CellState {
 
     @Override
     public CombinedTextureRegions getTexture() {
-        final Set<TextureRegion> parts = new HashSet<>();
+        final List<TextureRegion> parts = new ArrayList<>(5);
         parts.add(new TextureRegion(85, isActive ? 17 : 0));
         for (final Direction2D direction : connections) {
             if (parent.getCell(direction).canBeConnected(direction)) {
