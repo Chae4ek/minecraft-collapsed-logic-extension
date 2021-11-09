@@ -57,8 +57,6 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
                         new FieldButton(
                                 xStart + x * 16,
                                 yStart + y * 16,
-                                0,
-                                0,
                                 FIELD_BUTTON_TEXTURE,
                                 button -> board.applyTool(selectedTool.tool, finalX, finalY),
                                 board.getTextureUpdaterForCell(x, y));

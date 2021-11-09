@@ -3,11 +3,14 @@ package ru.omsu.collapsedlogicextension.init;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.block.Block;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -58,6 +61,18 @@ public class Registrator {
     /** Регистратор контейнеров */
     private static final DeferredRegister<ContainerType<?>> CONTAINERS =
             DeferredRegister.create(ForgeRegistries.CONTAINERS, ModInit.MOD_ID);
+
+    private static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ModInit.MOD_ID);
+
+    public static SoundEvent buttonClick;
+
+    @SubscribeEvent
+    public static void registerSoundEvents(RegistryEvent.Register<SoundEvent> event) {
+        ResourceLocation resourceLocation = new ResourceLocation(ModInit.MOD_ID, "buttonclick");
+        buttonClick = new SoundEvent(resourceLocation).setRegistryName(resourceLocation);
+        //final SoundEvent[] soundEvents = {buttonClick};
+        event.getRegistry().register(buttonClick);
+    }
 
     /** @return зарегистрированный предмет */
     public static Item getItem(final ModObjectEnum modObject) {
@@ -134,6 +149,7 @@ public class Registrator {
         BLOCKS.register(bus);
         TILE_ENTITIES.register(bus);
         CONTAINERS.register(bus);
+        SOUNDS.register(bus);
     }
 
     /**

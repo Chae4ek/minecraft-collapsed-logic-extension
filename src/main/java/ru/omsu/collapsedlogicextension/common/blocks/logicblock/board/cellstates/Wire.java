@@ -20,12 +20,12 @@ public class Wire extends CellState {
     @Override
     public CombinedTextureRegions getTexture() {
         final Set<TextureRegion> parts = new HashSet<>();
+        parts.add(new TextureRegion(85, isActive ? 17 : 0));
         for (final Direction2D direction : connections) {
             if (parent.getCell(direction).canBeConnected(direction)) {
                 parts.add(new TextureRegion(102 + (isActive ? 17 : 0), 17 * direction.id));
             }
         }
-        parts.add(new TextureRegion(85, isActive ? 17 : 0));
         return new CombinedTextureRegions(parts);
     }
 

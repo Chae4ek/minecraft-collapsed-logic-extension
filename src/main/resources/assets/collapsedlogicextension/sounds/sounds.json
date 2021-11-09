@@ -1,0 +1,10 @@
+{
+  "buttonclick": {
+	"category": "master"
+    "sounds": [ 
+	
+		"name": "collapsedlogicextension:sounds/buttonclick", "stream":true 
+		
+		]
+  }
+}

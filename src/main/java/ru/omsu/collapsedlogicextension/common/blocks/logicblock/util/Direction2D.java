@@ -19,4 +19,8 @@ public enum Direction2D {
     public Direction2D opposite() {
         return values()[(id + 2) % 4];
     }
+
+    public Direction2D rotate(){
+        return values()[(id+1)%4];
+    }
 }

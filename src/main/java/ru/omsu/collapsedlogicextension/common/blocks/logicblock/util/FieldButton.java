@@ -3,9 +3,15 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import ru.omsu.collapsedlogicextension.init.ModInit;
+import ru.omsu.collapsedlogicextension.init.Registrator;
 
 /**
  * Отличие этого класса от ImageButton в том, что координату текстуры наведенной кнопки мы можем
@@ -19,17 +25,14 @@ public class FieldButton extends Button {
 
     private final Supplier<CombinedTextureRegions> textureUpdater;
 
+    ISound sound = SimpleSound.master(Registrator.buttonClick, 1.0F, 1.0F);
     /**
      * @param xIn координата на гуи
      * @param yIn координата на гуи
-     * @param xTexStartIn координата на атласе
-     * @param yTexStartIn координата на атласе
      */
     public FieldButton(
             final int xIn,
             final int yIn,
-            final int xTexStartIn,
-            final int yTexStartIn,
             final ResourceLocation resourceLocationIn,
             final Button.IPressable onPressIn,
             final Supplier<CombinedTextureRegions> textureUpdater) {
@@ -65,5 +68,7 @@ public class FieldButton extends Button {
     }
 
     @Override
-    public void playDownSound(final SoundHandler soundHandler) {}
+    public void playDownSound(final SoundHandler soundHandler) {
+        soundHandler.play(sound);
+    }
 }

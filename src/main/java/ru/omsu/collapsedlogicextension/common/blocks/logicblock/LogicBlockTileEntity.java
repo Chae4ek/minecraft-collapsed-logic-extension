@@ -6,6 +6,8 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 
+import java.util.concurrent.TimeUnit;
+
 public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
 
     public final Board board;
