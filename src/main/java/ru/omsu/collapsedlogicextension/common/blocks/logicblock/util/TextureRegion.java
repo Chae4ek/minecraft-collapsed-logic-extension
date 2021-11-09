@@ -1,7 +1,5 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util;
 
-import java.util.Objects;
-
 public class TextureRegion {
 
     public final int x;
@@ -13,15 +11,15 @@ public class TextureRegion {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TextureRegion that = (TextureRegion) o;
+        final TextureRegion that = (TextureRegion) o;
         return x == that.x && y == that.y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return 1000 * x + y;
     }
 }

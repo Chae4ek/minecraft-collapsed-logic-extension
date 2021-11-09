@@ -3,7 +3,6 @@ package ru.omsu.collapsedlogicextension.init;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.block.Block;
-import net.minecraft.client.audio.Sound;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -62,17 +61,11 @@ public class Registrator {
     private static final DeferredRegister<ContainerType<?>> CONTAINERS =
             DeferredRegister.create(ForgeRegistries.CONTAINERS, ModInit.MOD_ID);
 
-    private static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ModInit.MOD_ID);
+    private static final DeferredRegister<SoundEvent> SOUNDS =
+            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ModInit.MOD_ID);
 
-    public static SoundEvent buttonClick;
-
-    @SubscribeEvent
-    public static void registerSoundEvents(RegistryEvent.Register<SoundEvent> event) {
-        ResourceLocation resourceLocation = new ResourceLocation(ModInit.MOD_ID, "buttonclick");
-        buttonClick = new SoundEvent(resourceLocation).setRegistryName(resourceLocation);
-        //final SoundEvent[] soundEvents = {buttonClick};
-        event.getRegistry().register(buttonClick);
-    }
+    // TODO: сделать нормальную мапу
+    public static RegistryObject<SoundEvent> buttonClick;
 
     /** @return зарегистрированный предмет */
     public static Item getItem(final ModObjectEnum modObject) {
@@ -97,6 +90,10 @@ public class Registrator {
 
     /** Регистрирует все объекты мода */
     public static void registerAll() {
+        // TODO: сделать отдельное перечисление звуков?
+        final ResourceLocation button = new ResourceLocation(ModInit.MOD_ID, "button_click");
+        buttonClick = SOUNDS.register("button_click", () -> new SoundEvent(button));
+
         for (final ModObjectEnum modObjectEnum : ModObjectEnum.values()) {
             final ModObject<?, ?, ?, ?, ?> modObject = modObjectEnum.modObject;
             final String registryName = modObject.registryName;

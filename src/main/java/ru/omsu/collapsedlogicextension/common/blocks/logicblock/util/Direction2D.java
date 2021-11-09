@@ -20,7 +20,7 @@ public enum Direction2D {
         return values()[(id + 2) % 4];
     }
 
-    public Direction2D rotate(){
-        return values()[(id+1)%4];
+    public Direction2D rotate() {
+        return values()[(id + 1) % 4];
     }
 }

@@ -3,14 +3,10 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import ru.omsu.collapsedlogicextension.init.ModInit;
 import ru.omsu.collapsedlogicextension.init.Registrator;
 
 /**
@@ -22,10 +18,8 @@ public class FieldButton extends Button {
     private final ResourceLocation resourceLocation;
     private final int textureWidth;
     private final int textureHeight;
-
     private final Supplier<CombinedTextureRegions> textureUpdater;
 
-    ISound sound = SimpleSound.master(Registrator.buttonClick, 1.0F, 1.0F);
     /**
      * @param xIn координата на гуи
      * @param yIn координата на гуи
@@ -48,27 +42,22 @@ public class FieldButton extends Button {
         final Minecraft minecraft = Minecraft.getInstance();
         minecraft.getTextureManager().bindTexture(resourceLocation);
         RenderSystem.disableDepthTest();
-        if (isHovered()) {
-            // TODO: сделать адекватный hover
-        }
+
+        final RenderHelper renderHelper = new RenderHelper();
+        renderHelper.setSettings(x, y, width, height, getBlitOffset());
+        renderHelper.begin();
 
         for (final TextureRegion textureRegion : textureUpdater.get().getParts()) {
-            blit(
-                    x,
-                    y,
-                    textureRegion.x,
-                    textureRegion.y,
-                    width,
-                    height,
-                    textureWidth,
-                    textureHeight);
+            renderHelper.draw(textureRegion.x, textureRegion.y, textureWidth, textureHeight);
         }
+
+        renderHelper.end();
 
         RenderSystem.enableDepthTest();
     }
 
     @Override
     public void playDownSound(final SoundHandler soundHandler) {
-        soundHandler.play(sound);
+        soundHandler.play(SimpleSound.master(Registrator.buttonClick.get(), 1f, 1f));
     }
 }

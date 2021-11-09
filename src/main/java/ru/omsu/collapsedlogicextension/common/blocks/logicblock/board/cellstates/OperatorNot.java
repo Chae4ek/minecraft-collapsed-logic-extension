@@ -1,20 +1,15 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
-import net.minecraft.client.gui.widget.Widget;
+import java.util.EnumSet;
+import java.util.Set;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
-
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class OperatorNot extends CellState {
 
     private Direction2D output = Direction2D.UP;
-    private Set<Direction2D> connections = EnumSet.of(Direction2D.UP, Direction2D.DOWN);
+    private final Set<Direction2D> connections = EnumSet.of(Direction2D.UP, Direction2D.DOWN);
 
     public OperatorNot(final Cell parent) {
         super(parent);
@@ -22,7 +17,7 @@ public class OperatorNot extends CellState {
 
     @Override
     public CombinedTextureRegions getTexture() {
-        return new CombinedTextureRegions(34, 17* output.id);
+        return new CombinedTextureRegions(34, 17 * output.id);
     }
 
     @Override
