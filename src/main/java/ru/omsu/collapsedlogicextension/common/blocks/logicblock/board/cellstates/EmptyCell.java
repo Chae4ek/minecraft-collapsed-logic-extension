@@ -35,12 +35,7 @@ public class EmptyCell extends CellState {
     public void forceDeactivate() {}
 
     @Override
-    public boolean isGenerator() {
-        return false;
-    }
-
-    @Override
-    public boolean canBeConnected(final Direction2D direction) {
+    public boolean canBeConnected(final Direction2D fromToThis) {
         return false;
     }
 }

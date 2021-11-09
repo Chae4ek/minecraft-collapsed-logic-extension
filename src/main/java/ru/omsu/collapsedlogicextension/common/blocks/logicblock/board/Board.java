@@ -2,6 +2,7 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Activator;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.EmptyCell;
@@ -17,13 +18,13 @@ public class Board implements Serializable {
 
     // TODO: изменить на клетки-входы редстоун сигнала (?)
     /** Фантомная клетка для активации начальной */
-    private final Cell activator = new Cell(this, 0, 4);
+    private final Cell activator = new Cell(this, -1, 4);
 
     private final Cell[][] cells = new Cell[9][13];
     private List<Runnable> deferredEvents = new ArrayList<>();
 
     public Board() {
-        activator.setCellState(new Activator(activator));
+        activator.cellState = new Activator(activator);
         for (int y = 0; y < cells.length; ++y) {
             for (int x = 0; x < cells[0].length; ++x) {
                 cells[y][x] = new Cell(this, x, y);
@@ -37,13 +38,13 @@ public class Board implements Serializable {
         return true;
     }
 
-    public Cell applyTool(final Tool tool, final int x, final int y) {
+    public void applyTool(final Tool tool, final int x, final int y) {
         final Cell cell = getCell(x, y);
         cell.setCellState(tool.apply(cell));
-        return cell;
     }
 
-    public Cell getCell(final int x, final int y) {
+    private Cell getCell(final int x, final int y) {
+        if (x == activator.x && y == activator.y) return activator;
         return x < 0 || y < 0 || x >= cells[0].length || y >= cells.length
                 ? emptyCell
                 : cells[y][x];
@@ -54,8 +55,8 @@ public class Board implements Serializable {
     }
 
     public void switchSchemeActive() {
-        if (!activator.isActive()) activator.forceActivate();
-        else activator.forceDeactivate();
+        if (!activator.isActive()) activator.cellState.forceActivate();
+        else activator.cellState.forceDeactivate();
     }
 
     @Override
@@ -70,8 +71,13 @@ public class Board implements Serializable {
         // cells = Serializer.deserialize(data, Cell[][].class);
     }
 
+    /** @return updater, который возвращает текстуру конкретной клетки доски */
+    public Supplier<CombinedTextureRegions> getTextureUpdaterForCell(final int x, final int y) {
+        return getCell(x, y)::getTexture;
+    }
+
+    /** Обновляет доску с каждым игровым тиком */
     public void update() {
-        System.out.println("here");
         if (!deferredEvents.isEmpty()) {
             final List<Runnable> deferredEvents = this.deferredEvents;
             this.deferredEvents = new ArrayList<>(); // fast clear
@@ -99,7 +105,7 @@ public class Board implements Serializable {
         }
 
         /** @return текстура клетки */
-        public CombinedTextureRegions getTextureRegion() {
+        public CombinedTextureRegions getTexture() {
             return cellState.getTexture();
         }
 
@@ -109,10 +115,15 @@ public class Board implements Serializable {
         }
 
         /** Устанавливает новое состояние этой клетке */
-        public void setCellState(final CellState newCellState) {
-            final CellState old = cellState;
+        private void setCellState(final CellState newCellState) {
+            cellState.forceDeactivate();
             cellState = newCellState;
-            if (old.isActive()) old.forceActivate();
+            board.update();
+            for (final Direction2D direction : Direction2D.values()) {
+                final Cell cell = getCell(direction);
+                if (cell.isActive()) cell.cellState.forceActivate();
+                else cell.cellState.forceDeactivate();
+            }
         }
 
         /** Активирует клетку */
@@ -120,29 +131,14 @@ public class Board implements Serializable {
             board.deferredEvents.add(() -> cellState.activate(from, fromToThis));
         }
 
-        /** Активирует клетку, даже если она уже активирована */
-        public void forceActivate() {
-            board.deferredEvents.add(cellState::forceActivate);
-        }
-
         /** Деактивирует клетку */
         public void deactivate(final Cell from, final Direction2D fromToThis) {
             board.deferredEvents.add(() -> cellState.deactivate(from, fromToThis));
         }
 
-        /** Деактивирует клетку, даже если она уже деактивирована */
-        public void forceDeactivate() {
-            board.deferredEvents.add(cellState::forceDeactivate);
-        }
-
         /** @return true, если клетка активирована */
         public boolean isActive() {
             return cellState.isActive();
-        }
-
-        /** @return true, если клетка генерирует ток */
-        public boolean isGenerator() {
-            return cellState.isGenerator();
         }
 
         /** @return true, если клетка может быть соединена с клеткой в указанном направлении */

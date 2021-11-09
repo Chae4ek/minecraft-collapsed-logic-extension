@@ -29,7 +29,7 @@ public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
     }
 
     @Override
-    public void tick() {
+    public void update() {
         board.update();
     }
 }

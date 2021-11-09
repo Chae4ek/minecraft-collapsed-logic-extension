@@ -1,6 +1,7 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
@@ -16,7 +17,7 @@ public class FieldButton extends Button {
     private final int textureWidth;
     private final int textureHeight;
 
-    private CombinedTextureRegions texture;
+    private final Supplier<CombinedTextureRegions> textureUpdater;
 
     /**
      * @param xIn координата на гуи
@@ -30,16 +31,13 @@ public class FieldButton extends Button {
             final int xTexStartIn,
             final int yTexStartIn,
             final ResourceLocation resourceLocationIn,
-            final Button.IPressable onPressIn) {
+            final Button.IPressable onPressIn,
+            final Supplier<CombinedTextureRegions> textureUpdater) {
         super(xIn, yIn, 16, 16, "", onPressIn);
         textureWidth = 256;
         textureHeight = 256;
-        texture = new CombinedTextureRegions(xTexStartIn, yTexStartIn);
         resourceLocation = resourceLocationIn;
-    }
-
-    public void setTexture(final CombinedTextureRegions texture) {
-        this.texture = texture;
+        this.textureUpdater = textureUpdater;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class FieldButton extends Button {
             // TODO: сделать адекватный hover
         }
 
-        for (final TextureRegion textureRegion : texture.getParts()) {
+        for (final TextureRegion textureRegion : textureUpdater.get().getParts()) {
             blit(
                     x,
                     y,

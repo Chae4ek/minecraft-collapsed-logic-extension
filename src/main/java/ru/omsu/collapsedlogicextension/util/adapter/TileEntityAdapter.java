@@ -124,6 +124,6 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
 
     @Override
     public void tick() {
-        tileEntity.tick();
+        tileEntity.update();
     }
 }

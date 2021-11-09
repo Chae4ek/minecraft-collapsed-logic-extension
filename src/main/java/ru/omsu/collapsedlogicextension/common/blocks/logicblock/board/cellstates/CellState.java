@@ -36,9 +36,6 @@ public abstract class CellState {
         return isActive;
     }
 
-    /** @return true, если клетка генерирует ток */
-    public abstract boolean isGenerator();
-
     /** @return true, если клетка может быть соединена с клеткой в указанном направлении */
     public abstract boolean canBeConnected(Direction2D fromToThis);
 }

@@ -35,11 +35,6 @@ public class OperatorNot extends CellState {
     public void forceDeactivate() {}
 
     @Override
-    public boolean isGenerator() {
-        return false;
-    }
-
-    @Override
     public boolean canBeConnected(final Direction2D direction) {
         return false;
     }
