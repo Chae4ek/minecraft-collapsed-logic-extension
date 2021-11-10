@@ -1,5 +1,7 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board;
@@ -27,9 +29,9 @@ public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
         compound.putString("Board", board.serialize());
         return compound;
     }
-
     @Override
     public void update() {
         board.update();
     }
+
 }

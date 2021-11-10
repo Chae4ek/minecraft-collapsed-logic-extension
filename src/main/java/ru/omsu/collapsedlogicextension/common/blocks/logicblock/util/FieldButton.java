@@ -6,7 +6,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.extensions.IForgeKeybinding;
 import ru.omsu.collapsedlogicextension.init.Registrator;
 
 /**
@@ -60,4 +62,5 @@ public class FieldButton extends Button {
     public void playDownSound(final SoundHandler soundHandler) {
         soundHandler.play(SimpleSound.master(Registrator.buttonClick.get(), 1f, 1f));
     }
+
 }

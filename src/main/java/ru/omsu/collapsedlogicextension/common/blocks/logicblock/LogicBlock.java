@@ -48,4 +48,14 @@ public class LogicBlock extends ModBlock<LogicBlock> {
                         .board
                         .canConnectRedstone(Direction3D.convert(side));
     }
+
+    @Override
+    public boolean isAffectRedstone() {
+        return true;
+    }
+
+    @Override
+    public int getRedstoneCharge() {
+        return 15;
+    }
 }
