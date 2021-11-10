@@ -75,7 +75,7 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
 
     @Override
     public void read(final CompoundNBT compound) {
-        super.read(compound);
+        // super.read(compound);
         if (compound.contains("CustomName", Constants.NBT.TAG_STRING)) {
             customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
@@ -85,7 +85,7 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
 
     @Override
     public CompoundNBT write(final CompoundNBT compound) {
-        super.write(compound);
+        // super.write(compound);
         if (customName != null)
             compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
         compound.merge(slots.serializeNBT());
@@ -106,9 +106,7 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
 
     @Override
     public CompoundNBT getUpdateTag() {
-        final CompoundNBT tag = new CompoundNBT();
-        write(tag);
-        return tag;
+        return write(new CompoundNBT());
     }
 
     @Override

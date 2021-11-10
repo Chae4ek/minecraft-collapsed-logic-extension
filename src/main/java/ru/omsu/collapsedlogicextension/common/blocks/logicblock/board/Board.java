@@ -1,8 +1,11 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.function.Supplier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Activator;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.EmptyCell;
@@ -10,9 +13,12 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools.Tool
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
+import ru.omsu.collapsedlogicextension.init.ModInit;
 import ru.omsu.collapsedlogicextension.util.api.Serializer.Serializable;
 
 public class Board implements Serializable {
+
+    private static final Logger logger = LogManager.getLogger(ModInit.MOD_ID + " : " + Board.class);
 
     private final Cell emptyCell = new Cell(this, -100, -100);
 
@@ -59,16 +65,52 @@ public class Board implements Serializable {
         else activator.cellState.forceDeactivate();
     }
 
+    // TODO: переделать на Gson
     @Override
     public String serialize() {
-        // TODO: нестабильно. нужны состояния
-        return ""; // Serializer.serialize(cells);
+        final StringBuilder builder = new StringBuilder();
+        for (final Cell[] cells : cells) {
+            for (final Cell cell : cells) {
+                builder.append(cell.cellState.getClass().getName()).append(';');
+            }
+        }
+        return builder.toString();
     }
 
+    // TODO: переделать на Gson
     @Override
     public void deserialize(final String data) {
-        // TODO: нестабильно. нужны состояния
-        // cells = Serializer.deserialize(data, Cell[][].class);
+        try {
+            StringBuilder builder = new StringBuilder();
+            int x = 0, y = 0;
+            for (final char c : data.toCharArray()) {
+                if (c != ';') builder.append(c);
+                else {
+                    final Class<?> clazz = Class.forName(builder.toString());
+                    cells[y][x].cellState =
+                            (CellState) clazz.getConstructor(Cell.class).newInstance(cells[y][x]);
+                    ++x;
+                    if (x == cells[0].length) {
+                        x = 0;
+                        ++y;
+                        if (y == cells.length) return;
+                    }
+                    builder = new StringBuilder();
+                }
+            }
+        } catch (final InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException
+                | NoSuchMethodException
+                | ClassNotFoundException e) {
+            logger.error(e.getMessage());
+        }
+        logger.error("Board has not been deserialized!");
+        for (int y = 0; y < cells.length; ++y) {
+            for (int x = 0; x < cells[0].length; ++x) {
+                cells[y][x] = new Cell(this, x, y);
+            }
+        }
     }
 
     /** @return updater, который возвращает текстуру конкретной клетки доски */
