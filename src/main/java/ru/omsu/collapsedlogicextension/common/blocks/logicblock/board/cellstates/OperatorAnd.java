@@ -6,95 +6,94 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D
 
 public class OperatorAnd extends CellState {
 
-    /*private final Direction2D input1;
-    private final Direction2D input2;
+    private Direction2D input1 = Direction2D.LEFT;
+    private Direction2D input2 = Direction2D.RIGHT;
+    private Direction2D output = Direction2D.UP;
 
-    private final boolean isFirstInputActive;
-    private final boolean isSecondInputActive;*/
+    private boolean firstInputActive, secondInputActive, outputActive;
 
     public OperatorAnd(final Cell parent) {
         super(parent);
-        /*input1 = Direction2D.RIGHT;
-        input2 = Direction2D.LEFT;
-        isFirstInputActive = false;
-        isSecondInputActive = false;*/
+        firstInputActive = false;
+        secondInputActive = false;
+        outputActive = false;
     }
 
     @Override
     public CombinedTextureRegions getTexture() {
-        return null;
+        return new CombinedTextureRegions(17, 17*output.id);
     }
 
     @Override
     public CellState getRotated() {
-        return null;
+        output = output.rotate();
+        input1 = input1.rotate();
+        input2 = input2.rotate();
+
+        return this;
     }
 
     @Override
-    public void activate(final Cell from, final Direction2D fromToThis) {}
+    public void activate(final Cell from, final Direction2D fromToThis) {
+
+        if(fromToThis.opposite() == input1){
+            firstInputActive = true;
+        }
+        if(fromToThis.opposite() == input2){
+            secondInputActive = true;
+        }
+
+        if(!outputActive || this.canBeConnected(fromToThis)){
+            forceActivate();
+        }
+    }
 
     @Override
-    public void forceActivate() {}
+    public void forceActivate() {
+        outputActive = firstInputActive && secondInputActive;
+
+        final Cell connectedCellFromOutput = parent.getCell(output);
+
+        if(connectedCellFromOutput.canBeConnected(output.opposite())){
+            if(outputActive){
+                connectedCellFromOutput.activate(parent, output);
+            }
+            else{
+                connectedCellFromOutput.deactivate(parent, output);
+            }
+        }
+
+    }
 
     @Override
-    public void deactivate(final Cell from, final Direction2D fromToThis) {}
+    public void deactivate(final Cell from, final Direction2D fromToThis) {
+
+        if(fromToThis.opposite() == input1){
+            firstInputActive = false;
+        }
+        if(fromToThis.opposite() == input2){
+            secondInputActive = false;
+        }
+
+        if(!outputActive || this.canBeConnected(fromToThis)){
+            forceDeactivate();
+        }
+    }
 
     @Override
-    public void forceDeactivate() {}
+    public void forceDeactivate() {
+        outputActive = false;
+        final Cell connectedCellFromOutput = parent.getCell(output);
+
+        if(connectedCellFromOutput.canBeConnected(output.opposite())){
+            connectedCellFromOutput.deactivate(parent, output);
+        }
+    }
 
     @Override
     public boolean canBeConnected(final Direction2D direction) {
-        return false;
+        Direction2D direction1 = direction.opposite();
+        return direction1 == output || direction1 == input1 || direction1 == input2;
     }
 
-    /*@Override
-    public void activate(final Direction2D from, final boolean isActive) {
-        if (from == input1) {
-            isFirstInputActive = isActive;
-        } else if (from == input2) {
-            isSecondInputActive = isActive;
-        }
-        isOutputActive = isFirstInputActive && isSecondInputActive;
-    }
-
-    @Override
-    public void getRotated() {
-        output = Direction2D.rotate(output);
-        input1 = Direction2D.rotate(input1);
-        input2 = Direction2D.rotate(input2);
-    }
-
-    @Override
-    public boolean isActiveAt(final Direction2D direction2D) {
-        if (direction2D == input1) {
-            return isFirstInputActive;
-        } else if (direction2D == input2) {
-            return isSecondInputActive;
-        }
-        return isOutputActive;
-    }
-
-    @Override
-    public Map<Integer, Boolean> getDirections() {
-        final Map<Integer, Boolean> map = new HashMap<>();
-        map.put(output.getMeta(), isOutputActive);
-        map.put(input1.getMeta(), isFirstInputActive);
-        map.put(input2.getMeta(), isSecondInputActive);
-        return map;
-    }
-
-    @Override
-    public boolean isConnectableFrom(final Direction2D direction2D) {
-        return direction2D != Direction2D.oppositeOf(output);
-    }
-
-    @Override
-    public int getXTex() {
-        return 17;
-    }
-
-    @Override
-    public String getType() {
-        return "OPERATOR AND";
-    }*/
 }

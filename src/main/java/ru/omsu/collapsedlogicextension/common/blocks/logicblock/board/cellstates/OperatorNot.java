@@ -9,7 +9,8 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D
 public class OperatorNot extends CellState {
 
     private Direction2D output = Direction2D.UP;
-    private final Set<Direction2D> connections = EnumSet.of(Direction2D.UP, Direction2D.DOWN);
+    private Direction2D input = Direction2D.DOWN;
+    private boolean isOutputActive = true;
 
     public OperatorNot(final Cell parent) {
         super(parent);
@@ -17,51 +18,53 @@ public class OperatorNot extends CellState {
 
     @Override
     public CombinedTextureRegions getTexture() {
-        return new CombinedTextureRegions(34, 17 * output.id);
+        return new CombinedTextureRegions(68, 17 * output.id);
     }
 
     @Override
     public CellState getRotated() {
         output = output.rotate();
-        connections.forEach(direction -> direction = direction.rotate());
+        input = input.rotate();
+
         return this;
     }
 
     @Override
-    public void activate(final Cell from, final Direction2D fromToThis) {}
+    public void activate(final Cell from, final Direction2D fromToThis) {
+        if(isOutputActive && this.canBeConnected(fromToThis)){
+            forceActivate();
+        }
+    }
 
     @Override
-    public void forceActivate() {}
+    public void forceActivate() {
+        isOutputActive = false;
+        final Cell outputCell = parent.getCell(output);
+
+        if(outputCell.canBeConnected(output.opposite())){
+            outputCell.deactivate(parent, output);
+        }
+    }
 
     @Override
-    public void deactivate(final Cell from, final Direction2D fromToThis) {}
+    public void deactivate(final Cell from, final Direction2D fromToThis) {
+        if(!isOutputActive && this.canBeConnected(fromToThis)){
+            forceDeactivate();
+        }
+    }
 
     @Override
-    public void forceDeactivate() {}
+    public void forceDeactivate() {
+        isOutputActive = true;
+        final Cell outputCell = parent.getCell(output);
+
+        if(outputCell.canBeConnected(output.opposite())){
+            outputCell.activate(parent, output);
+        }
+    }
 
     @Override
     public boolean canBeConnected(final Direction2D direction) {
-        return false;
+        return direction == input || direction == output;
     }
-
-    /*@Override
-    public void activate(final Direction2D from, final boolean isInputActive) {
-        directions.replace(from, isInputActive);
-        directions.replace(Direction2D.oppositeOf(from), !isInputActive);
-    }
-
-    @Override
-    public int getXTex() {
-        return 68;
-    }
-
-    @Override
-    public String getType() {
-        return "OPERATOR NOT";
-    }
-
-    @Override
-    public boolean isActiveAt(final Direction2D direction2D) {
-        return directions.get(direction2D);
-    }*/
 }

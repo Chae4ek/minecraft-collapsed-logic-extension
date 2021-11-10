@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.function.Supplier;
+
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Activator;
@@ -68,6 +70,7 @@ public class Board implements Serializable {
     // TODO: переделать на Gson
     @Override
     public String serialize() {
+        logger.log(Level.INFO, "Serialising board...");
         final StringBuilder builder = new StringBuilder();
         for (final Cell[] cells : cells) {
             for (final Cell cell : cells) {
@@ -80,6 +83,7 @@ public class Board implements Serializable {
     // TODO: переделать на Gson
     @Override
     public void deserialize(final String data) {
+        logger.log(Level.INFO, "Deserialising board...");
         try {
             StringBuilder builder = new StringBuilder();
             int x = 0, y = 0;
