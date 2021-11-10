@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -50,6 +51,11 @@ public class LogicBlock extends ModBlock<LogicBlock> {
     }
 
     @Override
+    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return this.<LogicBlockTileEntity>getModTileEntityForThis(blockAccess, pos).board.getPowerOnSide(Direction3D.convert(side));
+    }
+
+    @Override
     public boolean isAffectRedstone() {
         return true;
     }
@@ -57,5 +63,10 @@ public class LogicBlock extends ModBlock<LogicBlock> {
     @Override
     public int getRedstoneCharge() {
         return 15;
+    }
+
+    @Override
+    public boolean canProvidePower(BlockState state) {
+        return true;
     }
 }

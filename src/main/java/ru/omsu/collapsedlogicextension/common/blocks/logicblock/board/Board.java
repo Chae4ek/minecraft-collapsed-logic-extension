@@ -43,8 +43,11 @@ public class Board implements Serializable {
     /** @return true, если сторона блока side может взаимодействовать с редстоуном */
     public boolean canConnectRedstone(final Direction3D side) {
         // TODO: сделать включение/отключение сторон блока (?)
+        return true;
+    }
 
-        return cells[side.y][side.x].getTexture().getParts().size()>1;
+    public int getPowerOnSide(final Direction3D side){
+        return cells[side.y][side.x].isActive() ? 15 : 0;
     }
 
     public void applyTool(final Tool tool, final int x, final int y) {

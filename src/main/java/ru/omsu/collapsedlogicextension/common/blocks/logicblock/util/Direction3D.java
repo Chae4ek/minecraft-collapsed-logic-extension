@@ -1,13 +1,12 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.util;
 
 import net.minecraft.util.Direction;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
 
 public enum Direction3D {
     UP(12, 0),
     DOWN(12, 2),
     NORTH(12, 4),
-    SOUTH(-100, -100),
+    SOUTH(0, 4),
     WEST(12, 6),
     EAST(12, 8);
 

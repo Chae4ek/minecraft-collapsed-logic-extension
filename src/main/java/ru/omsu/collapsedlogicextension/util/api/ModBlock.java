@@ -2,16 +2,24 @@ package ru.omsu.collapsedlogicextension.util.api;
 
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneBlock;
+import net.minecraft.block.RepeaterBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockTileEntity;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
+
+import static ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter.POWER;
 
 /** Основной класс для всех блоков мода */
 public abstract class ModBlock<E extends ModBlock<E>> {
@@ -101,6 +109,9 @@ public abstract class ModBlock<E extends ModBlock<E>> {
         return ((TileEntityAdapter<T>) world.getTileEntity(pos)).tileEntity;
     }
 
+    public boolean canProvidePower(BlockState state){
+        return true;
+    }
     /**
      * @return физический (майнкрафтовский) tile entity этого объекта, если он есть, иначе крашнется
      *     игра
@@ -110,6 +121,17 @@ public abstract class ModBlock<E extends ModBlock<E>> {
     public final <T extends ModTileEntity<T>> TileEntityAdapter<T> getTileEntityAdapterForThis(
             final World worldIn, final BlockPos pos) {
         return ((TileEntityAdapter<T>) worldIn.getTileEntity(pos));
+    }
+
+    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side){
+        return 0;
+    }
+
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos) {
+        for(Direction3D direction : Direction3D.values()){
+            int power = this.<LogicBlockTileEntity>getModTileEntityForThis(worldIn, pos).board.getPowerOnSide(direction);
+            worldIn.setBlockState(pos, state.with(POWER, power));
+        }
     }
 
     public interface ModBlockFactory<E extends ModBlock<E>> {
