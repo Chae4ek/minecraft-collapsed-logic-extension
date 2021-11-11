@@ -95,4 +95,9 @@ public class OperatorOr extends CellState {
         Direction2D direction1 = direction.opposite();
         return direction1 == output || direction1 == input1 || direction1 == input2;
     }
+
+    @Override
+    public boolean isConductive() {
+        return false;
+    }
 }

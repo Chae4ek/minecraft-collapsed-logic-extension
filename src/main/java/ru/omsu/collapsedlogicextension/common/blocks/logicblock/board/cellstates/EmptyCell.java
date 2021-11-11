@@ -38,4 +38,9 @@ public class EmptyCell extends CellState {
     public boolean canBeConnected(final Direction2D fromToThis) {
         return false;
     }
+
+    @Override
+    public boolean isConductive() {
+        return false;
+    }
 }

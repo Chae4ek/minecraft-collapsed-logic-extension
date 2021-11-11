@@ -44,15 +44,15 @@ public class LogicBlock extends ModBlock<LogicBlock> {
             final BlockPos pos,
             final BlockState state,
             @Nullable final Direction side) {
-        return side != null
-                && this.<LogicBlockTileEntity>getModTileEntityForThis(world, pos)
-                        .board
-                        .canConnectRedstone(Direction3D.convert(side));
+        return side!=null && LogicBlockTileEntity.board.canConnectRedstone(Direction3D.convert(side));
     }
 
+    //TODO: сделать вызов статичного поля
     @Override
     public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return this.<LogicBlockTileEntity>getModTileEntityForThis(blockAccess, pos).board.getPowerOnSide(Direction3D.convert(side));
+        return LogicBlockTileEntity
+                   .board
+                   .getPowerOnSide(Direction3D.convert(side));
     }
 
     @Override

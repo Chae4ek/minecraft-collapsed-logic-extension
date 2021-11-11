@@ -77,4 +77,9 @@ public class Wire extends CellState {
     public boolean canBeConnected(final Direction2D fromToThis) {
         return connections.contains(fromToThis.opposite());
     }
+
+    @Override
+    public boolean isConductive() {
+        return true;
+    }
 }

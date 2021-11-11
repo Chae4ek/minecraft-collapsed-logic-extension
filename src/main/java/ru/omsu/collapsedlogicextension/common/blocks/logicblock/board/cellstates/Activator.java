@@ -48,4 +48,9 @@ public class Activator extends CellState {
     public boolean canBeConnected(final Direction2D direction) {
         return true;
     }
+
+    @Override
+    public boolean isConductive() {
+        return true;
+    }
 }

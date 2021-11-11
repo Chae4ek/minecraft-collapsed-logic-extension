@@ -67,4 +67,9 @@ public class OperatorNot extends CellState {
     public boolean canBeConnected(final Direction2D direction) {
         return direction == input || direction == output;
     }
+
+    @Override
+    public boolean isConductive() {
+        return false;
+    }
 }

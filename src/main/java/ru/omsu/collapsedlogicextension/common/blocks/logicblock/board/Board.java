@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Activator;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.EmptyCell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Wire;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools.Tool;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
@@ -43,7 +44,7 @@ public class Board implements Serializable {
     /** @return true, если сторона блока side может взаимодействовать с редстоуном */
     public boolean canConnectRedstone(final Direction3D side) {
         // TODO: сделать включение/отключение сторон блока (?)
-        return true;
+        return cells[side.y][side.x].isConductive();
     }
 
     public int getPowerOnSide(final Direction3D side){
@@ -185,6 +186,10 @@ public class Board implements Serializable {
         /** @return true, если клетка активирована */
         public boolean isActive() {
             return cellState.isActive();
+        }
+
+        public boolean isConductive(){
+            return cellState.isConductive();
         }
 
         /** @return true, если клетка может быть соединена с клеткой в указанном направлении */

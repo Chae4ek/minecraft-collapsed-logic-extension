@@ -1,7 +1,5 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board;
@@ -10,11 +8,10 @@ import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 
 public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
 
-    public final Board board;
+    public static final Board board = new Board();
 
     public LogicBlockTileEntity(final TileEntityAdapter<LogicBlockTileEntity> tileEntityAdapter) {
         super(tileEntityAdapter);
-        board = new Board();
     }
 
     @Override
