@@ -11,6 +11,7 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -127,12 +128,7 @@ public abstract class ModBlock<E extends ModBlock<E>> {
         return 0;
     }
 
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos) {
-        for(Direction3D direction : Direction3D.values()){
-            int power = this.<LogicBlockTileEntity>getModTileEntityForThis(worldIn, pos).board.getPowerOnSide(direction);
-            worldIn.setBlockState(pos, state.with(POWER, power));
-        }
-    }
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {}
 
     public interface ModBlockFactory<E extends ModBlock<E>> {
         E create(BlockAdapter<E> adapter);

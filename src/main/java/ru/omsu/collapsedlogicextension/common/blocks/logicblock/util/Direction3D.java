@@ -6,7 +6,7 @@ public enum Direction3D {
     UP(12, 0),
     DOWN(12, 2),
     NORTH(12, 4),
-    SOUTH(0, 4),
+    SOUTH(-1, 4),
     WEST(12, 6),
     EAST(12, 8);
 

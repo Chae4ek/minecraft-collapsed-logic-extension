@@ -8,10 +8,7 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Activator;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.EmptyCell;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Wire;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.*;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools.Tool;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
@@ -29,11 +26,24 @@ public class Board implements Serializable {
     /** Фантомная клетка для активации начальной */
     private final Cell activator = new Cell(this, -1, 4);
 
+    private final Cell[] inputs = {
+            new Cell(this, 13, 0),
+            new Cell(this, 13, 2),
+            new Cell(this, 13, 4),
+            new Cell(this, 13, 6),
+            new Cell(this, 13, 8)
+    };
+
     private final Cell[][] cells = new Cell[9][13];
     private final Queue<Runnable> deferredEvents = new ArrayDeque<>();
 
     public Board() {
         activator.cellState = new Activator(activator);
+
+        for(int i = 0; i < inputs.length; i++){
+            inputs[i].cellState = new Input(inputs[i]);
+        }
+
         for (int y = 0; y < cells.length; ++y) {
             for (int x = 0; x < cells[0].length; ++x) {
                 cells[y][x] = new Cell(this, x, y);
@@ -58,6 +68,9 @@ public class Board implements Serializable {
 
     private Cell getCell(final int x, final int y) {
         if (x == activator.x && y == activator.y) return activator;
+        if (x == 13 && y%2==0){
+            return inputs[y/2];
+        }
         return x < 0 || y < 0 || x >= cells[0].length || y >= cells.length
                 ? emptyCell
                 : cells[y][x];

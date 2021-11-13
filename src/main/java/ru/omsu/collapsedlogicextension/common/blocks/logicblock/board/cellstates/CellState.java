@@ -35,9 +35,6 @@ public abstract class CellState {
 
     /** @return true, если клетка активирована */
     public final boolean isActive() {
-        if(parent.x == 12){
-            System.out.println("12 " + parent.y + " " + isActive);
-        }
         return isActive;
     }
 

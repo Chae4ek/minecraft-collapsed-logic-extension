@@ -4,14 +4,15 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
+
 
 public class LogicBlock extends ModBlock<LogicBlock> {
 
@@ -44,16 +45,18 @@ public class LogicBlock extends ModBlock<LogicBlock> {
             final BlockPos pos,
             final BlockState state,
             @Nullable final Direction side) {
-        return side!=null && LogicBlockTileEntity.board.canConnectRedstone(Direction3D.convert(side));
+        return side!=null && this.<LogicBlockTileEntity>getModTileEntityForThis(world, pos).board.canConnectRedstone(Direction3D.convert(side));
     }
 
-    //TODO: сделать вызов статичного поля
     @Override
     public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return LogicBlockTileEntity
+        return this.<LogicBlockTileEntity>getModTileEntityForThis(blockAccess, pos)
                    .board
                    .getPowerOnSide(Direction3D.convert(side));
     }
+
+    @Override
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {}
 
     @Override
     public boolean isAffectRedstone() {

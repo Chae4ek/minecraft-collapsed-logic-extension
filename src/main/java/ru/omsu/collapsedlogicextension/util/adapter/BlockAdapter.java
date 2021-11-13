@@ -22,9 +22,11 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
 import ru.omsu.collapsedlogicextension.init.Registrator;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
@@ -37,7 +39,7 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     private static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
-    //,
+
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private final E block;
@@ -134,6 +136,11 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     }
 
     @Override
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        block.onNeighborChange(state, world, pos, neighbor);
+    }
+
+    @Override
     public boolean canConnectRedstone(
             final BlockState state,
             final IBlockReader world,
@@ -150,10 +157,5 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     @Override
     public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
         return block.getWeakPower(blockState, blockAccess, pos, side);
-    }
-
-    @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        block.tick(state, worldIn, pos);
     }
 }

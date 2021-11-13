@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "rgr",
+        "fef",
+        "ooo"
+    ],
+    "key": {
+		"r": {
+			"item": "minecraft:redstone"
+		},
+		"g": {
+			"item": "minecraft:glass_pane"
+		},
+		"f": {
+			"item": "minecraft:flint"
+		},
+		"e": {
+			"item": "minecraft:emerald"
+		},
+		"o": {
+			"item": "minecraft:iron_ingot"
+		}
+    },
+    "result": {
+        "item": "collapsedlogicextension:logic_block",
+        "count": 1
+    }
+}

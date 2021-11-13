@@ -8,10 +8,11 @@ import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 
 public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
 
-    public static final Board board = new Board();
+    public final Board board;
 
     public LogicBlockTileEntity(final TileEntityAdapter<LogicBlockTileEntity> tileEntityAdapter) {
         super(tileEntityAdapter);
+        board = new Board();
     }
 
     @Override
@@ -26,6 +27,7 @@ public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
         compound.putString("Board", board.serialize());
         return compound;
     }
+
     @Override
     public void update() {
         board.update();
