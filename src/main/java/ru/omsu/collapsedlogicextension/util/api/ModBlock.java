@@ -2,25 +2,18 @@ package ru.omsu.collapsedlogicextension.util.api;
 
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.RedstoneBlock;
-import net.minecraft.block.RepeaterBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockTileEntity;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 
-import static ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter.POWER;
 
 /** Основной класс для всех блоков мода */
 public abstract class ModBlock<E extends ModBlock<E>> {

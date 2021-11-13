@@ -53,12 +53,11 @@ public class Board implements Serializable {
 
     /** @return true, если сторона блока side может взаимодействовать с редстоуном */
     public boolean canConnectRedstone(final Direction3D side) {
-        // TODO: сделать включение/отключение сторон блока (?)
-        return cells[side.y][side.x].isConductive();
+        return getCell(side.x, side.y).isConductive();
     }
 
     public int getPowerOnSide(final Direction3D side){
-        return cells[side.y][side.x].isActive() ? 15 : 0;
+        return getCell(side.x, side.y).isActive() ? 15 : 0;
     }
 
     public void applyTool(final Tool tool, final int x, final int y) {
@@ -88,7 +87,6 @@ public class Board implements Serializable {
     // TODO: переделать на Gson
     @Override
     public String serialize() {
-        logger.log(Level.INFO, "Serialising board...");
         final StringBuilder builder = new StringBuilder();
         for (final Cell[] cells : cells) {
             for (final Cell cell : cells) {
@@ -101,7 +99,6 @@ public class Board implements Serializable {
     // TODO: переделать на Gson
     @Override
     public void deserialize(final String data) {
-        logger.log(Level.INFO, "Deserialising board...");
         try {
             StringBuilder builder = new StringBuilder();
             int x = 0, y = 0;

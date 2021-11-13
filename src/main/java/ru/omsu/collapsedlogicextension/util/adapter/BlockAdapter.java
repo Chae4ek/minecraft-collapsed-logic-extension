@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -22,16 +23,15 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
-import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
+import ru.omsu.collapsedlogicextension.init.ModObjectEnum;
 import ru.omsu.collapsedlogicextension.init.Registrator;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 
-import java.util.Random;
 
 /** Перехватывает методы физического блока */
 public class BlockAdapter<E extends ModBlock<E>> extends Block {
@@ -43,11 +43,13 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private final E block;
-    private final ModObject<?, E, ?, ?, ?> modObject;
+    private final ModObjectEnum.ModObject<?, E, ?, ?, ?> modObject;
 
-    public BlockAdapter(final ModObject<?, E, ?, ?, ?> modObject) {
+    private TileEntity te;
+
+    public BlockAdapter(final ModObjectEnum.ModObject<?, E, ?, ?, ?> modObject) {
         // TODO: добавить настройки в параметры конструктора?
-        super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE));
+        super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3));
         setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POWER, 0).with(POWERED, true));
         this.modObject = modObject;
         block = modObject.blockFactory.create(this);
@@ -58,10 +60,15 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
         return modObject.tileEntityFactory != null;
     }
 
+    //TODO: мне кажется это костыль))) можн адаптер написать для IBlockReader
     @Override
     public final TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-        if (modObject.tileEntityFactory != null) {
-            return Registrator.getTileEntityType(modObject.thisEnum).create();
+        if (modObject.tileEntityFactory != null && world instanceof ServerWorld) {
+            te = Registrator.getTileEntityType(modObject.thisEnum).create();
+            return te;
+        }
+        else if(world instanceof ClientWorld){
+            return te;
         }
         return null;
     }
@@ -133,6 +140,11 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
         } else {
             block.onBlockReplace(worldIn, pos, state, newState);
         }
+    }
+
+    @Override
+    public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
+        System.out.println("updateNeighbors");
     }
 
     @Override

@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -13,12 +14,13 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 
-
 public class LogicBlock extends ModBlock<LogicBlock> {
+
 
     public LogicBlock(final BlockAdapter<LogicBlock> blockAdapter) {
         super(blockAdapter);
     }
+
 
     @Override
     public void onBlockActive(final World worldIn, final BlockPos pos, final PlayerEntity player) {
@@ -56,7 +58,11 @@ public class LogicBlock extends ModBlock<LogicBlock> {
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {}
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        if(!world.isRemote()){
+
+        }
+    }
 
     @Override
     public boolean isAffectRedstone() {
