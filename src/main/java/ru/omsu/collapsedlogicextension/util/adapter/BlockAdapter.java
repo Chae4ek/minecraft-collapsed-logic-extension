@@ -28,7 +28,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
-import ru.omsu.collapsedlogicextension.init.ModObjectEnum;
+import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
 import ru.omsu.collapsedlogicextension.init.Registrator;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 
@@ -43,11 +43,11 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private final E block;
-    private final ModObjectEnum.ModObject<E, ?, ?> modObject;
+    private final ModObject<E, ?, ?> modObject;
 
     private TileEntity te;
 
-    public BlockAdapter(final ModObjectEnum.ModObject<E, ?, ?> modObject) {
+    public BlockAdapter(final ModObject<E, ?, ?> modObject) {
         // TODO: добавить настройки в параметры конструктора?
         super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3));
         setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POWER, 0).with(POWERED, true));

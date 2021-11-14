@@ -13,7 +13,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeContainerType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -23,7 +22,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.ContainerAdapter;
@@ -31,12 +29,8 @@ import ru.omsu.collapsedlogicextension.util.adapter.ContainerScreenAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 
 /** Регистрирует и хранит все объекты мода */
-@EventBusSubscriber(modid = ModInit.MOD_ID, bus = Bus.MOD)
 public class Registrator {
 
-    /** Все зарегистрированные предметы (items) мода */
-    private static final Map<ModObjectEnum, RegistryObject<Item>> registeredItems =
-            new EnumMap<>(ModObjectEnum.class);
     /** Все зарегистрированные блоки мода */
     private static final Map<ModObjectEnum, RegistryObject<Block>> registeredBlocks =
             new EnumMap<>(ModObjectEnum.class);
@@ -47,26 +41,8 @@ public class Registrator {
     private static final Map<ModObjectEnum, RegistryObject<ContainerType<ContainerAdapter<?>>>>
             registeredContainers = new EnumMap<>(ModObjectEnum.class);
 
-    /** Регистратор блоков */
-    private static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, ModInit.MOD_ID);
-    /** Регистратор tile entities */
-    private static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
-            DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, ModInit.MOD_ID);
-    /** Регистратор контейнеров */
-    private static final DeferredRegister<ContainerType<?>> CONTAINERS =
-            DeferredRegister.create(ForgeRegistries.CONTAINERS, ModInit.MOD_ID);
-
-    private static final DeferredRegister<SoundEvent> SOUNDS =
-            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ModInit.MOD_ID);
-
     // TODO: сделать нормальную мапу
     public static RegistryObject<SoundEvent> buttonClick;
-
-    /** @return зарегистрированный предмет */
-    public static Item getItem(final ModObjectEnum modObject) {
-        return registeredItems.get(modObject).get();
-    }
 
     /** @return зарегистрированный блок */
     public static Block getBlock(final ModObjectEnum modObject) {
@@ -86,6 +62,22 @@ public class Registrator {
 
     /** Регистрирует все объекты мода */
     public static void registerAll() {
+        // Регистратор предметов
+        final DeferredRegister<Item> ITEMS =
+                DeferredRegister.create(ForgeRegistries.ITEMS, ModInit.MOD_ID);
+        // Регистратор блоков
+        final DeferredRegister<Block> BLOCKS =
+                DeferredRegister.create(ForgeRegistries.BLOCKS, ModInit.MOD_ID);
+        // Регистратор tile entities
+        final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
+                DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, ModInit.MOD_ID);
+        // Регистратор контейнеров
+        final DeferredRegister<ContainerType<?>> CONTAINERS =
+                DeferredRegister.create(ForgeRegistries.CONTAINERS, ModInit.MOD_ID);
+        // Регистратор звуков
+        final DeferredRegister<SoundEvent> SOUNDS =
+                DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ModInit.MOD_ID);
+
         // TODO: сделать отдельное перечисление звуков?
         final ResourceLocation button = new ResourceLocation(ModInit.MOD_ID, "button_click");
         buttonClick = SOUNDS.register("button_click", () -> new SoundEvent(button));
@@ -114,6 +106,13 @@ public class Registrator {
                                                             registeredBlock.get())
                                                     .build(null)));
                 }
+
+                ITEMS.register(
+                        registryName,
+                        () ->
+                                new BlockItem(
+                                        registeredBlock.get(),
+                                        new Item.Properties().group(ModInit.MOD_GROUP)));
             }
 
             // Регистрация контейнера для объекта мода, если он есть
@@ -138,22 +137,7 @@ public class Registrator {
         TILE_ENTITIES.register(bus);
         CONTAINERS.register(bus);
         SOUNDS.register(bus);
-    }
-
-    /**
-     * Регистрирует аналоги предметов для блоков с настройками по-умолчанию из {@link
-     * net.minecraft.item.Item.Properties}
-     */
-    @SubscribeEvent
-    public static void onRegisterItems(final RegistryEvent.Register<Item> event) {
-        final IForgeRegistry<Item> registry = event.getRegistry();
-        for (final RegistryObject<Block> regBlock : BLOCKS.getEntries()) {
-            final Block block = regBlock.get();
-            final BlockItem blockItem =
-                    new BlockItem(block, new Item.Properties().group(ModInit.MOD_GROUP));
-            blockItem.setRegistryName(block.getRegistryName());
-            registry.register(blockItem);
-        }
+        ITEMS.register(bus);
     }
 
     /** Регистрация GUI только для клиента */
