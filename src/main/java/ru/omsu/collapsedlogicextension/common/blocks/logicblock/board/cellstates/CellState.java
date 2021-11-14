@@ -1,7 +1,5 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
-import net.minecraft.block.ComparatorBlock;
-import net.minecraft.block.RedstoneBlock;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;

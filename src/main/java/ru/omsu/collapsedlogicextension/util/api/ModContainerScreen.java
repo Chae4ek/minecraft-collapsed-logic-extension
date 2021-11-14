@@ -1,6 +1,5 @@
 package ru.omsu.collapsedlogicextension.util.api;
 
-import net.minecraft.block.RedstoneTorchBlock;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;

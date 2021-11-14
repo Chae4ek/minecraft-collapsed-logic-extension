@@ -4,11 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.*;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Activator;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.CellState;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.EmptyCell;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates.Input;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools.Tool;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
@@ -27,11 +28,11 @@ public class Board implements Serializable {
     private final Cell activator = new Cell(this, -1, 4);
 
     private final Cell[] inputs = {
-            new Cell(this, 13, 0),
-            new Cell(this, 13, 2),
-            new Cell(this, 13, 4),
-            new Cell(this, 13, 6),
-            new Cell(this, 13, 8)
+        new Cell(this, 13, 0),
+        new Cell(this, 13, 2),
+        new Cell(this, 13, 4),
+        new Cell(this, 13, 6),
+        new Cell(this, 13, 8)
     };
 
     private final Cell[][] cells = new Cell[9][13];
@@ -40,7 +41,7 @@ public class Board implements Serializable {
     public Board() {
         activator.cellState = new Activator(activator);
 
-        for(int i = 0; i < inputs.length; i++){
+        for (int i = 0; i < inputs.length; i++) {
             inputs[i].cellState = new Input(inputs[i]);
         }
 
@@ -56,7 +57,7 @@ public class Board implements Serializable {
         return getCell(side.x, side.y).isConductive();
     }
 
-    public int getPowerOnSide(final Direction3D side){
+    public int getPowerOnSide(final Direction3D side) {
         return getCell(side.x, side.y).isActive() ? 15 : 0;
     }
 
@@ -67,8 +68,8 @@ public class Board implements Serializable {
 
     private Cell getCell(final int x, final int y) {
         if (x == activator.x && y == activator.y) return activator;
-        if (x == 13 && y%2==0){
-            return inputs[y/2];
+        if (x == 13 && y % 2 == 0) {
+            return inputs[y / 2];
         }
         return x < 0 || y < 0 || x >= cells[0].length || y >= cells.length
                 ? emptyCell
@@ -198,7 +199,7 @@ public class Board implements Serializable {
             return cellState.isActive();
         }
 
-        public boolean isConductive(){
+        public boolean isConductive() {
             return cellState.isConductive();
         }
 

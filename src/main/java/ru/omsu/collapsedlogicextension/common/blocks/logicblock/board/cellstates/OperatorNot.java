@@ -1,7 +1,5 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.cellstates;
 
-import java.util.EnumSet;
-import java.util.Set;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
@@ -31,7 +29,7 @@ public class OperatorNot extends CellState {
 
     @Override
     public void activate(final Cell from, final Direction2D fromToThis) {
-        if(isOutputActive && this.canBeConnected(fromToThis)){
+        if (isOutputActive && canBeConnected(fromToThis)) {
             forceActivate();
         }
     }
@@ -41,14 +39,14 @@ public class OperatorNot extends CellState {
         isOutputActive = false;
         final Cell outputCell = parent.getCell(output);
 
-        if(outputCell.canBeConnected(output.opposite())){
+        if (outputCell.canBeConnected(output.opposite())) {
             outputCell.deactivate(parent, output);
         }
     }
 
     @Override
     public void deactivate(final Cell from, final Direction2D fromToThis) {
-        if(!isOutputActive && this.canBeConnected(fromToThis)){
+        if (!isOutputActive && canBeConnected(fromToThis)) {
             forceDeactivate();
         }
     }
@@ -58,7 +56,7 @@ public class OperatorNot extends CellState {
         isOutputActive = true;
         final Cell outputCell = parent.getCell(output);
 
-        if(outputCell.canBeConnected(output.opposite())){
+        if (outputCell.canBeConnected(output.opposite())) {
             outputCell.activate(parent, output);
         }
     }

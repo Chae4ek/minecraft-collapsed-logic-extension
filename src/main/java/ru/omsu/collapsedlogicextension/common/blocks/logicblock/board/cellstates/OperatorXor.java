@@ -21,7 +21,7 @@ public class OperatorXor extends CellState {
 
     @Override
     public CombinedTextureRegions getTexture() {
-        return new CombinedTextureRegions(51, 17*output.id);
+        return new CombinedTextureRegions(51, 17 * output.id);
     }
 
     @Override
@@ -36,14 +36,14 @@ public class OperatorXor extends CellState {
     @Override
     public void activate(final Cell from, final Direction2D fromToThis) {
 
-        if(fromToThis.opposite() == input1){
+        if (fromToThis.opposite() == input1) {
             firstInputActive = true;
         }
-        if(fromToThis.opposite() == input2){
+        if (fromToThis.opposite() == input2) {
             secondInputActive = true;
         }
 
-        if(!outputActive || this.canBeConnected(fromToThis)){
+        if (!outputActive || canBeConnected(fromToThis)) {
             forceActivate();
         }
     }
@@ -54,28 +54,26 @@ public class OperatorXor extends CellState {
 
         final Cell connectedCellFromOutput = parent.getCell(output);
 
-        if(connectedCellFromOutput.canBeConnected(output.opposite())){
-            if(outputActive){
+        if (connectedCellFromOutput.canBeConnected(output.opposite())) {
+            if (outputActive) {
                 connectedCellFromOutput.activate(parent, output);
-            }
-            else{
+            } else {
                 connectedCellFromOutput.deactivate(parent, output);
             }
         }
-
     }
 
     @Override
     public void deactivate(final Cell from, final Direction2D fromToThis) {
 
-        if(fromToThis.opposite() == input1){
+        if (fromToThis.opposite() == input1) {
             firstInputActive = false;
         }
-        if(fromToThis.opposite() == input2){
+        if (fromToThis.opposite() == input2) {
             secondInputActive = false;
         }
 
-        if(!outputActive || this.canBeConnected(fromToThis)){
+        if (!outputActive || canBeConnected(fromToThis)) {
             forceDeactivate();
         }
     }
@@ -85,14 +83,14 @@ public class OperatorXor extends CellState {
         outputActive = firstInputActive ^ secondInputActive;
         final Cell connectedCellFromOutput = parent.getCell(output);
 
-        if(connectedCellFromOutput.canBeConnected(output.opposite())){
+        if (connectedCellFromOutput.canBeConnected(output.opposite())) {
             connectedCellFromOutput.deactivate(parent, output);
         }
     }
 
     @Override
     public boolean canBeConnected(final Direction2D direction) {
-        Direction2D direction1 = direction.opposite();
+        final Direction2D direction1 = direction.opposite();
         return direction1 == output || direction1 == input1 || direction1 == input2;
     }
 

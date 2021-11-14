@@ -126,17 +126,19 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
                 cap, LazyOptional.of(() -> slots));
     }
 
-
-
     @Override
     public void tick() {
         tileEntity.update();
-        if(tileEntity instanceof LogicBlockTileEntity) {
-            for (Direction direction : Direction.values()) {
-                BlockState neighbor = world.getBlockState(pos.offset(direction));
-                if(neighbor.getBlock() == Blocks.REDSTONE_WIRE) {
-                    world.setBlockState(pos.offset(direction), neighbor.with(BlockStateProperties.POWER_0_15,
-                            ((LogicBlockTileEntity) tileEntity).board.getPowerOnSide(Direction3D.convert(direction))));
+        if (tileEntity instanceof LogicBlockTileEntity) {
+            for (final Direction direction : Direction.values()) {
+                final BlockState neighbor = world.getBlockState(pos.offset(direction));
+                if (neighbor.getBlock() == Blocks.REDSTONE_WIRE) {
+                    world.setBlockState(
+                            pos.offset(direction),
+                            neighbor.with(
+                                    BlockStateProperties.POWER_0_15,
+                                    ((LogicBlockTileEntity) tileEntity)
+                                            .board.getPowerOnSide(Direction3D.convert(direction))));
                 }
             }
         }

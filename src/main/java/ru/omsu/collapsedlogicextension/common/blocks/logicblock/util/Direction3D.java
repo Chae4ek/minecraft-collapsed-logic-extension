@@ -31,9 +31,8 @@ public enum Direction3D {
 
     public final int x, y;
 
-    Direction3D(int x, int y){
+    Direction3D(final int x, final int y) {
         this.x = x;
         this.y = y;
     }
-
 }

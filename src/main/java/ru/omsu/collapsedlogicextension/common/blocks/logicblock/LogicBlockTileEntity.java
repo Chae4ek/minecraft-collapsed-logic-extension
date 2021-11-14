@@ -3,7 +3,6 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board;
-import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 
@@ -21,7 +20,6 @@ public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
         if (compound.contains("Board", Constants.NBT.TAG_STRING)) {
             board.deserialize(compound.getString("Board"));
         }
-
     }
 
     @Override
@@ -34,5 +32,4 @@ public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
     public void update() {
         board.update();
     }
-
 }

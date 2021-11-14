@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D;
@@ -50,7 +48,8 @@ public class Wire extends CellState {
         isActive = true;
         for (final Direction2D connectedDirection : connections) {
             final Cell connectedCell = parent.getCell(connectedDirection);
-            if (fromToThis!=connectedDirection.opposite() && connectedCell.canBeConnected(connectedDirection)) {
+            if (fromToThis != connectedDirection.opposite()
+                    && connectedCell.canBeConnected(connectedDirection)) {
                 connectedCell.activate(parent, connectedDirection);
             }
         }
@@ -67,7 +66,8 @@ public class Wire extends CellState {
         isActive = false;
         for (final Direction2D connectedDirection : connections) {
             final Cell connectedCell = parent.getCell(connectedDirection);
-            if (fromToThis!=connectedDirection.opposite() && connectedCell.canBeConnected(connectedDirection)) {
+            if (fromToThis != connectedDirection.opposite()
+                    && connectedCell.canBeConnected(connectedDirection)) {
                 connectedCell.deactivate(parent, connectedDirection);
             }
         }

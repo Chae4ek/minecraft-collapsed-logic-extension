@@ -2,14 +2,11 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.RepeaterBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
@@ -17,11 +14,9 @@ import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 
 public class LogicBlock extends ModBlock<LogicBlock> {
 
-
     public LogicBlock(final BlockAdapter<LogicBlock> blockAdapter) {
         super(blockAdapter);
     }
-
 
     @Override
     public void onBlockActive(final World worldIn, final BlockPos pos, final PlayerEntity player) {
@@ -48,14 +43,21 @@ public class LogicBlock extends ModBlock<LogicBlock> {
             final BlockPos pos,
             final BlockState state,
             @Nullable final Direction side) {
-        return side!=null && this.<LogicBlockTileEntity>getModTileEntityForThis(world, pos).board.canConnectRedstone(Direction3D.convert(side));
+        return side != null
+                && this.<LogicBlockTileEntity>getModTileEntityForThis(world, pos)
+                        .board
+                        .canConnectRedstone(Direction3D.convert(side));
     }
 
     @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+    public int getWeakPower(
+            final BlockState blockState,
+            final IBlockReader blockAccess,
+            final BlockPos pos,
+            final Direction side) {
         return this.<LogicBlockTileEntity>getModTileEntityForThis(blockAccess, pos)
-                   .board
-                   .getPowerOnSide(Direction3D.convert(side));
+                .board
+                .getPowerOnSide(Direction3D.convert(side));
     }
 
     @Override
@@ -69,9 +71,7 @@ public class LogicBlock extends ModBlock<LogicBlock> {
     }
 
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean canProvidePower(final BlockState state) {
         return true;
     }
-
-
 }

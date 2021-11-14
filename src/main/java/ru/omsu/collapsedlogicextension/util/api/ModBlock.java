@@ -8,12 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
-
 
 /** Основной класс для всех блоков мода */
 public abstract class ModBlock<E extends ModBlock<E>> {
@@ -103,7 +101,7 @@ public abstract class ModBlock<E extends ModBlock<E>> {
         return ((TileEntityAdapter<T>) world.getTileEntity(pos)).tileEntity;
     }
 
-    public boolean canProvidePower(BlockState state){
+    public boolean canProvidePower(final BlockState state) {
         return true;
     }
     /**
@@ -117,7 +115,11 @@ public abstract class ModBlock<E extends ModBlock<E>> {
         return ((TileEntityAdapter<T>) worldIn.getTileEntity(pos));
     }
 
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side){
+    public int getWeakPower(
+            final BlockState blockState,
+            final IBlockReader blockAccess,
+            final BlockPos pos,
+            final Direction side) {
         return 0;
     }
 

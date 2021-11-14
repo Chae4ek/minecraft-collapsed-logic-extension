@@ -1,7 +1,6 @@
 package ru.omsu.collapsedlogicextension.util.api;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 
 /** Основной класс для всех tile entities мода */
