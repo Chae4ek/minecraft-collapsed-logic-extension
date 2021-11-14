@@ -3,6 +3,7 @@ package ru.omsu.collapsedlogicextension.util.adapter;
 import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RepeaterBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
@@ -31,6 +32,8 @@ import net.minecraftforge.common.ToolType;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum;
 import ru.omsu.collapsedlogicextension.init.Registrator;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
+
+import java.util.Random;
 
 
 /** Перехватывает методы физического блока */
@@ -140,16 +143,6 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
         } else {
             block.onBlockReplace(worldIn, pos, state, newState);
         }
-    }
-
-    @Override
-    public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
-        System.out.println("updateNeighbors");
-    }
-
-    @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        block.onNeighborChange(state, world, pos, neighbor);
     }
 
     @Override

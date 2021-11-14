@@ -21,6 +21,7 @@ public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
         if (compound.contains("Board", Constants.NBT.TAG_STRING)) {
             board.deserialize(compound.getString("Board"));
         }
+
     }
 
     @Override
