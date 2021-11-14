@@ -1,5 +1,7 @@
 package ru.omsu.collapsedlogicextension.util.adapter;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -8,6 +10,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -19,6 +22,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockTileEntity;
+import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
 import ru.omsu.collapsedlogicextension.init.ModInit;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
@@ -121,8 +126,19 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
                 cap, LazyOptional.of(() -> slots));
     }
 
+
+
     @Override
     public void tick() {
         tileEntity.update();
+        if(tileEntity instanceof LogicBlockTileEntity) {
+            for (Direction direction : Direction.values()) {
+                BlockState neighbor = world.getBlockState(pos.offset(direction));
+                if(neighbor.getBlock() == Blocks.REDSTONE_WIRE) {
+                    world.setBlockState(pos.offset(direction), neighbor.with(BlockStateProperties.POWER_0_15,
+                            ((LogicBlockTileEntity) tileEntity).board.getPowerOnSide(Direction3D.convert(direction))));
+                }
+            }
+        }
     }
 }

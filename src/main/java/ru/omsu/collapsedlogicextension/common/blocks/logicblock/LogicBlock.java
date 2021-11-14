@@ -2,6 +2,7 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RepeaterBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -58,13 +59,6 @@ public class LogicBlock extends ModBlock<LogicBlock> {
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        if(!world.isRemote()){
-
-        }
-    }
-
-    @Override
     public boolean isAffectRedstone() {
         return true;
     }
@@ -78,4 +72,6 @@ public class LogicBlock extends ModBlock<LogicBlock> {
     public boolean canProvidePower(BlockState state) {
         return true;
     }
+
+
 }

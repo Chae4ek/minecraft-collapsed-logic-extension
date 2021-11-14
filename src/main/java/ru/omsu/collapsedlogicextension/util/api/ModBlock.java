@@ -121,8 +121,6 @@ public abstract class ModBlock<E extends ModBlock<E>> {
         return 0;
     }
 
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {}
-
     public interface ModBlockFactory<E extends ModBlock<E>> {
         E create(BlockAdapter<E> adapter);
     }
