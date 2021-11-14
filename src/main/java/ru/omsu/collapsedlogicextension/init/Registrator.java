@@ -91,7 +91,7 @@ public class Registrator {
         buttonClick = SOUNDS.register("button_click", () -> new SoundEvent(button));
 
         for (final ModObjectEnum modObjectEnum : ModObjectEnum.values()) {
-            final ModObject<?, ?, ?, ?> modObject = modObjectEnum.modObject;
+            final ModObject<?, ?, ?> modObject = modObjectEnum.modObject;
             final String registryName = modObject.registryName;
 
             // Регистрация блока для объекта мода, если он есть
@@ -126,7 +126,10 @@ public class Registrator {
                                         IForgeContainerType.create(
                                                 (windowId, inv, data) ->
                                                         new ContainerAdapter<>(
-                                                                modObject, windowId, inv, data))));
+                                                                modObject.thisEnum,
+                                                                windowId,
+                                                                inv,
+                                                                data))));
             }
         }
 

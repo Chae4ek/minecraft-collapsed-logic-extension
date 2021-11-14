@@ -21,7 +21,7 @@ public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
     private final ContainerAdapter<?> containerAdapter;
 
     public ContainerScreenAdapter(
-            final ModObject<?, ?, ?, E> modObject,
+            final ModObject<?, ?, E> modObject,
             final ContainerAdapter<?> containerAdapter,
             final PlayerInventory inv,
             final ITextComponent titleIn) {
@@ -36,7 +36,7 @@ public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
     @Unsafe
     @SuppressWarnings("unchecked")
     public <T extends ModTileEntity<T>> T getModTileEntity() {
-        return (T) containerAdapter.getTileEntityAdapterForThis(null, null).tileEntity;
+        return (T) containerAdapter.getTileEntityAdapterForThis().tileEntity;
     }
 
     @Override

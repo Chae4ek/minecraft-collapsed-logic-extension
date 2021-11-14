@@ -20,6 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import ru.omsu.collapsedlogicextension.init.ModInit;
+import ru.omsu.collapsedlogicextension.init.ModObjectEnum;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
 import ru.omsu.collapsedlogicextension.init.Registrator;
 import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
@@ -36,12 +37,12 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
     public final E tileEntity;
 
     final ItemStackHandler slots;
-    private final ModObject<?, E, ?, ?> modObject;
+    private final ModObjectEnum modObjectEnum;
     private ITextComponent customName;
 
-    public TileEntityAdapter(final ModObject<?, E, ?, ?> modObject) {
+    public TileEntityAdapter(final ModObject<?, E, ?> modObject) {
         super(Registrator.getTileEntityType(modObject.thisEnum));
-        this.modObject = modObject;
+        modObjectEnum = modObject.thisEnum;
         slots = new ItemStackHandler(1);
         tileEntity = modObject.tileEntityFactory.create(this);
     }
@@ -57,7 +58,7 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
     @Override
     public Container createMenu(
             final int windowID, final PlayerInventory playerInv, final PlayerEntity playerIn) {
-        return new ContainerAdapter<>(modObject, windowID, this);
+        return new ContainerAdapter<>(modObjectEnum, windowID, this);
     }
 
     @Override

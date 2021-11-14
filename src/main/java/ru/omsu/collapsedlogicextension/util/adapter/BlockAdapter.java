@@ -43,11 +43,11 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private final E block;
-    private final ModObjectEnum.ModObject<E, ?, ?, ?> modObject;
+    private final ModObjectEnum.ModObject<E, ?, ?> modObject;
 
     private TileEntity te;
 
-    public BlockAdapter(final ModObjectEnum.ModObject<E, ?, ?, ?> modObject) {
+    public BlockAdapter(final ModObjectEnum.ModObject<E, ?, ?> modObject) {
         // TODO: добавить настройки в параметры конструктора?
         super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3));
         setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POWER, 0).with(POWERED, true));
