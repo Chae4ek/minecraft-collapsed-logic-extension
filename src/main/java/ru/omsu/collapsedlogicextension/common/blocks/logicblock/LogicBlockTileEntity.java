@@ -3,16 +3,18 @@ package ru.omsu.collapsedlogicextension.common.blocks.logicblock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.Board;
-import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 
 public class LogicBlockTileEntity extends ModTileEntity<LogicBlockTileEntity> {
 
-    public final Board board;
+    private final Board board;
 
-    public LogicBlockTileEntity(final TileEntityAdapter<LogicBlockTileEntity> tileEntityAdapter) {
-        super(tileEntityAdapter);
+    public LogicBlockTileEntity() {
         board = new Board();
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     @Override

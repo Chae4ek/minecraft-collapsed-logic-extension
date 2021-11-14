@@ -24,7 +24,7 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
 
     public LogicBlockScreen(final ContainerScreenAdapter<LogicBlockScreen> containerScreenAdapter) {
         super(containerScreenAdapter, 256, 192);
-        board = this.<LogicBlockTileEntity>getModTileEntity().board;
+        board = this.<LogicBlockTileEntity>getModTileEntity().getBoard();
     }
 
     @Override

@@ -9,14 +9,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction3D;
-import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 
 public class LogicBlock extends ModBlock<LogicBlock> {
-
-    public LogicBlock(final BlockAdapter<LogicBlock> blockAdapter) {
-        super(blockAdapter);
-    }
 
     @Override
     public void onBlockActive(final World worldIn, final BlockPos pos, final PlayerEntity player) {
@@ -45,7 +40,7 @@ public class LogicBlock extends ModBlock<LogicBlock> {
             @Nullable final Direction side) {
         return side != null
                 && this.<LogicBlockTileEntity>getModTileEntityForThis(world, pos)
-                        .board
+                        .getBoard()
                         .canConnectRedstone(Direction3D.convert(side));
     }
 
@@ -56,7 +51,7 @@ public class LogicBlock extends ModBlock<LogicBlock> {
             final BlockPos pos,
             final Direction side) {
         return this.<LogicBlockTileEntity>getModTileEntityForThis(blockAccess, pos)
-                .board
+                .getBoard()
                 .getPowerOnSide(Direction3D.convert(side));
     }
 

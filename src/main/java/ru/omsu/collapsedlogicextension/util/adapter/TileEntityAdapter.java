@@ -49,7 +49,7 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
         super(Registrator.getTileEntityType(modObject.thisEnum));
         modObjectEnum = modObject.thisEnum;
         slots = new ItemStackHandler(1);
-        tileEntity = modObject.tileEntityFactory.create(this);
+        tileEntity = modObject.tileEntityFactory.create();
     }
 
     /** Если у этого tile entity нет контейнера, игра крашнется */
@@ -138,7 +138,8 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
                             neighbor.with(
                                     BlockStateProperties.POWER_0_15,
                                     ((LogicBlockTileEntity) tileEntity)
-                                            .board.getPowerOnSide(Direction3D.convert(direction))));
+                                            .getBoard()
+                                            .getPowerOnSide(Direction3D.convert(direction))));
                 }
             }
         }

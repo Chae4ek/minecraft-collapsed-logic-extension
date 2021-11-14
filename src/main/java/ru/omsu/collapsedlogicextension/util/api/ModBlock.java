@@ -10,17 +10,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 
 /** Основной класс для всех блоков мода */
 public abstract class ModBlock<E extends ModBlock<E>> {
-
-    private final BlockAdapter<E> blockAdapter;
-
-    public ModBlock(final BlockAdapter<E> blockAdapter) {
-        this.blockAdapter = blockAdapter;
-    }
 
     /** Если блок не имеет tile entity, игра крашнется */
     @Unsafe
@@ -124,6 +117,6 @@ public abstract class ModBlock<E extends ModBlock<E>> {
     }
 
     public interface ModBlockFactory<E extends ModBlock<E>> {
-        E create(BlockAdapter<E> adapter);
+        E create();
     }
 }

@@ -54,7 +54,7 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
                         .with(POWER, 0)
                         .with(POWERED, true));
         this.modObject = modObject;
-        block = modObject.blockFactory.create(this);
+        block = modObject.blockFactory.create();
     }
 
     @Override
@@ -153,13 +153,16 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     }
 
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean canProvidePower(final BlockState state) {
         return block.canProvidePower(state);
     }
 
     @Override
     public int getWeakPower(
-            BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+            final BlockState blockState,
+            final IBlockReader blockAccess,
+            final BlockPos pos,
+            final Direction side) {
         return block.getWeakPower(blockState, blockAccess, pos, side);
     }
 }
