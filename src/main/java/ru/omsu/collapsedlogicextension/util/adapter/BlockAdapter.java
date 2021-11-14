@@ -43,11 +43,11 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private final E block;
-    private final ModObjectEnum.ModObject<?, E, ?, ?, ?> modObject;
+    private final ModObjectEnum.ModObject<E, ?, ?, ?> modObject;
 
     private TileEntity te;
 
-    public BlockAdapter(final ModObjectEnum.ModObject<?, E, ?, ?, ?> modObject) {
+    public BlockAdapter(final ModObjectEnum.ModObject<E, ?, ?, ?> modObject) {
         // TODO: добавить настройки в параметры конструктора?
         super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3));
         setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POWER, 0).with(POWERED, true));
@@ -143,12 +143,12 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     }
 
     @Override
-    public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
+    public void updateNeighbors(final BlockState stateIn, final IWorld worldIn, final BlockPos pos, final int flags) {
         System.out.println("updateNeighbors");
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+    public void onNeighborChange(final BlockState state, final IWorldReader world, final BlockPos pos, final BlockPos neighbor) {
         block.onNeighborChange(state, world, pos, neighbor);
     }
 
@@ -162,12 +162,13 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
     }
 
     @Override
-    public boolean canProvidePower(BlockState state) {
+    public boolean canProvidePower(final BlockState state) {
         return block.canProvidePower(state);
     }
 
     @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+    public int getWeakPower(
+        final BlockState blockState, final IBlockReader blockAccess, final BlockPos pos, final Direction side) {
         return block.getWeakPower(blockState, blockAccess, pos, side);
     }
 }

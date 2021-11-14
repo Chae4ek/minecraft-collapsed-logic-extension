@@ -7,14 +7,11 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.VanillaIngredientSerializer;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -31,7 +28,6 @@ import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
 import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.ContainerAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.ContainerScreenAdapter;
-import ru.omsu.collapsedlogicextension.util.adapter.ItemAdapter;
 import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
 
 /** Регистрирует и хранит все объекты мода */
@@ -51,9 +47,6 @@ public class Registrator {
     private static final Map<ModObjectEnum, RegistryObject<ContainerType<ContainerAdapter<?>>>>
             registeredContainers = new EnumMap<>(ModObjectEnum.class);
 
-    /** Регистратор предметов */
-    private static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, ModInit.MOD_ID);
     /** Регистратор блоков */
     private static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, ModInit.MOD_ID);
@@ -98,15 +91,8 @@ public class Registrator {
         buttonClick = SOUNDS.register("button_click", () -> new SoundEvent(button));
 
         for (final ModObjectEnum modObjectEnum : ModObjectEnum.values()) {
-            final ModObject<?, ?, ?, ?, ?> modObject = modObjectEnum.modObject;
+            final ModObject<?, ?, ?, ?> modObject = modObjectEnum.modObject;
             final String registryName = modObject.registryName;
-
-            // Регистрация предмета (item) для объекта мода, если он есть
-            if (modObject.itemFactory != null) {
-                registeredItems.put(
-                        modObjectEnum,
-                        ITEMS.register(registryName, () -> new ItemAdapter<>(modObject)));
-            }
 
             // Регистрация блока для объекта мода, если он есть
             if (modObject.blockFactory != null) {
@@ -145,7 +131,6 @@ public class Registrator {
         }
 
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ITEMS.register(bus);
         BLOCKS.register(bus);
         TILE_ENTITIES.register(bus);
         CONTAINERS.register(bus);

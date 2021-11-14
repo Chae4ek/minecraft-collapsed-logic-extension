@@ -22,7 +22,7 @@ public class ContainerAdapter<E extends ModContainer<E>> extends Container {
     private TileEntityAdapter<?> tileEntityAdapter;
 
     public ContainerAdapter(
-            final ModObject<?, ?, ?, E, ?> modObject,
+            final ModObject<?, ?, E, ?> modObject,
             final int windowId,
             final TileEntityAdapter<?> tileEntityAdapter) {
         super(Registrator.getContainerType(modObject.thisEnum), windowId);
@@ -31,7 +31,7 @@ public class ContainerAdapter<E extends ModContainer<E>> extends Container {
     }
 
     public ContainerAdapter(
-            final ModObject<?, ?, ?, E, ?> modObject,
+            final ModObject<?, ?, E, ?> modObject,
             final int windowId,
             final PlayerInventory inventory,
             final PacketBuffer data) {

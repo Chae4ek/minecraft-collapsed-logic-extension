@@ -21,7 +21,7 @@ public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
     private final ContainerAdapter<?> containerAdapter;
 
     public ContainerScreenAdapter(
-            final ModObject<?, ?, ?, ?, E> modObject,
+            final ModObject<?, ?, ?, E> modObject,
             final ContainerAdapter<?> containerAdapter,
             final PlayerInventory inv,
             final ITextComponent titleIn) {

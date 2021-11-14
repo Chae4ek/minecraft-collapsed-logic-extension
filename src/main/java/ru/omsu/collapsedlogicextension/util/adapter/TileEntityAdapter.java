@@ -36,10 +36,10 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
     public final E tileEntity;
 
     final ItemStackHandler slots;
-    private final ModObject<?, ?, E, ?, ?> modObject;
+    private final ModObject<?, E, ?, ?> modObject;
     private ITextComponent customName;
 
-    public TileEntityAdapter(final ModObject<?, ?, E, ?, ?> modObject) {
+    public TileEntityAdapter(final ModObject<?, E, ?, ?> modObject) {
         super(Registrator.getTileEntityType(modObject.thisEnum));
         this.modObject = modObject;
         slots = new ItemStackHandler(1);
