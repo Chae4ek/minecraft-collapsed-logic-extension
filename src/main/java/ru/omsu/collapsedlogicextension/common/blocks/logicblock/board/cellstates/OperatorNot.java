@@ -8,7 +8,6 @@ public class OperatorNot extends CellState {
 
     private Direction2D output = Direction2D.UP;
     private Direction2D input = Direction2D.DOWN;
-    private boolean isOutputActive = true;
 
     public OperatorNot(final Cell parent) {
         super(parent);
@@ -21,49 +20,44 @@ public class OperatorNot extends CellState {
 
     @Override
     public CellState getRotated() {
-        output = output.rotate();
-        input = input.rotate();
-
-        return this;
+        final OperatorNot newState = new OperatorNot(parent);
+        newState.input = input.rotate();
+        newState.output = output.rotate();
+        return newState;
     }
 
     @Override
     public void activate(final Cell from, final Direction2D fromToThis) {
-        if (isOutputActive && canBeConnected(fromToThis)) {
-            forceActivate();
-        }
+        if (isActive && fromToThis.opposite() == input) forceDeactivate();
     }
 
     @Override
     public void forceActivate() {
-        isOutputActive = false;
+        isActive = true;
         final Cell outputCell = parent.getCell(output);
-
-        if (outputCell.canBeConnected(output.opposite())) {
-            outputCell.deactivate(parent, output);
-        }
+        if (outputCell.canBeConnected(output)) outputCell.activate(parent, output);
     }
 
     @Override
     public void deactivate(final Cell from, final Direction2D fromToThis) {
-        if (!isOutputActive && canBeConnected(fromToThis)) {
-            forceDeactivate();
+        if (!isActive && fromToThis.opposite() == input) forceActivate();
+        else if (isActive && fromToThis.opposite() == output) {
+            final Cell outputCell = parent.getCell(output);
+            if (outputCell.canBeConnected(output)) outputCell.activate(parent, output);
         }
     }
 
     @Override
     public void forceDeactivate() {
-        isOutputActive = true;
+        isActive = false;
         final Cell outputCell = parent.getCell(output);
-
-        if (outputCell.canBeConnected(output.opposite())) {
-            outputCell.activate(parent, output);
-        }
+        if (outputCell.canBeConnected(output)) outputCell.deactivate(parent, output);
     }
 
     @Override
-    public boolean canBeConnected(final Direction2D direction) {
-        return direction == input || direction == output;
+    public boolean canBeConnected(final Direction2D fromToThis) {
+        final Direction2D fromThisTo = fromToThis.opposite();
+        return fromThisTo == input || fromThisTo == output;
     }
 
     @Override

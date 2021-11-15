@@ -14,8 +14,6 @@ public class Wire extends CellState {
     /** Направления из этой клетки в стороны, к которым подключен этот провод */
     private final Set<Direction2D> connections = EnumSet.allOf(Direction2D.class);
 
-    private Direction2D fromToThis;
-
     public Wire(final Cell parent) {
         super(parent);
     }
@@ -39,7 +37,6 @@ public class Wire extends CellState {
 
     @Override
     public void activate(final Cell from, final Direction2D fromToThis) {
-        this.fromToThis = fromToThis;
         if (!isActive) forceActivate();
     }
 
@@ -48,8 +45,7 @@ public class Wire extends CellState {
         isActive = true;
         for (final Direction2D connectedDirection : connections) {
             final Cell connectedCell = parent.getCell(connectedDirection);
-            if (fromToThis != connectedDirection.opposite()
-                    && connectedCell.canBeConnected(connectedDirection)) {
+            if (connectedCell.canBeConnected(connectedDirection)) {
                 connectedCell.activate(parent, connectedDirection);
             }
         }
@@ -57,7 +53,6 @@ public class Wire extends CellState {
 
     @Override
     public void deactivate(final Cell from, final Direction2D fromToThis) {
-        this.fromToThis = fromToThis;
         if (isActive) forceDeactivate();
     }
 
@@ -66,8 +61,7 @@ public class Wire extends CellState {
         isActive = false;
         for (final Direction2D connectedDirection : connections) {
             final Cell connectedCell = parent.getCell(connectedDirection);
-            if (fromToThis != connectedDirection.opposite()
-                    && connectedCell.canBeConnected(connectedDirection)) {
+            if (connectedCell.canBeConnected(connectedDirection)) {
                 connectedCell.deactivate(parent, connectedDirection);
             }
         }

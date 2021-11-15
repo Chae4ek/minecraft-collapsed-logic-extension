@@ -1,7 +1,7 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +36,8 @@ public class Board implements Serializable {
     };
 
     private final Cell[][] cells = new Cell[9][13];
-    private final Queue<Runnable> deferredEvents = new ArrayDeque<>();
+    private Queue<Cell> deferredCellUpdate = new LinkedList<>();
+    private int version = Integer.MIN_VALUE;
 
     public Board() {
         activator.cellState = new Activator(activator);
@@ -140,7 +141,12 @@ public class Board implements Serializable {
 
     /** Обновляет доску с каждым игровым тиком */
     public void update() {
-        for (int i = deferredEvents.size(); i > 0; --i) deferredEvents.poll().run();
+        ++version;
+        final Queue<Cell> deferredCellUpdate = this.deferredCellUpdate;
+        this.deferredCellUpdate = new LinkedList<>();
+        for (int i = deferredCellUpdate.size(); i > 0; --i) {
+            deferredCellUpdate.poll().nextEvent.run();
+        }
     }
 
     public static final class Cell {
@@ -148,6 +154,8 @@ public class Board implements Serializable {
         public final int x;
         public final int y;
         private final Board board;
+        private Runnable nextEvent;
+        private int version = Integer.MIN_VALUE;
 
         private CellState cellState = new EmptyCell(this);
 
@@ -167,7 +175,7 @@ public class Board implements Serializable {
             return cellState.getTexture();
         }
 
-        /** @return новое состояние клетки, повернутой против часовой стрелки на 90 градусов */
+        /** @return новое состояние клетки, повернутой по часовой стрелке на 90 градусов */
         public CellState getRotated() {
             return cellState.getRotated();
         }
@@ -176,22 +184,47 @@ public class Board implements Serializable {
         private void setCellState(final CellState newCellState) {
             cellState.forceDeactivate();
             cellState = newCellState;
-            board.update();
             for (final Direction2D direction : Direction2D.values()) {
                 final Cell cell = getCell(direction);
-                if (cell.isActive()) board.deferredEvents.add(() -> cell.cellState.forceActivate());
-                else board.deferredEvents.add(() -> cell.cellState.forceDeactivate());
+                if (cellState.canBeConnected(direction.opposite())) {
+                    if (cell.isActive()) {
+                        cell.nextEvent = () -> cell.cellState.forceActivate();
+                    } else {
+                        cell.nextEvent = () -> cell.cellState.forceDeactivate();
+                    }
+                    if (version <= board.version) {
+                        version = board.version + 1;
+                        board.deferredCellUpdate.add(cell);
+                    } else {
+                        board.deferredCellUpdate.remove(cell);
+                        board.deferredCellUpdate.add(cell);
+                    }
+                }
             }
         }
 
         /** Активирует клетку */
         public void activate(final Cell from, final Direction2D fromToThis) {
-            board.deferredEvents.add(() -> cellState.activate(from, fromToThis));
+            nextEvent = () -> cellState.activate(from, fromToThis);
+            if (version <= board.version) {
+                version = board.version + 1;
+                board.deferredCellUpdate.add(this);
+            } else {
+                board.deferredCellUpdate.remove(this);
+                board.deferredCellUpdate.add(this);
+            }
         }
 
         /** Деактивирует клетку */
         public void deactivate(final Cell from, final Direction2D fromToThis) {
-            board.deferredEvents.add(() -> cellState.deactivate(from, fromToThis));
+            nextEvent = () -> cellState.deactivate(from, fromToThis);
+            if (version <= board.version) {
+                version = board.version + 1;
+                board.deferredCellUpdate.add(this);
+            } else {
+                board.deferredCellUpdate.remove(this);
+                board.deferredCellUpdate.add(this);
+            }
         }
 
         /** @return true, если клетка активирована */

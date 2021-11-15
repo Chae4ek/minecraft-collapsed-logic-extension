@@ -7,6 +7,7 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D
 public abstract class CellState {
 
     protected final transient Cell parent;
+    /** true, если клетка даёт ток */
     protected boolean isActive;
 
     public CellState(final Cell parent) {
@@ -16,7 +17,7 @@ public abstract class CellState {
     /** @return текстура клетки */
     public abstract CombinedTextureRegions getTexture();
 
-    /** @return новое состояние клетки, повернутой против часовой стрелки на 90 градусов */
+    /** @return новое состояние клетки, повернутой по часовой стрелке на 90 градусов */
     public abstract CellState getRotated();
 
     /** Активирует клетку */
