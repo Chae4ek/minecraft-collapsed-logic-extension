@@ -66,4 +66,9 @@ public class Activator extends CellState {
     public boolean isConductive() {
         return true;
     }
+
+    @Override
+    public boolean equalsWithoutActive(final CellState state) {
+        return this == state || state != null && getClass() == state.getClass();
+    }
 }

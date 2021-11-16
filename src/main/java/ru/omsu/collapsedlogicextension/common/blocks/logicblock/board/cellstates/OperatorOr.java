@@ -10,7 +10,7 @@ public class OperatorOr extends CellState {
     private Direction2D input2 = Direction2D.RIGHT;
     private Direction2D output = Direction2D.UP;
 
-    private boolean firstInputActive, secondInputActive;
+    private boolean firstInputActive, secondInputActive, outputActive;
 
     public OperatorOr(final Cell parent) {
         super(parent);
@@ -32,49 +32,42 @@ public class OperatorOr extends CellState {
 
     @Override
     public void update() {
-        if (parent.getCell(input1).isActivate(input1.opposite())) firstInputActive = true;
-        if (parent.getCell(input2).isActivate(input2.opposite())) secondInputActive = true;
-        if (firstInputActive || secondInputActive) parent.getCell(output).activate(output);
-        else parent.getCell(output).deactivate(output);
+        firstInputActive = parent.getCell(input1).isActivate(input1.opposite());
+        secondInputActive = parent.getCell(input2).isActivate(input2.opposite());
+        outputActive = firstInputActive || secondInputActive;
+        if (outputActive) forceActivate();
+        else forceDeactivate();
     }
 
     @Override
     public void activate(final Direction2D fromToThis) {
-        final boolean wasActive = firstInputActive || secondInputActive;
-        if (fromToThis.opposite() == input1) firstInputActive = true;
-        else if (fromToThis.opposite() == input2) secondInputActive = true;
-        if (!wasActive && (firstInputActive || secondInputActive)) {
-            parent.getCell(output).activate(output);
-        }
+        final Direction2D fromThisTo = fromToThis.opposite();
+        if (fromThisTo == input1 && !firstInputActive) update();
+        else if (fromThisTo == input2 && !secondInputActive) update();
     }
 
     @Override
     public void forceActivate() {
-        firstInputActive = secondInputActive = true;
+        outputActive = true;
         parent.getCell(output).activate(output);
     }
 
     @Override
     public void deactivate(final Direction2D fromToThis) {
-        final boolean wasActive = firstInputActive || secondInputActive;
-        if (fromToThis.opposite() == input1) firstInputActive = false;
-        else if (fromToThis.opposite() == input2) secondInputActive = false;
-        if (wasActive && !firstInputActive && !secondInputActive) {
-            parent.getCell(output).deactivate(output);
-        } else if (fromToThis.opposite() == output && (firstInputActive || secondInputActive)) {
-            parent.getCell(output).activate(output);
-        }
+        final Direction2D fromThisTo = fromToThis.opposite();
+        if (fromThisTo == input1 && firstInputActive) update();
+        else if (fromThisTo == input2 && secondInputActive) update();
     }
 
     @Override
     public void forceDeactivate() {
-        firstInputActive = secondInputActive = false;
+        outputActive = false;
         parent.getCell(output).deactivate(output);
     }
 
     @Override
     public boolean isActivate(final Direction2D fromThisTo) {
-        return fromThisTo == output && (firstInputActive || secondInputActive);
+        return outputActive && fromThisTo == output;
     }
 
     @Override
@@ -86,5 +79,13 @@ public class OperatorOr extends CellState {
     @Override
     public boolean isConductive() {
         return false;
+    }
+
+    @Override
+    public boolean equalsWithoutActive(final CellState state) {
+        if (this == state) return true;
+        if (state == null || getClass() != state.getClass()) return false;
+        final OperatorOr that = (OperatorOr) state;
+        return input1 == that.input1 && input2 == that.input2 && output == that.output;
     }
 }

@@ -56,4 +56,9 @@ public class Input extends CellState {
     public boolean canBeConnected(final Direction2D fromToThis) {
         return fromToThis.opposite() == Direction2D.LEFT;
     }
+
+    @Override
+    public boolean equalsWithoutActive(final CellState state) {
+        return this == state || state != null && getClass() == state.getClass();
+    }
 }

@@ -41,4 +41,7 @@ public abstract class CellState {
 
     /** @return true, если клетка может быть соединена с клеткой в указанном направлении */
     public abstract boolean canBeConnected(Direction2D fromToThis);
+
+    /** @return true, если состояния равны без учета активности входов/выходов */
+    public abstract boolean equalsWithoutActive(final CellState state);
 }

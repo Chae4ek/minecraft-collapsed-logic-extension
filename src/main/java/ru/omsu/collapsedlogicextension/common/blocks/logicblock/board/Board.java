@@ -1,8 +1,8 @@
 package ru.omsu.collapsedlogicextension.common.blocks.logicblock.board;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,8 +36,7 @@ public class Board implements Serializable {
     };
 
     private final Cell[][] cells = new Cell[9][13];
-    private Queue<Cell> deferredCellUpdate = new LinkedList<>();
-    private int version = Integer.MIN_VALUE;
+    private Set<Runnable> deferredCellUpdate = new HashSet<>();
 
     public Board() {
         activator.cellState = new Activator(activator);
@@ -141,12 +140,9 @@ public class Board implements Serializable {
 
     /** Обновляет доску с каждым игровым тиком */
     public void update() {
-        ++version;
-        final Queue<Cell> deferredCellUpdate = this.deferredCellUpdate;
-        this.deferredCellUpdate = new LinkedList<>();
-        for (int i = deferredCellUpdate.size(); i > 0; --i) {
-            deferredCellUpdate.poll().nextEvent.run();
-        }
+        final Set<Runnable> deferredCellUpdate = this.deferredCellUpdate;
+        this.deferredCellUpdate = new HashSet<>();
+        for (final Runnable event : deferredCellUpdate) event.run();
     }
 
     public static final class Cell {
@@ -154,8 +150,6 @@ public class Board implements Serializable {
         public final int x;
         public final int y;
         private final Board board;
-        private Runnable nextEvent;
-        private int version = Integer.MIN_VALUE;
 
         private CellState cellState = new EmptyCell(this);
 
@@ -182,45 +176,23 @@ public class Board implements Serializable {
 
         /** Устанавливает новое состояние этой клетке */
         private void setCellState(final CellState newCellState) {
-            cellState.forceDeactivate();
-            cellState = newCellState;
-            cellState.update();
-        }
-
-        /** Обновляет клетку */
-        /*public void update() {
-            nextEvent = () -> cellState.update();
-            if (version <= board.version) {
-                version = board.version + 1;
-                board.deferredCellUpdate.add(this);
-            } else {
-                board.deferredCellUpdate.remove(this);
-                board.deferredCellUpdate.add(this);
+            if (!cellState.equalsWithoutActive(newCellState)) {
+                cellState.forceDeactivate();
+                cellState = newCellState;
+                board.update();
+                board.update(); // костыль, исправляющий баг с миганием (но не всегда)
+                cellState.update();
             }
-        }*/
+        }
 
         /** Активирует клетку */
         public void activate(final Direction2D fromToThis) {
-            nextEvent = () -> cellState.activate(fromToThis);
-            if (version <= board.version) {
-                version = board.version + 1;
-                board.deferredCellUpdate.add(this);
-            } else {
-                board.deferredCellUpdate.remove(this);
-                board.deferredCellUpdate.add(this);
-            }
+            board.deferredCellUpdate.add(() -> cellState.activate(fromToThis));
         }
 
         /** Деактивирует клетку */
         public void deactivate(final Direction2D fromToThis) {
-            nextEvent = () -> cellState.deactivate(fromToThis);
-            if (version <= board.version) {
-                version = board.version + 1;
-                board.deferredCellUpdate.add(this);
-            } else {
-                board.deferredCellUpdate.remove(this);
-                board.deferredCellUpdate.add(this);
-            }
+            board.deferredCellUpdate.add(() -> cellState.deactivate(fromToThis));
         }
 
         /** @return true, если клетка активирована */

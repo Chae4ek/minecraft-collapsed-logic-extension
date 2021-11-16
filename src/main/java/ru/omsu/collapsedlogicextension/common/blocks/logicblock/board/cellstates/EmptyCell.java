@@ -51,4 +51,9 @@ public class EmptyCell extends CellState {
     public boolean isConductive() {
         return false;
     }
+
+    @Override
+    public boolean equalsWithoutActive(final CellState state) {
+        return this == state || state != null && getClass() == state.getClass();
+    }
 }

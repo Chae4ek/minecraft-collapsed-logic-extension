@@ -46,7 +46,13 @@ public class Wire extends CellState {
 
     @Override
     public void activate(final Direction2D fromToThis) {
-        if (!isActive) forceActivate();
+        if (!isActive) {
+            isActive = true;
+            final Direction2D fromThisTo = fromToThis.opposite();
+            for (final Direction2D direction : Direction2D.values()) {
+                if (fromThisTo != direction) parent.getCell(direction).activate(direction);
+            }
+        }
     }
 
     @Override
@@ -59,7 +65,13 @@ public class Wire extends CellState {
 
     @Override
     public void deactivate(final Direction2D fromToThis) {
-        if (isActive) forceDeactivate();
+        if (isActive) {
+            isActive = false;
+            final Direction2D fromThisTo = fromToThis.opposite();
+            for (final Direction2D direction : Direction2D.values()) {
+                if (fromThisTo != direction) parent.getCell(direction).deactivate(direction);
+            }
+        }
     }
 
     @Override
@@ -83,5 +95,10 @@ public class Wire extends CellState {
     @Override
     public boolean isConductive() {
         return true;
+    }
+
+    @Override
+    public boolean equalsWithoutActive(final CellState state) {
+        return this == state || state != null && getClass() == state.getClass();
     }
 }

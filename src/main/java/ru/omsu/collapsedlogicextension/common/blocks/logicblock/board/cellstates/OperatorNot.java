@@ -8,7 +8,7 @@ public class OperatorNot extends CellState {
 
     private Direction2D output = Direction2D.UP;
     private Direction2D input = Direction2D.DOWN;
-    private boolean isOutputActive;
+    private boolean outputActive;
 
     public OperatorNot(final Cell parent) {
         super(parent);
@@ -29,38 +29,38 @@ public class OperatorNot extends CellState {
 
     @Override
     public void update() {
-        if (parent.getCell(input).isActivate(input.opposite())) forceActivate();
-        else forceDeactivate();
+        if (parent.getCell(input).isActivate(input.opposite())) forceDeactivate();
+        else forceActivate();
     }
 
     @Override
     public void activate(final Direction2D fromToThis) {
-        if (isOutputActive && fromToThis.opposite() == input) forceDeactivate();
+        if (outputActive && fromToThis.opposite() == input) forceDeactivate();
     }
 
     @Override
     public void forceActivate() {
-        isOutputActive = true;
+        outputActive = true;
         parent.getCell(output).activate(output);
     }
 
     @Override
     public void deactivate(final Direction2D fromToThis) {
-        if (!isOutputActive && fromToThis.opposite() == input) forceActivate();
-        else if (isOutputActive && fromToThis.opposite() == output) {
+        if (!outputActive && fromToThis.opposite() == input) forceActivate();
+        else if (outputActive && fromToThis.opposite() == output) {
             parent.getCell(output).activate(output);
         }
     }
 
     @Override
     public void forceDeactivate() {
-        isOutputActive = false;
+        outputActive = false;
         parent.getCell(output).deactivate(output);
     }
 
     @Override
     public boolean isActivate(final Direction2D fromThisTo) {
-        return isOutputActive && fromThisTo == output;
+        return outputActive && fromThisTo == output;
     }
 
     @Override
@@ -72,5 +72,13 @@ public class OperatorNot extends CellState {
     @Override
     public boolean isConductive() {
         return false;
+    }
+
+    @Override
+    public boolean equalsWithoutActive(final CellState state) {
+        if (this == state) return true;
+        if (state == null || getClass() != state.getClass()) return false;
+        final OperatorNot that = (OperatorNot) state;
+        return output == that.output && input == that.input;
     }
 }
