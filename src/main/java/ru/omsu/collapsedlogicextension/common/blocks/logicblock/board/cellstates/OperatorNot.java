@@ -47,9 +47,7 @@ public class OperatorNot extends CellState {
     @Override
     public void deactivate(final Direction2D fromToThis) {
         if (!outputActive && fromToThis.opposite() == input) forceActivate();
-        else if (outputActive && fromToThis.opposite() == output) {
-            parent.getCell(output).activate(output);
-        }
+        else if (outputActive && fromToThis.opposite() == output) forceActivate();
     }
 
     @Override
