@@ -57,6 +57,7 @@ public class OperatorXor extends CellState {
         final Direction2D fromThisTo = fromToThis.opposite();
         if (fromThisTo == input1 && firstInputActive) update();
         else if (fromThisTo == input2 && secondInputActive) update();
+        else if (fromThisTo == output && outputActive) forceActivate();
     }
 
     @Override
