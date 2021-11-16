@@ -6,6 +6,8 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.Direction2D
 
 public class Activator extends CellState {
 
+    private boolean isActive;
+
     public Activator(final Cell parent) {
         super(parent);
     }
@@ -21,27 +23,38 @@ public class Activator extends CellState {
     }
 
     @Override
-    public void activate(final Cell from, final Direction2D fromToThis) {}
+    public void update() {
+        if (isActive) forceActivate();
+        else forceDeactivate();
+    }
+
+    @Override
+    public void activate(final Direction2D fromToThis) {}
 
     @Override
     public void forceActivate() {
         isActive = true;
         for (final Direction2D direction : Direction2D.values()) {
-            parent.getCell(direction).activate(parent, direction);
+            parent.getCell(direction).activate(direction);
         }
     }
 
     @Override
-    public void deactivate(final Cell from, final Direction2D fromToThis) {
-        if (isActive) parent.getCell(fromToThis.opposite()).activate(parent, fromToThis.opposite());
+    public void deactivate(final Direction2D fromToThis) {
+        if (isActive) parent.getCell(fromToThis.opposite()).activate(fromToThis.opposite());
     }
 
     @Override
     public void forceDeactivate() {
         isActive = false;
         for (final Direction2D direction : Direction2D.values()) {
-            parent.getCell(direction).deactivate(parent, direction);
+            parent.getCell(direction).deactivate(direction);
         }
+    }
+
+    @Override
+    public boolean isActivate(final Direction2D fromThisTo) {
+        return isActive;
     }
 
     @Override

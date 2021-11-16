@@ -8,6 +8,7 @@ public class OperatorNot extends CellState {
 
     private Direction2D output = Direction2D.UP;
     private Direction2D input = Direction2D.DOWN;
+    private boolean isOutputActive;
 
     public OperatorNot(final Cell parent) {
         super(parent);
@@ -27,31 +28,39 @@ public class OperatorNot extends CellState {
     }
 
     @Override
-    public void activate(final Cell from, final Direction2D fromToThis) {
-        if (isActive && fromToThis.opposite() == input) forceDeactivate();
+    public void update() {
+        if (parent.getCell(input).isActivate(input.opposite())) forceActivate();
+        else forceDeactivate();
+    }
+
+    @Override
+    public void activate(final Direction2D fromToThis) {
+        if (isOutputActive && fromToThis.opposite() == input) forceDeactivate();
     }
 
     @Override
     public void forceActivate() {
-        isActive = true;
-        final Cell outputCell = parent.getCell(output);
-        if (outputCell.canBeConnected(output)) outputCell.activate(parent, output);
+        isOutputActive = true;
+        parent.getCell(output).activate(output);
     }
 
     @Override
-    public void deactivate(final Cell from, final Direction2D fromToThis) {
-        if (!isActive && fromToThis.opposite() == input) forceActivate();
-        else if (isActive && fromToThis.opposite() == output) {
-            final Cell outputCell = parent.getCell(output);
-            if (outputCell.canBeConnected(output)) outputCell.activate(parent, output);
+    public void deactivate(final Direction2D fromToThis) {
+        if (!isOutputActive && fromToThis.opposite() == input) forceActivate();
+        else if (isOutputActive && fromToThis.opposite() == output) {
+            parent.getCell(output).activate(output);
         }
     }
 
     @Override
     public void forceDeactivate() {
-        isActive = false;
-        final Cell outputCell = parent.getCell(output);
-        if (outputCell.canBeConnected(output)) outputCell.deactivate(parent, output);
+        isOutputActive = false;
+        parent.getCell(output).deactivate(output);
+    }
+
+    @Override
+    public boolean isActivate(final Direction2D fromThisTo) {
+        return isOutputActive && fromThisTo == output;
     }
 
     @Override

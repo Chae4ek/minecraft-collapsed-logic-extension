@@ -59,7 +59,7 @@ public class Board implements Serializable {
     }
 
     public int getPowerOnSide(final Direction3D side) {
-        return getCell(side.x, side.y).isActive() ? 15 : 0;
+        return 0; // getCell(side.x, side.y).isActive() ? 15 : 0;
     }
 
     public void applyTool(final Tool tool, final int x, final int y) {
@@ -69,9 +69,9 @@ public class Board implements Serializable {
 
     private Cell getCell(final int x, final int y) {
         if (x == activator.x && y == activator.y) return activator;
-        if (x == 13 && y % 2 == 0) {
+        /*if (x == 13 && y % 2 == 0) {
             return inputs[y / 2];
-        }
+        }*/
         return x < 0 || y < 0 || x >= cells[0].length || y >= cells.length
                 ? emptyCell
                 : cells[y][x];
@@ -82,7 +82,7 @@ public class Board implements Serializable {
     }
 
     public void switchSchemeActive() {
-        if (!activator.isActive()) activator.cellState.forceActivate();
+        if (!activator.isActivate(Direction2D.RIGHT)) activator.cellState.forceActivate();
         else activator.cellState.forceDeactivate();
     }
 
@@ -184,28 +184,24 @@ public class Board implements Serializable {
         private void setCellState(final CellState newCellState) {
             cellState.forceDeactivate();
             cellState = newCellState;
-            for (final Direction2D direction : Direction2D.values()) {
-                final Cell cell = getCell(direction);
-                if (cellState.canBeConnected(direction.opposite())) {
-                    if (cell.isActive()) {
-                        cell.nextEvent = () -> cell.cellState.forceActivate();
-                    } else {
-                        cell.nextEvent = () -> cell.cellState.forceDeactivate();
-                    }
-                    if (version <= board.version) {
-                        version = board.version + 1;
-                        board.deferredCellUpdate.add(cell);
-                    } else {
-                        board.deferredCellUpdate.remove(cell);
-                        board.deferredCellUpdate.add(cell);
-                    }
-                }
-            }
+            cellState.update();
         }
 
+        /** Обновляет клетку */
+        /*public void update() {
+            nextEvent = () -> cellState.update();
+            if (version <= board.version) {
+                version = board.version + 1;
+                board.deferredCellUpdate.add(this);
+            } else {
+                board.deferredCellUpdate.remove(this);
+                board.deferredCellUpdate.add(this);
+            }
+        }*/
+
         /** Активирует клетку */
-        public void activate(final Cell from, final Direction2D fromToThis) {
-            nextEvent = () -> cellState.activate(from, fromToThis);
+        public void activate(final Direction2D fromToThis) {
+            nextEvent = () -> cellState.activate(fromToThis);
             if (version <= board.version) {
                 version = board.version + 1;
                 board.deferredCellUpdate.add(this);
@@ -216,8 +212,8 @@ public class Board implements Serializable {
         }
 
         /** Деактивирует клетку */
-        public void deactivate(final Cell from, final Direction2D fromToThis) {
-            nextEvent = () -> cellState.deactivate(from, fromToThis);
+        public void deactivate(final Direction2D fromToThis) {
+            nextEvent = () -> cellState.deactivate(fromToThis);
             if (version <= board.version) {
                 version = board.version + 1;
                 board.deferredCellUpdate.add(this);
@@ -228,8 +224,8 @@ public class Board implements Serializable {
         }
 
         /** @return true, если клетка активирована */
-        public boolean isActive() {
-            return cellState.isActive();
+        public boolean isActivate(final Direction2D fromThisTo) {
+            return cellState.isActivate(fromThisTo);
         }
 
         public boolean isConductive() {

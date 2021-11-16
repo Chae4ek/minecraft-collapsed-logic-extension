@@ -10,13 +10,10 @@ public class OperatorXor extends CellState {
     private Direction2D input2 = Direction2D.RIGHT;
     private Direction2D output = Direction2D.UP;
 
-    private boolean firstInputActive, secondInputActive, outputActive;
+    private boolean firstInputActive, secondInputActive;
 
     public OperatorXor(final Cell parent) {
         super(parent);
-        firstInputActive = false;
-        secondInputActive = false;
-        outputActive = false;
     }
 
     @Override
@@ -26,72 +23,64 @@ public class OperatorXor extends CellState {
 
     @Override
     public CellState getRotated() {
-        output = output.rotate();
-        input1 = input1.rotate();
-        input2 = input2.rotate();
-
-        return this;
+        final OperatorXor newState = new OperatorXor(parent);
+        newState.output = output.rotate();
+        newState.input1 = input1.rotate();
+        newState.input2 = input2.rotate();
+        return newState;
     }
 
     @Override
-    public void activate(final Cell from, final Direction2D fromToThis) {
+    public void update() {
+        if (parent.getCell(input1).isActivate(input1.opposite())) firstInputActive = true;
+        if (parent.getCell(input2).isActivate(input2.opposite())) secondInputActive = true;
+        if (firstInputActive ^ secondInputActive) parent.getCell(output).activate(output);
+        else parent.getCell(output).deactivate(output);
+    }
 
-        if (fromToThis.opposite() == input1) {
-            firstInputActive = true;
-        }
-        if (fromToThis.opposite() == input2) {
-            secondInputActive = true;
-        }
-
-        if (!outputActive || canBeConnected(fromToThis)) {
-            forceActivate();
+    @Override
+    public void activate(final Direction2D fromToThis) {
+        final boolean wasActive = firstInputActive ^ secondInputActive;
+        if (fromToThis.opposite() == input1) firstInputActive = true;
+        else if (fromToThis.opposite() == input2) secondInputActive = true;
+        if (!wasActive && (firstInputActive ^ secondInputActive)) {
+            parent.getCell(output).activate(output);
         }
     }
 
     @Override
     public void forceActivate() {
-        outputActive = firstInputActive ^ secondInputActive;
-
-        final Cell connectedCellFromOutput = parent.getCell(output);
-
-        if (connectedCellFromOutput.canBeConnected(output.opposite())) {
-            if (outputActive) {
-                connectedCellFromOutput.activate(parent, output);
-            } else {
-                connectedCellFromOutput.deactivate(parent, output);
-            }
-        }
+        firstInputActive = secondInputActive = true;
+        parent.getCell(output).activate(output);
     }
 
     @Override
-    public void deactivate(final Cell from, final Direction2D fromToThis) {
-
-        if (fromToThis.opposite() == input1) {
-            firstInputActive = false;
-        }
-        if (fromToThis.opposite() == input2) {
-            secondInputActive = false;
-        }
-
-        if (!outputActive || canBeConnected(fromToThis)) {
-            forceDeactivate();
+    public void deactivate(final Direction2D fromToThis) {
+        final boolean wasActive = firstInputActive ^ secondInputActive;
+        if (fromToThis.opposite() == input1) firstInputActive = false;
+        else if (fromToThis.opposite() == input2) secondInputActive = false;
+        if (wasActive && firstInputActive == secondInputActive) {
+            parent.getCell(output).deactivate(output);
+        } else if (fromToThis.opposite() == output && (firstInputActive ^ secondInputActive)) {
+            parent.getCell(output).activate(output);
         }
     }
 
     @Override
     public void forceDeactivate() {
-        outputActive = firstInputActive ^ secondInputActive;
-        final Cell connectedCellFromOutput = parent.getCell(output);
-
-        if (connectedCellFromOutput.canBeConnected(output.opposite())) {
-            connectedCellFromOutput.deactivate(parent, output);
-        }
+        firstInputActive = secondInputActive = false;
+        parent.getCell(output).deactivate(output);
     }
 
     @Override
-    public boolean canBeConnected(final Direction2D direction) {
-        final Direction2D direction1 = direction.opposite();
-        return direction1 == output || direction1 == input1 || direction1 == input2;
+    public boolean isActivate(final Direction2D fromThisTo) {
+        return fromThisTo == output && (firstInputActive ^ secondInputActive);
+    }
+
+    @Override
+    public boolean canBeConnected(final Direction2D fromToThis) {
+        final Direction2D fromThisTo = fromToThis.opposite();
+        return fromThisTo == output || fromThisTo == input1 || fromThisTo == input2;
     }
 
     @Override

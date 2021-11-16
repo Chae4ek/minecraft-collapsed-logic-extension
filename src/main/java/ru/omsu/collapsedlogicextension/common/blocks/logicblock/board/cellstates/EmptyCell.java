@@ -23,16 +23,24 @@ public class EmptyCell extends CellState {
     }
 
     @Override
-    public void activate(final Cell from, final Direction2D fromToThis) {}
+    public void update() {}
+
+    @Override
+    public void activate(final Direction2D fromToThis) {}
 
     @Override
     public void forceActivate() {}
 
     @Override
-    public void deactivate(final Cell from, final Direction2D fromToThis) {}
+    public void deactivate(final Direction2D fromToThis) {}
 
     @Override
     public void forceDeactivate() {}
+
+    @Override
+    public boolean isActivate(final Direction2D fromThisTo) {
+        return false;
+    }
 
     @Override
     public boolean canBeConnected(final Direction2D fromToThis) {
