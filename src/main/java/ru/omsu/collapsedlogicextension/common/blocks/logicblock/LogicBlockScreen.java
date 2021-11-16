@@ -8,7 +8,7 @@ import ru.omsu.collapsedlogicextension.common.blocks.logicblock.board.tools.Tool
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.FieldButton;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.util.TextureRegion;
 import ru.omsu.collapsedlogicextension.init.ModInit;
-import ru.omsu.collapsedlogicextension.util.adapter.ContainerScreenAdapter;
+import ru.omsu.collapsedlogicextension.util.proxy.ContainerScreenProxy;
 import ru.omsu.collapsedlogicextension.util.api.ModContainerScreen;
 
 /** Отрисовка GUI блока */
@@ -22,8 +22,8 @@ public class LogicBlockScreen extends ModContainerScreen<LogicBlockScreen> {
     private final Board board;
     private ToolEnum selectedTool = ToolEnum.ERASER;
 
-    public LogicBlockScreen(final ContainerScreenAdapter<LogicBlockScreen> containerScreenAdapter) {
-        super(containerScreenAdapter, 256, 192);
+    public LogicBlockScreen(final ContainerScreenProxy<LogicBlockScreen> containerScreenProxy) {
+        super(containerScreenProxy, 256, 192);
         board = this.<LogicBlockTileEntity>getModTileEntity().getBoard();
     }
 

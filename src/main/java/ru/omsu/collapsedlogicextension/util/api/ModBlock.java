@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
+import ru.omsu.collapsedlogicextension.util.proxy.TileEntityProxy;
 
 /** Основной класс для всех блоков мода */
 public abstract class ModBlock<E extends ModBlock<E>> {
@@ -20,7 +20,7 @@ public abstract class ModBlock<E extends ModBlock<E>> {
     public void sendOpenGuiIfRemote(
             final World worldIn, final BlockPos pos, final PlayerEntity player) {
         if (!worldIn.isRemote) {
-            final TileEntityAdapter<?> tile = (TileEntityAdapter<?>) worldIn.getTileEntity(pos);
+            final TileEntityProxy<?> tile = (TileEntityProxy<?>) worldIn.getTileEntity(pos);
             NetworkHooks.openGui((ServerPlayerEntity) player, tile, pos);
         }
     }
@@ -30,7 +30,7 @@ public abstract class ModBlock<E extends ModBlock<E>> {
     public void setCustomTileEntityName(
             final World worldIn, final BlockPos pos, final ItemStack stack) {
         if (stack.hasDisplayName()) {
-            final TileEntityAdapter<?> tile = (TileEntityAdapter<?>) worldIn.getTileEntity(pos);
+            final TileEntityProxy<?> tile = (TileEntityProxy<?>) worldIn.getTileEntity(pos);
             tile.setCustomName(stack.getDisplayName());
         }
     }
@@ -91,7 +91,7 @@ public abstract class ModBlock<E extends ModBlock<E>> {
     @SuppressWarnings("unchecked")
     public final <T extends ModTileEntity<T>> T getModTileEntityForThis(
             final IBlockReader world, final BlockPos pos) {
-        return ((TileEntityAdapter<T>) world.getTileEntity(pos)).tileEntity;
+        return ((TileEntityProxy<T>) world.getTileEntity(pos)).tileEntity;
     }
 
     public boolean canProvidePower(final BlockState state) {
@@ -103,9 +103,9 @@ public abstract class ModBlock<E extends ModBlock<E>> {
      */
     @Unsafe
     @SuppressWarnings("unchecked")
-    public final <T extends ModTileEntity<T>> TileEntityAdapter<T> getTileEntityAdapterForThis(
+    public final <T extends ModTileEntity<T>> TileEntityProxy<T> getTileEntityAdapterForThis(
             final World worldIn, final BlockPos pos) {
-        return ((TileEntityAdapter<T>) worldIn.getTileEntity(pos));
+        return ((TileEntityProxy<T>) worldIn.getTileEntity(pos));
     }
 
     public int getWeakPower(

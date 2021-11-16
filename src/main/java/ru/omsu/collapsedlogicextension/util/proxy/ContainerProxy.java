@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.util.adapter;
+package ru.omsu.collapsedlogicextension.util.proxy;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,24 +11,24 @@ import ru.omsu.collapsedlogicextension.util.api.ModTileEntity;
 import ru.omsu.collapsedlogicextension.util.api.Unsafe;
 
 /** Перехватывает методы физического контейнера */
-public class ContainerAdapter<E extends ModTileEntity<E>> extends Container {
+public class ContainerProxy<E extends ModTileEntity<E>> extends Container {
 
-    private final TileEntityAdapter<E> tileEntityAdapter;
+    private final TileEntityProxy<E> tileEntityProxy;
     private final IWorldPosCallable canInteractWithCallable;
     private final ModObjectEnum modObjectEnum;
 
-    public ContainerAdapter(
+    public ContainerProxy(
             final ModObjectEnum modObjectEnum,
             final int windowId,
-            final TileEntityAdapter<E> tileEntityAdapter) {
+            final TileEntityProxy<E> tileEntityProxy) {
         super(Registrator.getContainerType(modObjectEnum), windowId);
-        this.tileEntityAdapter = tileEntityAdapter;
+        this.tileEntityProxy = tileEntityProxy;
         canInteractWithCallable =
-                IWorldPosCallable.of(tileEntityAdapter.getWorld(), tileEntityAdapter.getPos());
+                IWorldPosCallable.of(tileEntityProxy.getWorld(), tileEntityProxy.getPos());
         this.modObjectEnum = modObjectEnum;
     }
 
-    public ContainerAdapter(
+    public ContainerProxy(
             final ModObjectEnum modObjectEnum,
             final int windowId,
             final PlayerInventory inventory,
@@ -36,7 +36,7 @@ public class ContainerAdapter<E extends ModTileEntity<E>> extends Container {
         this(
                 modObjectEnum,
                 windowId,
-                (TileEntityAdapter<E>) inventory.player.world.getTileEntity(data.readBlockPos()));
+                (TileEntityProxy<E>) inventory.player.world.getTileEntity(data.readBlockPos()));
     }
 
     /**
@@ -45,8 +45,8 @@ public class ContainerAdapter<E extends ModTileEntity<E>> extends Container {
      */
     @Unsafe
     @SuppressWarnings("unchecked")
-    public <T extends ModTileEntity<T>> TileEntityAdapter<T> getTileEntityAdapterForThis() {
-        return (TileEntityAdapter<T>) tileEntityAdapter;
+    public <T extends ModTileEntity<T>> TileEntityProxy<T> getTileEntityAdapterForThis() {
+        return (TileEntityProxy<T>) tileEntityProxy;
     }
 
     @Override
@@ -57,9 +57,9 @@ public class ContainerAdapter<E extends ModTileEntity<E>> extends Container {
 
     /** Нужен только для того, чтобы майн правильно регистрировал адаптер для разных типов блоков */
     public interface ModContainerFactory<E extends ModTileEntity<E>> {
-        ContainerAdapter<E> create(
+        ContainerProxy<E> create(
                 final ModObjectEnum modObjectEnum,
                 final int windowId,
-                final TileEntityAdapter<E> tileEntityAdapter);
+                final TileEntityProxy<E> tileEntityProxy);
     }
 }

@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.util.adapter;
+package ru.omsu.collapsedlogicextension.util.proxy;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -36,7 +36,7 @@ import ru.omsu.collapsedlogicextension.util.api.Unsafe;
 // этого класса специальный класс tile entity именно с контейнером
 
 /** Перехватывает методы физического tile entity */
-public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
+public class TileEntityProxy<E extends ModTileEntity<E>> extends TileEntity
         implements INamedContainerProvider, ITickableTileEntity {
 
     public final E tileEntity;
@@ -45,7 +45,7 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
     private final ModObjectEnum modObjectEnum;
     private ITextComponent customName;
 
-    public TileEntityAdapter(final ModObject<?, E, ?> modObject) {
+    public TileEntityProxy(final ModObject<?, E, ?> modObject) {
         super(Registrator.getTileEntityType(modObject.thisEnum));
         modObjectEnum = modObject.thisEnum;
         slots = new ItemStackHandler(1);
@@ -63,7 +63,7 @@ public class TileEntityAdapter<E extends ModTileEntity<E>> extends TileEntity
     @Override
     public Container createMenu(
             final int windowID, final PlayerInventory playerInv, final PlayerEntity playerIn) {
-        return new ContainerAdapter<>(modObjectEnum, windowID, this);
+        return new ContainerProxy<>(modObjectEnum, windowID, this);
     }
 
     @Override

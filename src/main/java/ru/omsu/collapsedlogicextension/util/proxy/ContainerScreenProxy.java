@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.util.adapter;
+package ru.omsu.collapsedlogicextension.util.proxy;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -14,19 +14,19 @@ import ru.omsu.collapsedlogicextension.util.api.Unsafe;
 
 /** Перехватывает методы GUI клиента */
 @OnlyIn(Dist.CLIENT)
-public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
-        extends ContainerScreen<ContainerAdapter<?>> {
+public class ContainerScreenProxy<E extends ModContainerScreen<E>>
+        extends ContainerScreen<ContainerProxy<?>> {
 
     private final E containerScreen;
-    private final ContainerAdapter<?> containerAdapter;
+    private final ContainerProxy<?> containerProxy;
 
-    public ContainerScreenAdapter(
+    public ContainerScreenProxy(
             final ModObject<?, ?, E> modObject,
-            final ContainerAdapter<?> containerAdapter,
+            final ContainerProxy<?> containerProxy,
             final PlayerInventory inv,
             final ITextComponent titleIn) {
-        super(containerAdapter, inv, titleIn);
-        this.containerAdapter = containerAdapter;
+        super(containerProxy, inv, titleIn);
+        this.containerProxy = containerProxy;
         containerScreen = modObject.containerScreenFactory.create(this);
         xSize = containerScreen.getWidth();
         ySize = containerScreen.getHeight();
@@ -36,7 +36,7 @@ public class ContainerScreenAdapter<E extends ModContainerScreen<E>>
     @Unsafe
     @SuppressWarnings("unchecked")
     public <T extends ModTileEntity<T>> T getModTileEntity() {
-        return (T) containerAdapter.getTileEntityAdapterForThis().tileEntity;
+        return (T) containerProxy.getTileEntityAdapterForThis().tileEntity;
     }
 
     @Override

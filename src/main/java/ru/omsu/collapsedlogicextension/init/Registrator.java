@@ -23,10 +23,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import ru.omsu.collapsedlogicextension.init.ModObjectEnum.ModObject;
-import ru.omsu.collapsedlogicextension.util.adapter.BlockAdapter;
-import ru.omsu.collapsedlogicextension.util.adapter.ContainerAdapter;
-import ru.omsu.collapsedlogicextension.util.adapter.ContainerScreenAdapter;
-import ru.omsu.collapsedlogicextension.util.adapter.TileEntityAdapter;
+import ru.omsu.collapsedlogicextension.util.proxy.BlockProxy;
+import ru.omsu.collapsedlogicextension.util.proxy.ContainerProxy;
+import ru.omsu.collapsedlogicextension.util.proxy.ContainerScreenProxy;
+import ru.omsu.collapsedlogicextension.util.proxy.TileEntityProxy;
 
 /** Регистрирует и хранит все объекты мода */
 public class Registrator {
@@ -38,7 +38,7 @@ public class Registrator {
     private static final Map<ModObjectEnum, RegistryObject<TileEntityType<?>>>
             registeredTileEntities = new EnumMap<>(ModObjectEnum.class);
     /** Все зарегистрированные контейнеры мода */
-    private static final Map<ModObjectEnum, RegistryObject<ContainerType<ContainerAdapter<?>>>>
+    private static final Map<ModObjectEnum, RegistryObject<ContainerType<ContainerProxy<?>>>>
             registeredContainers = new EnumMap<>(ModObjectEnum.class);
 
     // TODO: сделать нормальную мапу
@@ -55,7 +55,7 @@ public class Registrator {
     }
 
     /** @return зарегистрированный контейнер */
-    public static ContainerType<ContainerAdapter<?>> getContainerType(
+    public static ContainerType<ContainerProxy<?>> getContainerType(
             final ModObjectEnum modObject) {
         return registeredContainers.get(modObject).get();
     }
@@ -89,7 +89,7 @@ public class Registrator {
             // Регистрация блока для объекта мода, если он есть
             if (modObject.blockFactory != null) {
                 final RegistryObject<Block> registeredBlock =
-                        BLOCKS.register(registryName, () -> new BlockAdapter<>(modObject));
+                        BLOCKS.register(registryName, () -> new BlockProxy<>(modObject));
                 registeredBlocks.put(modObjectEnum, registeredBlock);
 
                 // Регистрация tile entity блока для объекта мода, если он есть
@@ -101,7 +101,7 @@ public class Registrator {
                                     () ->
                                             TileEntityType.Builder.create(
                                                             () ->
-                                                                    new TileEntityAdapter<>(
+                                                                    new TileEntityProxy<>(
                                                                             modObject),
                                                             registeredBlock.get())
                                                     .build(null)));
@@ -124,7 +124,7 @@ public class Registrator {
                                 () ->
                                         IForgeContainerType.create(
                                                 (windowId, inv, data) ->
-                                                        new ContainerAdapter<>(
+                                                        new ContainerProxy<>(
                                                                 modObject.thisEnum,
                                                                 windowId,
                                                                 inv,
@@ -156,9 +156,9 @@ public class Registrator {
                             getContainerType(modObjectEnum),
                             (ScreenManager.IScreenFactory)
                                     (container, inventory, title) ->
-                                            new ContainerScreenAdapter<>(
+                                            new ContainerScreenProxy<>(
                                                     modObjectEnum.modObject,
-                                                    (ContainerAdapter) container,
+                                                    (ContainerProxy) container,
                                                     inventory,
                                                     title));
                 }

@@ -3,8 +3,8 @@ package ru.omsu.collapsedlogicextension.init;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlock;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockScreen;
 import ru.omsu.collapsedlogicextension.common.blocks.logicblock.LogicBlockTileEntity;
-import ru.omsu.collapsedlogicextension.util.adapter.ContainerAdapter;
-import ru.omsu.collapsedlogicextension.util.adapter.ContainerAdapter.ModContainerFactory;
+import ru.omsu.collapsedlogicextension.util.proxy.ContainerProxy;
+import ru.omsu.collapsedlogicextension.util.proxy.ContainerProxy.ModContainerFactory;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock.ModBlockFactory;
 import ru.omsu.collapsedlogicextension.util.api.ModContainerScreen;
@@ -18,7 +18,7 @@ public enum ModObjectEnum {
             "logic_block",
             LogicBlock::new,
             LogicBlockTileEntity::new,
-            ContainerAdapter::new,
+            ContainerProxy::new,
             LogicBlockScreen::new);
 
     public final ModObject<?, ?, ?> modObject;

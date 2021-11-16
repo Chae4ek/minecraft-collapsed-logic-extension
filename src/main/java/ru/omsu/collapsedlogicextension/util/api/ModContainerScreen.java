@@ -4,22 +4,22 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import ru.omsu.collapsedlogicextension.util.adapter.ContainerScreenAdapter;
+import ru.omsu.collapsedlogicextension.util.proxy.ContainerScreenProxy;
 
 /** Основной класс для всех GUI контейнеров мода */
 @OnlyIn(Dist.CLIENT)
 public abstract class ModContainerScreen<E extends ModContainerScreen<E>> {
 
-    private final ContainerScreenAdapter<E> containerScreenAdapter;
+    private final ContainerScreenProxy<E> containerScreenProxy;
 
     private final int width;
     private final int height;
 
     public ModContainerScreen(
-            final ContainerScreenAdapter<E> containerScreenAdapter,
+            final ContainerScreenProxy<E> containerScreenProxy,
             final int width,
             final int height) {
-        this.containerScreenAdapter = containerScreenAdapter;
+        this.containerScreenProxy = containerScreenProxy;
         this.width = width;
         this.height = height;
     }
@@ -27,7 +27,7 @@ public abstract class ModContainerScreen<E extends ModContainerScreen<E>> {
     /** @return tile entity этого объекта, если он есть, иначе крашнется игра */
     @Unsafe
     public <T extends ModTileEntity<T>> T getModTileEntity() {
-        return containerScreenAdapter.getModTileEntity();
+        return containerScreenProxy.getModTileEntity();
     }
 
     /**
@@ -53,15 +53,15 @@ public abstract class ModContainerScreen<E extends ModContainerScreen<E>> {
 
     /** Рисует текст на GUI с координатами (x,y) и цветом color */
     public final void drawString(final String text, final float x, final float y, final int color) {
-        containerScreenAdapter.drawString(text, x, y, color);
+        containerScreenProxy.drawString(text, x, y, color);
     }
 
     /** Добавляет новую кнопку на GUI */
     public final void addButton(final Widget widget) {
-        containerScreenAdapter.addNewButton(widget);
+        containerScreenProxy.addNewButton(widget);
     }
 
     public interface ModContainerScreenFactory<E extends ModContainerScreen<E>> {
-        E create(ContainerScreenAdapter<E> adapter);
+        E create(ContainerScreenProxy<E> adapter);
     }
 }

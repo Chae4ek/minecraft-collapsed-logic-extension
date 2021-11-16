@@ -1,4 +1,4 @@
-package ru.omsu.collapsedlogicextension.util.adapter;
+package ru.omsu.collapsedlogicextension.util.proxy;
 
 import javax.annotation.Nullable;
 import net.minecraft.block.Block;
@@ -31,7 +31,7 @@ import ru.omsu.collapsedlogicextension.init.Registrator;
 import ru.omsu.collapsedlogicextension.util.api.ModBlock;
 
 /** Перехватывает методы физического блока */
-public class BlockAdapter<E extends ModBlock<E>> extends Block {
+public class BlockProxy<E extends ModBlock<E>> extends Block {
 
     public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -41,7 +41,7 @@ public class BlockAdapter<E extends ModBlock<E>> extends Block {
 
     private TileEntity te;
 
-    public BlockAdapter(final ModObject<E, ?, ?> modObject) {
+    public BlockProxy(final ModObject<E, ?, ?> modObject) {
         // TODO: добавить настройки в параметры конструктора?
         super(
                 Properties.create(Material.ROCK)
