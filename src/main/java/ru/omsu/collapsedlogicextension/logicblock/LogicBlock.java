@@ -32,10 +32,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class LogicBlock extends Block {
 
-    private static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
-    private static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    private static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-
     private final Supplier<TileEntityType<?>> creator;
     private TileEntity tileEntity;
 
@@ -60,27 +56,6 @@ public class LogicBlock extends Block {
             return tileEntity;
         }
         return null;
-    }
-
-    @Override
-    public final BlockState mirror(final BlockState state, final Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-    }
-
-    @Override
-    public BlockState rotate(final BlockState state, final Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
-    }
-
-    @Override
-    public BlockState getStateForPlacement(final BlockItemUseContext context) {
-        return getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
-    }
-
-    @Override
-    protected void fillStateContainer(final Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
-        builder.add(FACING, POWER, POWERED);
     }
 
     /** Вызывается при активации блока (нажатием ПКМ) */
