@@ -2,6 +2,7 @@ package ru.omsu.collapsedlogicextension.logicblock.board;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +35,14 @@ public class Board {
     }
 
     public void applyTool(final Tool tool, final int x, final int y) {
-        tool.apply(getCell(x, y));
+        Cell cell = getCell(x, y);
+        CellState newCellState = tool.apply(cell);
+        addEvents(cell, cell.setCellState(newCellState));
+        if(x == 1){
+            //x+=0;
+        }
+        this.update();
+        addEvents(cell, newCellState.update());
     }
 
     public void switchSchemeActive() {
@@ -117,6 +125,17 @@ public class Board {
         for (final Runnable event : deferredCellUpdate) event.run();
     }
 
+    private void addEvents(Cell cell, Map<Direction2D, Boolean> map){
+        for(Map.Entry<Direction2D, Boolean> entry : map.entrySet()){
+            if(entry.getValue()){
+                deferredCellUpdate.add(() -> addEvents(getCell(cell, entry.getKey()), getCell(cell, entry.getKey()).activate(entry.getKey())));
+            }
+            else{
+                deferredCellUpdate.add(() -> addEvents(getCell(cell, entry.getKey()), getCell(cell, entry.getKey()).deactivate(entry.getKey())));
+            }
+        }
+    }
+
     public static final class Cell {
 
         public final int x;
@@ -147,24 +166,25 @@ public class Board {
         }
 
         /** Устанавливает новое состояние этой клетке */
-        public void setCellState(final CellState newCellState) {
-            if (!cellState.equalsWithoutActive(newCellState)) {
-                cellState.forceDeactivate();
-                cellState = newCellState;
-                board.update();
-                board.update(); // костыль, исправляющий баг с миганием (но не всегда)
-                cellState.update();
-            }
+        public Map<Direction2D, Boolean> setCellState(final CellState newCellState) {
+            Map<Direction2D, Boolean> map = cellState.forceDeactivate();
+            cellState = newCellState;
+            //board.update();
+            //board.update(); // костыль, исправляющий баг с миганием (но не всегда)
+            //cellState.update();
+            return map;
         }
 
         /** Активирует клетку */
-        public void activate(final Direction2D fromToThis) {
-            board.deferredCellUpdate.add(() -> cellState.activate(fromToThis));
+        public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+            return cellState.activate(fromToThis);
+            //board.deferredCellUpdate.add(() -> cellState.activate(fromToThis));
         }
 
         /** Деактивирует клетку */
-        public void deactivate(final Direction2D fromToThis) {
-            board.deferredCellUpdate.add(() -> cellState.deactivate(fromToThis));
+        public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+            return cellState.deactivate(fromToThis);
+            //board.deferredCellUpdate.add(() -> cellState.deactivate(fromToThis));
         }
 
         /** @return true, если клетка активирована */

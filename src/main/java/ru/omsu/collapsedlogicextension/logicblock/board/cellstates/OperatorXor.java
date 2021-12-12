@@ -3,9 +3,9 @@ package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
-
-public class OperatorXor extends CellState {
-
+//TODO: добавь extends CellState
+public class OperatorXor {
+/*
     private Direction2D input1 = Direction2D.LEFT;
     private Direction2D input2 = Direction2D.RIGHT;
     private Direction2D output = Direction2D.UP;
@@ -84,4 +84,6 @@ public class OperatorXor extends CellState {
         final OperatorXor that = (OperatorXor) state;
         return input1 == that.input1 && input2 == that.input2 && output == that.output;
     }
+
+ */
 }

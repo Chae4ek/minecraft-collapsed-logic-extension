@@ -4,8 +4,10 @@ import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
-public class OperatorAnd extends CellState {
-
+import java.util.Map;
+//TODO: добавь extends CellState
+public class OperatorAnd  {
+    /*
     private Direction2D input1 = Direction2D.LEFT;
     private Direction2D input2 = Direction2D.RIGHT;
     private Direction2D output = Direction2D.UP;
@@ -31,29 +33,29 @@ public class OperatorAnd extends CellState {
     }
 
     @Override
-    public void update() {
+    public Map<Direction2D, Boolean> update() {
         firstInputActive = parent.getCell(input1).isActivate(input1.opposite());
         secondInputActive = parent.getCell(input2).isActivate(input2.opposite());
         outputActive = firstInputActive && secondInputActive;
-        if (outputActive) forceActivate();
-        else forceDeactivate();
+        if (outputActive) return forceActivate();
+        else return forceDeactivate();
     }
 
     @Override
-    public void activate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
         final Direction2D fromThisTo = fromToThis.opposite();
-        if (fromThisTo == input1 && !firstInputActive) update();
-        else if (fromThisTo == input2 && !secondInputActive) update();
+        if (fromThisTo == input1 && !firstInputActive) return update();
+        else if (fromThisTo == input2 && !secondInputActive) return update();
     }
 
     @Override
-    public void forceActivate() {
+    public Map<Direction2D, Boolean> forceActivate() {
         outputActive = true;
         parent.getCell(output).activate(output);
     }
 
     @Override
-    public void deactivate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
         final Direction2D fromThisTo = fromToThis.opposite();
         if (fromThisTo == input1 && firstInputActive) update();
         else if (fromThisTo == input2 && secondInputActive) update();
@@ -61,7 +63,7 @@ public class OperatorAnd extends CellState {
     }
 
     @Override
-    public void forceDeactivate() {
+    public Map<Direction2D, Boolean> forceDeactivate() {
         outputActive = false;
         parent.getCell(output).deactivate(output);
     }
@@ -84,4 +86,6 @@ public class OperatorAnd extends CellState {
         final OperatorAnd that = (OperatorAnd) state;
         return input1 == that.input1 && input2 == that.input2 && output == that.output;
     }
+
+ */
 }

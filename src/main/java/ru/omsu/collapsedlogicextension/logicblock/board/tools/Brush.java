@@ -17,8 +17,8 @@ public class Brush implements Tool {
     }
 
     @Override
-    public void apply(final Cell cell) {
-        cell.setCellState(cellConstructor.apply(cell));
+    public CellState apply(final Cell cell) {
+        return cellConstructor.apply(cell);
     }
 
     @Override

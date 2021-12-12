@@ -4,6 +4,8 @@ import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
+import java.util.Map;
+
 public abstract class CellState {
 
     protected final transient Cell parent;
@@ -19,19 +21,19 @@ public abstract class CellState {
     public abstract CellState getRotated();
 
     /** Активирует или деактивирует клетку в зависимости от соседних клеток */
-    public abstract void update();
+    public abstract Map<Direction2D, Boolean> update();
 
     /** Активирует клетку */
-    public abstract void activate(Direction2D fromToThis);
+    public abstract Map<Direction2D, Boolean> activate(Direction2D fromToThis);
 
     /** Активирует клетку и клетки, в которые из этой идет ток */
-    public abstract void forceActivate();
+    public abstract Map<Direction2D, Boolean> forceActivate();
 
     /** Деактивирует клетку */
-    public abstract void deactivate(Direction2D fromToThis);
+    public abstract Map<Direction2D, Boolean> deactivate(Direction2D fromToThis);
 
     /** Деактивирует клетку и клетки, в которые из этой идет ток */
-    public abstract void forceDeactivate();
+    public abstract Map<Direction2D, Boolean> forceDeactivate();
 
     /** @return true, если клетка активирует клетку в заданном направлении */
     public abstract boolean isActivate(Direction2D fromThisTo);

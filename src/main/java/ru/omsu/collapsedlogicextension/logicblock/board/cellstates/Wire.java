@@ -1,7 +1,10 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
@@ -33,53 +36,44 @@ public class Wire extends CellState {
     }
 
     @Override
-    public void update() {
+    public Map<Direction2D, Boolean> update() {
         for (final Direction2D connectedDirection : Direction2D.values()) {
             final Cell connectedCell = parent.getCell(connectedDirection);
             if (connectedCell.isActivate(connectedDirection.opposite())) {
-                forceActivate();
-                return;
+                return forceActivate();
             }
         }
-        forceDeactivate();
+        return forceDeactivate();
     }
 
     @Override
-    public void activate(final Direction2D fromToThis) {
-        if (!isActive) {
-            isActive = true;
-            final Direction2D fromThisTo = fromToThis.opposite();
-            for (final Direction2D direction : Direction2D.values()) {
-                if (fromThisTo != direction) parent.getCell(direction).activate(direction);
-            }
-        }
+    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+        return forceActivate();
     }
 
     @Override
-    public void forceActivate() {
+    public Map<Direction2D, Boolean> forceActivate() {
         isActive = true;
+        Map<Direction2D, Boolean> map = new HashMap<>(4);
         for (final Direction2D direction : Direction2D.values()) {
-            parent.getCell(direction).activate(direction);
+            map.put(direction, true);
         }
+        return map;
     }
 
     @Override
-    public void deactivate(final Direction2D fromToThis) {
-        if (isActive) {
-            isActive = false;
-            final Direction2D fromThisTo = fromToThis.opposite();
-            for (final Direction2D direction : Direction2D.values()) {
-                if (fromThisTo != direction) parent.getCell(direction).deactivate(direction);
-            }
-        }
+    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+        return forceDeactivate();
     }
 
     @Override
-    public void forceDeactivate() {
+    public Map<Direction2D, Boolean> forceDeactivate() {
         isActive = false;
+        Map<Direction2D, Boolean> map = new HashMap<>(4);
         for (final Direction2D direction : Direction2D.values()) {
-            parent.getCell(direction).deactivate(direction);
+            map.put(direction, true);
         }
+        return map;
     }
 
     @Override

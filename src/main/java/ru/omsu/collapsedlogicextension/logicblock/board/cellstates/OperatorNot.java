@@ -3,9 +3,9 @@ package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
-
-public class OperatorNot extends CellState {
-
+//TODO: добавь extends CellState
+public class OperatorNot {
+/*
     private Direction2D output = Direction2D.UP;
     private Direction2D input = Direction2D.DOWN;
     private boolean outputActive;
@@ -74,4 +74,6 @@ public class OperatorNot extends CellState {
         final OperatorNot that = (OperatorNot) state;
         return output == that.output && input == that.input;
     }
+
+ */
 }
