@@ -48,7 +48,18 @@ public class Wire extends CellState {
 
     @Override
     public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
-        return forceActivate();
+        if(!isActive) {
+            isActive = true;
+            final Direction2D from = fromToThis.opposite();
+            Map<Direction2D, Boolean> map = new HashMap<>(3);
+            for (Direction2D direction : Direction2D.values()) {
+                if (direction != from) {
+                    map.put(direction, true);
+                }
+            }
+            return map;
+        }
+        return new HashMap<>();
     }
 
     @Override
@@ -63,7 +74,18 @@ public class Wire extends CellState {
 
     @Override
     public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
-        return forceDeactivate();
+        if(isActive) {
+            isActive = false;
+            final Direction2D from = fromToThis.opposite();
+            Map<Direction2D, Boolean> map = new HashMap<>(3);
+            for (Direction2D direction : Direction2D.values()) {
+                if (direction != from) {
+                    map.put(direction, false);
+                }
+            }
+            return map;
+        }
+        return new HashMap<>();
     }
 
     @Override

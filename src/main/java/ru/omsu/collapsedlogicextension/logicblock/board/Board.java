@@ -1,9 +1,7 @@
 package ru.omsu.collapsedlogicextension.logicblock.board;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +21,7 @@ public class Board {
     private final Cell activator = new Cell(this, -1, 4);
 
     private final Cell[][] cells = new Cell[9][13];
-    private Set<Runnable> deferredCellUpdate = new HashSet<>();
+    private Queue<Runnable> deferredCellUpdate = new LinkedList<>();
 
     public Board() {
         activator.cellState = new Activator(activator);
@@ -38,9 +36,6 @@ public class Board {
         Cell cell = getCell(x, y);
         CellState newCellState = tool.apply(cell);
         addEvents(cell, cell.setCellState(newCellState));
-        if(x == 1){
-            //x+=0;
-        }
         this.update();
         addEvents(cell, newCellState.update());
     }
@@ -120,18 +115,19 @@ public class Board {
 
     /** Обновляет доску с каждым игровым тиком */
     public void update() {
-        final Set<Runnable> deferredCellUpdate = this.deferredCellUpdate;
-        this.deferredCellUpdate = new HashSet<>();
-        for (final Runnable event : deferredCellUpdate) event.run();
+        final Queue<Runnable> deferredCellUpdate = this.deferredCellUpdate;
+        this.deferredCellUpdate = new LinkedList<>();
+        for (final Runnable event : deferredCellUpdate) event.run(); //меняется размер deferredCellupdate
     }
 
     private void addEvents(Cell cell, Map<Direction2D, Boolean> map){
+        System.out.println(map);
         for(Map.Entry<Direction2D, Boolean> entry : map.entrySet()){
             if(entry.getValue()){
-                deferredCellUpdate.add(() -> addEvents(getCell(cell, entry.getKey()), getCell(cell, entry.getKey()).activate(entry.getKey())));
+                deferredCellUpdate.add(() -> getCell(cell, entry.getKey()).activate(entry.getKey()));
             }
             else{
-                deferredCellUpdate.add(() -> addEvents(getCell(cell, entry.getKey()), getCell(cell, entry.getKey()).deactivate(entry.getKey())));
+                deferredCellUpdate.add(() -> getCell(cell, entry.getKey()).deactivate(entry.getKey()));
             }
         }
     }

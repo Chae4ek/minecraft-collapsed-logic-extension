@@ -32,7 +32,7 @@ public class Activator extends CellState {
     }
 
     @Override
-    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {return forceActivate();}
+    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {return new HashMap<>();}
 
     @Override
     public Map<Direction2D, Boolean> forceActivate() {
@@ -46,7 +46,7 @@ public class Activator extends CellState {
 
     @Override
     public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
-        return forceDeactivate();
+        return new HashMap<>();
     }
 
     @Override
