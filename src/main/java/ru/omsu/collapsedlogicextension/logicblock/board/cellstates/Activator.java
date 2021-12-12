@@ -1,11 +1,11 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Activator extends CellState {
 
@@ -32,12 +32,14 @@ public class Activator extends CellState {
     }
 
     @Override
-    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {return new HashMap<>();}
+    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+        return new HashMap<>();
+    }
 
     @Override
     public Map<Direction2D, Boolean> forceActivate() {
         isActive = true;
-        Map<Direction2D, Boolean> map = new HashMap<>(4);
+        final Map<Direction2D, Boolean> map = new HashMap<>(4);
         for (final Direction2D direction : Direction2D.values()) {
             map.put(direction, true);
         }
@@ -46,15 +48,16 @@ public class Activator extends CellState {
 
     @Override
     public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+        if (isActive) return Collections.singletonMap(fromToThis.opposite(), true);
         return new HashMap<>();
     }
 
     @Override
     public Map<Direction2D, Boolean> forceDeactivate() {
         isActive = false;
-        Map<Direction2D, Boolean> map = new HashMap<>(4);
+        final Map<Direction2D, Boolean> map = new HashMap<>(4);
         for (final Direction2D direction : Direction2D.values()) {
-            map.put(direction, true);
+            map.put(direction, false);
         }
         return map;
     }

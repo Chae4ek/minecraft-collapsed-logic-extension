@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
@@ -48,11 +47,11 @@ public class Wire extends CellState {
 
     @Override
     public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
-        if(!isActive) {
+        if (!isActive) {
             isActive = true;
             final Direction2D from = fromToThis.opposite();
-            Map<Direction2D, Boolean> map = new HashMap<>(3);
-            for (Direction2D direction : Direction2D.values()) {
+            final Map<Direction2D, Boolean> map = new HashMap<>(3);
+            for (final Direction2D direction : Direction2D.values()) {
                 if (direction != from) {
                     map.put(direction, true);
                 }
@@ -65,7 +64,7 @@ public class Wire extends CellState {
     @Override
     public Map<Direction2D, Boolean> forceActivate() {
         isActive = true;
-        Map<Direction2D, Boolean> map = new HashMap<>(4);
+        final Map<Direction2D, Boolean> map = new HashMap<>(4);
         for (final Direction2D direction : Direction2D.values()) {
             map.put(direction, true);
         }
@@ -74,11 +73,11 @@ public class Wire extends CellState {
 
     @Override
     public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
-        if(isActive) {
+        if (isActive) {
             isActive = false;
             final Direction2D from = fromToThis.opposite();
-            Map<Direction2D, Boolean> map = new HashMap<>(3);
-            for (Direction2D direction : Direction2D.values()) {
+            final Map<Direction2D, Boolean> map = new HashMap<>(3);
+            for (final Direction2D direction : Direction2D.values()) {
                 if (direction != from) {
                     map.put(direction, false);
                 }
@@ -91,9 +90,9 @@ public class Wire extends CellState {
     @Override
     public Map<Direction2D, Boolean> forceDeactivate() {
         isActive = false;
-        Map<Direction2D, Boolean> map = new HashMap<>(4);
+        final Map<Direction2D, Boolean> map = new HashMap<>(4);
         for (final Direction2D direction : Direction2D.values()) {
-            map.put(direction, true);
+            map.put(direction, false);
         }
         return map;
     }

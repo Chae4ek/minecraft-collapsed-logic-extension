@@ -1,10 +1,9 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
+import java.util.Map;
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
-
-import java.util.Map;
 
 public abstract class CellState {
 

@@ -1,7 +1,10 @@
 package ru.omsu.collapsedlogicextension.logicblock.board;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,16 +36,20 @@ public class Board {
     }
 
     public void applyTool(final Tool tool, final int x, final int y) {
-        Cell cell = getCell(x, y);
-        CellState newCellState = tool.apply(cell);
-        addEvents(cell, cell.setCellState(newCellState));
-        this.update();
+        final Cell cell = getCell(x, y);
+        final CellState newCellState = tool.apply(cell);
+        final Map<Direction2D, Boolean> map = cell.setCellState(newCellState);
+        addEvents(cell, map);
+        update();
         addEvents(cell, newCellState.update());
     }
 
     public void switchSchemeActive() {
-        if (!activator.isActivate(Direction2D.RIGHT)) activator.cellState.forceActivate();
-        else activator.cellState.forceDeactivate();
+        addEvents(
+                activator,
+                activator.isActivate(Direction2D.RIGHT)
+                        ? activator.cellState.forceDeactivate()
+                        : activator.cellState.forceActivate());
     }
 
     /**
@@ -117,17 +124,17 @@ public class Board {
     public void update() {
         final Queue<Runnable> deferredCellUpdate = this.deferredCellUpdate;
         this.deferredCellUpdate = new LinkedList<>();
-        for (final Runnable event : deferredCellUpdate) event.run(); //меняется размер deferredCellupdate
+        for (final Runnable event : deferredCellUpdate) event.run();
     }
 
-    private void addEvents(Cell cell, Map<Direction2D, Boolean> map){
-        System.out.println(map);
-        for(Map.Entry<Direction2D, Boolean> entry : map.entrySet()){
-            if(entry.getValue()){
-                deferredCellUpdate.add(() -> getCell(cell, entry.getKey()).activate(entry.getKey()));
-            }
-            else{
-                deferredCellUpdate.add(() -> getCell(cell, entry.getKey()).deactivate(entry.getKey()));
+    private void addEvents(final Cell cell, final Map<Direction2D, Boolean> map) {
+        for (final Map.Entry<Direction2D, Boolean> entry : map.entrySet()) {
+            final Cell dirCell = getCell(cell, entry.getKey());
+            if (entry.getValue()) {
+                deferredCellUpdate.add(() -> addEvents(dirCell, dirCell.activate(entry.getKey())));
+            } else {
+                deferredCellUpdate.add(
+                        () -> addEvents(dirCell, dirCell.deactivate(entry.getKey())));
             }
         }
     }
@@ -136,7 +143,7 @@ public class Board {
 
         public final int x;
         public final int y;
-        private final Board board;
+        @Deprecated private final Board board;
 
         private CellState cellState = new EmptyCell(this);
 
@@ -146,7 +153,12 @@ public class Board {
             this.y = y;
         }
 
-        /** @return клетка в направлении от текущей */
+        /**
+         * @return клетка в направлении от текущей
+         * @deprecated удалить, т.к. у CellState метод getTexture(Set<Cell> neighbors) принимает
+         *     соседей клетки и update тоже
+         */
+        @Deprecated
         public Cell getCell(final Direction2D fromThisTo) {
             return board.getCell(this, fromThisTo);
         }
@@ -163,24 +175,22 @@ public class Board {
 
         /** Устанавливает новое состояние этой клетке */
         public Map<Direction2D, Boolean> setCellState(final CellState newCellState) {
-            Map<Direction2D, Boolean> map = cellState.forceDeactivate();
-            cellState = newCellState;
-            //board.update();
-            //board.update(); // костыль, исправляющий баг с миганием (но не всегда)
-            //cellState.update();
-            return map;
+            if (!cellState.equalsWithoutActive(newCellState)) {
+                final Map<Direction2D, Boolean> map = cellState.forceDeactivate();
+                cellState = newCellState;
+                return map;
+            }
+            return new HashMap<>();
         }
 
         /** Активирует клетку */
         public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
             return cellState.activate(fromToThis);
-            //board.deferredCellUpdate.add(() -> cellState.activate(fromToThis));
         }
 
         /** Деактивирует клетку */
         public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
             return cellState.deactivate(fromToThis);
-            //board.deferredCellUpdate.add(() -> cellState.deactivate(fromToThis));
         }
 
         /** @return true, если клетка активирована */
