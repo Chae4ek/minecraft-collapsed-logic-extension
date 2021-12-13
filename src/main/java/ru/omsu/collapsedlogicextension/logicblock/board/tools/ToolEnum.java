@@ -2,7 +2,12 @@ package ru.omsu.collapsedlogicextension.logicblock.board.tools;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.*;
+import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.EmptyCell;
+import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.OperatorAnd;
+import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.OperatorNot;
+import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.OperatorOr;
+import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.OperatorXor;
+import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.Wire;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 
 public enum ToolEnum {

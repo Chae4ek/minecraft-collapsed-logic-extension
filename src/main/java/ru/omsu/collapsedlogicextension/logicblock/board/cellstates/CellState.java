@@ -1,8 +1,6 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
 import java.util.Map;
-import java.util.Set;
-
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
@@ -10,13 +8,13 @@ import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 public interface CellState {
 
     /** @return текстура клетки */
-    CombinedTextureRegions getTexture(Map<Cell, Direction2D> neighbors);
+    CombinedTextureRegions getTexture(Map<Direction2D, Cell> neighbors);
 
     /** @return новое состояние клетки, повернутой по часовой стрелке на 90 градусов */
     CellState getRotated();
 
     /** Активирует или деактивирует клетку в зависимости от соседних клеток */
-    Map<Direction2D, Boolean> update(Map<Cell, Direction2D> neighbors);
+    Map<Direction2D, Boolean> update(Map<Direction2D, Cell> neighbors);
 
     /** Активирует клетку */
     Map<Direction2D, Boolean> activate(Direction2D fromToThis);
