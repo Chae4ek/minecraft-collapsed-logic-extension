@@ -2,21 +2,24 @@ package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
-public class EmptyCell extends CellState {
+public class EmptyCell implements CellState {
 
     private static final CombinedTextureRegions texture = new CombinedTextureRegions(0, 0);
     private static final Map<Direction2D, Boolean> map = new HashMap<>();
+    private Cell parent;
 
-    public EmptyCell(final Cell parent) {
-        super(parent);
+    public EmptyCell(Cell parent){
+        this.parent = parent;
     }
 
     @Override
-    public CombinedTextureRegions getTexture() {
+    public CombinedTextureRegions getTexture(Map<Cell, Direction2D> neighbors) {
         return texture;
     }
 
@@ -26,7 +29,7 @@ public class EmptyCell extends CellState {
     }
 
     @Override
-    public Map<Direction2D, Boolean> update() {
+    public Map<Direction2D, Boolean> update(Map<Cell, Direction2D> neighbors) {
         return map;
     }
 

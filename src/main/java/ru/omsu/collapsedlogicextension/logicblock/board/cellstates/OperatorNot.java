@@ -1,18 +1,26 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
-// TODO: добавь extends CellState
-public class OperatorNot {
-    /*
+import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
+import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
+
+import java.util.HashMap;
+import java.util.Map;
+
+//TODO: оператор неправильно работает, тут багофикс нужен
+public class OperatorNot implements CellState{
        private Direction2D output = Direction2D.UP;
        private Direction2D input = Direction2D.DOWN;
        private boolean outputActive;
 
+       private Cell parent;
+
        public OperatorNot(final Cell parent) {
-           super(parent);
+           this.parent = parent;
        }
 
        @Override
-       public CombinedTextureRegions getTexture() {
+       public CombinedTextureRegions getTexture(Map<Cell, Direction2D> neighbors) {
            return new CombinedTextureRegions(68, 17 * output.id);
        }
 
@@ -25,32 +33,48 @@ public class OperatorNot {
        }
 
        @Override
-       public void update() {
-           if (parent.getCell(input).isActivate(input.opposite())) forceDeactivate();
-           else forceActivate();
+       public Map<Direction2D, Boolean> update(Map<Cell, Direction2D> neighbors) {
+           for(Map.Entry<Cell, Direction2D> entry : neighbors.entrySet()){
+                if(input == entry.getValue() && entry.getKey().isActivate(input.opposite())){
+                    return forceDeactivate();
+                }
+                else if(output == entry.getValue()){
+                    return forceActivate();
+                }
+           }
+           return new HashMap<>();
        }
 
        @Override
-       public void activate(final Direction2D fromToThis) {
-           if (outputActive && fromToThis.opposite() == input) forceDeactivate();
+       public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+           if (!outputActive && fromToThis.opposite() == input) return forceDeactivate();
+           else if (outputActive && fromToThis.opposite() == output) return forceActivate();
+           return new HashMap<>();
        }
 
        @Override
-       public void forceActivate() {
+       public Map<Direction2D, Boolean> forceActivate() {
            outputActive = true;
-           parent.getCell(output).activate(output);
+           Map<Direction2D, Boolean> map = new HashMap<>(2);
+           map.put(input, false);
+           map.put(output, true);
+           return map;
        }
 
        @Override
-       public void deactivate(final Direction2D fromToThis) {
-           if (!outputActive && fromToThis.opposite() == input) forceActivate();
-           else if (outputActive && fromToThis.opposite() == output) forceActivate();
+       public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+           if (!outputActive && fromToThis.opposite() == input) return forceActivate();
+           else if (outputActive && fromToThis.opposite() == output) return forceDeactivate();
+           return new HashMap<>();
        }
 
        @Override
-       public void forceDeactivate() {
+       public Map<Direction2D, Boolean> forceDeactivate() {
            outputActive = false;
-           parent.getCell(output).deactivate(output);
+           Map<Direction2D, Boolean> map = new HashMap<>(2);
+           map.put(input, true);
+           map.put(output, false);
+           return map;
        }
 
        @Override
@@ -71,6 +95,4 @@ public class OperatorNot {
            final OperatorNot that = (OperatorNot) state;
            return output == that.output && input == that.input;
        }
-
-    */
 }

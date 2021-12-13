@@ -1,31 +1,33 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import ru.omsu.collapsedlogicextension.logicblock.board.Board;
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.logicblock.util.TextureRegion;
 
-public class Wire extends CellState {
+public class Wire implements CellState {
 
     private boolean isActive;
+    private Cell parent;
 
-    public Wire(final Cell parent) {
-        super(parent);
+    public Wire(Cell parent){
+        this.parent = parent;
     }
 
     @Override
-    public CombinedTextureRegions getTexture() {
+    public CombinedTextureRegions getTexture(Map<Cell, Direction2D> neighbors) {
         final List<TextureRegion> parts = new ArrayList<>(5);
         parts.add(new TextureRegion(85, isActive ? 17 : 0));
-        for (final Direction2D direction : Direction2D.values()) {
-            if (parent.getCell(direction).canBeConnected(direction)) {
-                parts.add(new TextureRegion(102 + (isActive ? 17 : 0), 17 * direction.id));
+
+        for(Map.Entry<Cell, Direction2D> entry : neighbors.entrySet()){
+            if(entry.getKey().canBeConnected(entry.getValue())){
+                parts.add(new TextureRegion(102 + (isActive ? 17 : 0), 17 * entry.getValue().id));
             }
         }
+
         return new CombinedTextureRegions(parts);
     }
 
@@ -35,12 +37,9 @@ public class Wire extends CellState {
     }
 
     @Override
-    public Map<Direction2D, Boolean> update() {
-        for (final Direction2D connectedDirection : Direction2D.values()) {
-            final Cell connectedCell = parent.getCell(connectedDirection);
-            if (connectedCell.isActivate(connectedDirection.opposite())) {
-                return forceActivate();
-            }
+    public Map<Direction2D, Boolean> update(Map<Cell, Direction2D> neighbors) {
+        if(neighbors.entrySet().stream().anyMatch(entry -> entry.getKey().isActivate(entry.getValue()))){
+            return forceActivate();
         }
         return forceDeactivate();
     }

@@ -1,20 +1,27 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
-// TODO: добавь extends CellState
-public class OperatorAnd {
-    /*
+import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
+import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class OperatorAnd implements CellState{
        private Direction2D input1 = Direction2D.LEFT;
        private Direction2D input2 = Direction2D.RIGHT;
        private Direction2D output = Direction2D.UP;
 
        private boolean firstInputActive, secondInputActive, outputActive;
 
-       public OperatorAnd(final Cell parent) {
-           super(parent);
+       private Cell parent;
+
+       public OperatorAnd(Cell parent){
+           this.parent = parent;
        }
 
        @Override
-       public CombinedTextureRegions getTexture() {
+       public CombinedTextureRegions getTexture(Map<Cell, Direction2D> neighbors) {
            return new CombinedTextureRegions(17, 17 * output.id);
        }
 
@@ -28,9 +35,12 @@ public class OperatorAnd {
        }
 
        @Override
-       public Map<Direction2D, Boolean> update() {
-           firstInputActive = parent.getCell(input1).isActivate(input1.opposite());
-           secondInputActive = parent.getCell(input2).isActivate(input2.opposite());
+       public Map<Direction2D, Boolean> update(Map<Cell, Direction2D> neighbors) {
+           for(Map.Entry<Cell, Direction2D> entry : neighbors.entrySet()){
+               if(input1 == entry.getValue()) firstInputActive = entry.getKey().isActivate(entry.getValue().opposite());
+               if(input2 == entry.getValue()) secondInputActive = entry.getKey().isActivate(entry.getValue().opposite());
+           }
+
            outputActive = firstInputActive && secondInputActive;
            if (outputActive) return forceActivate();
            else return forceDeactivate();
@@ -39,28 +49,58 @@ public class OperatorAnd {
        @Override
        public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
            final Direction2D fromThisTo = fromToThis.opposite();
-           if (fromThisTo == input1 && !firstInputActive) return update();
-           else if (fromThisTo == input2 && !secondInputActive) return update();
+
+           Map<Direction2D, Boolean> map = new HashMap<>(3);
+
+           if (fromThisTo == input1 && !firstInputActive) {
+                firstInputActive = true;
+                map.put(input1, true);
+           }
+           else if (fromThisTo == input2 && !secondInputActive) {
+               secondInputActive = true;
+               map.put(input2, true);
+           }
+           map.put(output, firstInputActive && secondInputActive);
+           return map;
        }
 
        @Override
        public Map<Direction2D, Boolean> forceActivate() {
            outputActive = true;
-           parent.getCell(output).activate(output);
+           Map<Direction2D, Boolean> map = new HashMap<>(3);
+           map.put(output, true);
+           map.put(input1, true);
+           map.put(input2, true);
+           return map;
        }
 
        @Override
        public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
            final Direction2D fromThisTo = fromToThis.opposite();
-           if (fromThisTo == input1 && firstInputActive) update();
-           else if (fromThisTo == input2 && secondInputActive) update();
-           else if (fromThisTo == output && outputActive) forceActivate();
+
+           Map<Direction2D, Boolean> map = new HashMap<>(3);
+
+           if (fromThisTo == input1 && firstInputActive) {
+               firstInputActive = false;
+               map.put(input1, false);
+           }
+           else if (fromThisTo == input2 && secondInputActive) {
+               secondInputActive = false;
+               map.put(input2, false);
+           }
+           else if (fromThisTo == output && outputActive) return forceDeactivate();
+           map.put(output, firstInputActive && secondInputActive);
+           return map;
        }
 
        @Override
        public Map<Direction2D, Boolean> forceDeactivate() {
            outputActive = false;
-           parent.getCell(output).deactivate(output);
+           Map<Direction2D, Boolean> map = new HashMap<>(3);
+           map.put(output, false);
+           map.put(input1, false);
+           map.put(input2, false);
+           return map;
        }
 
        @Override
@@ -81,6 +121,4 @@ public class OperatorAnd {
            final OperatorAnd that = (OperatorAnd) state;
            return input1 == that.input1 && input2 == that.input2 && output == that.output;
        }
-
-    */
 }

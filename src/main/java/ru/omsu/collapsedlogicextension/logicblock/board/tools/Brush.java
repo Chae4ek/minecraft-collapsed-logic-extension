@@ -16,6 +16,7 @@ public class Brush implements Tool {
         this.cellConstructor = cellConstructor;
     }
 
+    //TODO: у нас нет в юмл такого чтобы состояние инкапсулировало родителя клетку, це норм? надо убрать
     @Override
     public CellState apply(final Cell cell) {
         return cellConstructor.apply(cell);

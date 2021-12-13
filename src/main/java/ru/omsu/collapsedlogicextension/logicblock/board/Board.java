@@ -1,10 +1,7 @@
 package ru.omsu.collapsedlogicextension.logicblock.board;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,16 +18,17 @@ public class Board {
     private static final Logger logger = LogManager.getLogger(ModInit.MOD_ID + " : " + Board.class);
 
     /** Фантомная клетка для активации начальной */
-    private final Cell activator = new Cell(this, -1, 4);
+    private final Cell activator = new Cell();
+    private final int activatorX = -1, activatorY = 4;
 
     private final Cell[][] cells = new Cell[9][13];
     private Queue<Runnable> deferredCellUpdate = new LinkedList<>();
 
     public Board() {
-        activator.cellState = new Activator(activator);
+        activator.cellState = new Activator();
         for (int y = 0; y < cells.length; ++y) {
             for (int x = 0; x < cells[0].length; ++x) {
-                cells[y][x] = new Cell(this, x, y);
+                cells[y][x] = new Cell();
             }
         }
     }
@@ -39,17 +37,26 @@ public class Board {
         final Cell cell = getCell(x, y);
         final CellState newCellState = tool.apply(cell);
         final Map<Direction2D, Boolean> map = cell.setCellState(newCellState);
-        addEvents(cell, map);
+        addEvents(x, y, map);
         update();
-        addEvents(cell, newCellState.update());
+        addEvents(x, y, newCellState.update(getNeighbors(x, y)));
     }
 
     public void switchSchemeActive() {
         addEvents(
-                activator,
+                activatorX, activatorY,
                 activator.isActivate(Direction2D.RIGHT)
                         ? activator.cellState.forceDeactivate()
                         : activator.cellState.forceActivate());
+    }
+
+    //TODO: добавь в юмл
+    private Map<Cell, Direction2D> getNeighbors(final int fromX, final int fromY){
+        Map<Cell, Direction2D> neighbors = new HashMap<>();
+        for(Direction2D connectedDirection : Direction2D.values()){
+            neighbors.put(getCell(fromX, fromY, connectedDirection), connectedDirection);
+        }
+        return neighbors;
     }
 
     /**
@@ -99,25 +106,25 @@ public class Board {
         logger.error("Board has not been deserialized!");
         for (int y = 0; y < cells.length; ++y) {
             for (int x = 0; x < cells[0].length; ++x) {
-                cells[y][x] = new Cell(this, x, y);
+                cells[y][x] = new Cell();
             }
         }
     }
 
     /** @return updater, который возвращает текстуру конкретной клетки доски */
     public Supplier<CombinedTextureRegions> getTextureUpdaterForCell(final int x, final int y) {
-        return getCell(x, y)::getTexture;
+        return () -> getCell(x, y).getTexture(getNeighbors(x, y));
     }
 
     private Cell getCell(final int x, final int y) {
-        if (x == activator.x && y == activator.y) return activator;
+        if (x == activatorX && y == activatorY) return activator;
         return x < 0 || y < 0 || x >= cells[0].length || y >= cells.length
-                ? new Cell(this, -100, -100)
+                ? new Cell()
                 : cells[y][x];
     }
 
-    private Cell getCell(final Cell from, final Direction2D fromTo) {
-        return getCell(from.x + fromTo.xShift, from.y + fromTo.yShift);
+    private Cell getCell(final int fromX, final int fromY, final Direction2D fromTo) {
+        return getCell(fromX + fromTo.xShift, fromY + fromTo.yShift);
     }
 
     /** Обновляет доску с каждым игровым тиком */
@@ -127,45 +134,25 @@ public class Board {
         for (final Runnable event : deferredCellUpdate) event.run();
     }
 
-    private void addEvents(final Cell cell, final Map<Direction2D, Boolean> map) {
+    private void addEvents(final int cellX, final int cellY, final Map<Direction2D, Boolean> map) {
         for (final Map.Entry<Direction2D, Boolean> entry : map.entrySet()) {
-            final Cell dirCell = getCell(cell, entry.getKey());
+            final Cell dirCell = getCell(cellX, cellY, entry.getKey());
             if (entry.getValue()) {
-                deferredCellUpdate.add(() -> addEvents(dirCell, dirCell.activate(entry.getKey())));
+                deferredCellUpdate.add(() -> addEvents(cellX + entry.getKey().xShift, cellY + entry.getKey().yShift, dirCell.activate(entry.getKey())));
             } else {
                 deferredCellUpdate.add(
-                        () -> addEvents(dirCell, dirCell.deactivate(entry.getKey())));
+                        () -> addEvents(cellX + entry.getKey().xShift, cellY + entry.getKey().yShift, dirCell.deactivate(entry.getKey())));
             }
         }
     }
 
     public static final class Cell {
 
-        public final int x;
-        public final int y;
-        @Deprecated private final Board board;
-
         private CellState cellState = new EmptyCell(this);
 
-        private Cell(final Board board, final int x, final int y) {
-            this.board = board;
-            this.x = x;
-            this.y = y;
-        }
-
-        /**
-         * @return клетка в направлении от текущей
-         * @deprecated удалить, т.к. у CellState метод getTexture(Set<Cell> neighbors) принимает
-         *     соседей клетки и update тоже
-         */
-        @Deprecated
-        public Cell getCell(final Direction2D fromThisTo) {
-            return board.getCell(this, fromThisTo);
-        }
-
         /** @return текстура клетки */
-        public CombinedTextureRegions getTexture() {
-            return cellState.getTexture();
+        public CombinedTextureRegions getTexture(Map<Cell, Direction2D> neighbors) {
+            return cellState.getTexture(neighbors);
         }
 
         /** @return новое состояние клетки, повернутой по часовой стрелке на 90 градусов */

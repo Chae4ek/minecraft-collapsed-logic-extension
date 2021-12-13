@@ -3,20 +3,17 @@ package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
-public class Activator extends CellState {
+public class Activator implements CellState {
 
     private boolean isActive;
 
-    public Activator(final Cell parent) {
-        super(parent);
-    }
-
     @Override
-    public CombinedTextureRegions getTexture() {
+    public CombinedTextureRegions getTexture(Map<Cell, Direction2D> neighbors) {
         return new CombinedTextureRegions(153, isActive ? 17 : 0);
     }
 
@@ -26,7 +23,7 @@ public class Activator extends CellState {
     }
 
     @Override
-    public Map<Direction2D, Boolean> update() {
+    public Map<Direction2D, Boolean> update(Map<Cell, Direction2D> neighbors) {
         if (isActive) return forceActivate();
         return forceDeactivate();
     }
