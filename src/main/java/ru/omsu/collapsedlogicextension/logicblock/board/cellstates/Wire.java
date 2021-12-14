@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
+import ru.omsu.collapsedlogicextension.logicblock.board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 import ru.omsu.collapsedlogicextension.logicblock.util.TextureRegion;
