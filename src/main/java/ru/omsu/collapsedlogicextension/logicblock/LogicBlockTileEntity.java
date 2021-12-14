@@ -1,5 +1,6 @@
 package ru.omsu.collapsedlogicextension.logicblock;
 
+import com.google.gson.Gson;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -20,8 +21,9 @@ import ru.omsu.collapsedlogicextension.logicblock.board.Board;
 public class LogicBlockTileEntity extends TileEntity
         implements INamedContainerProvider, ITickableTileEntity {
 
-    private final Board board;
     private final ContainerType<?> containerType;
+    private final Gson gson = new Gson();
+    private Board board;
     private ITextComponent customName;
 
     public LogicBlockTileEntity(
@@ -38,29 +40,27 @@ public class LogicBlockTileEntity extends TileEntity
     /** Читает данные из NBT и записывает их в этот tile entity */
     @Override
     public void read(final CompoundNBT compound) {
-        // super.read(compound);
         if (compound.contains("CustomName", Constants.NBT.TAG_STRING)) {
             customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
         if (compound.contains("Board", Constants.NBT.TAG_STRING)) {
-            board.deserialize(compound.getString("Board"));
+            board = new Board(gson.fromJson(compound.getString("Board"), Board.class));
         }
     }
 
     /** Записывает данные в NBT из этого tile entity */
     @Override
     public CompoundNBT write(final CompoundNBT compound) {
-        // super.write(compound);
         if (customName != null)
             compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
-        compound.putString("Board", board.serialize());
+        compound.putString("Board", gson.toJson(board));
         return compound;
     }
 
     @Override
     public Container createMenu(
             final int windowID, final PlayerInventory playerInv, final PlayerEntity playerIn) {
-        return new LogicBlockContainer(containerType, windowID, board);
+        return new LogicBlockContainer(containerType, windowID, this::getBoard);
     }
 
     @Override

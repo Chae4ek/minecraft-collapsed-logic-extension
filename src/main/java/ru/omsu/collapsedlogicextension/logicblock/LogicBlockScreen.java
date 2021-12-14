@@ -2,6 +2,7 @@ package ru.omsu.collapsedlogicextension.logicblock;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.awt.Color;
+import java.util.function.Supplier;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -22,7 +23,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     private static final ResourceLocation FIELD_BUTTON_TEXTURE =
             new ResourceLocation(ModInit.MOD_ID, "textures/gui/board/field.png");
 
-    private final Board board;
+    private final Supplier<Board> boardGetter;
 
     private ToolEnum selectedTool = ToolEnum.ERASER;
 
@@ -33,7 +34,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
         super(logicBlockContainer, inv, titleIn);
         xSize = 256;
         ySize = 192;
-        board = logicBlockContainer.getBoard();
+        boardGetter = logicBlockContainer.getBoardGetter();
     }
 
     /**
@@ -71,8 +72,11 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                                 xStart + x * 16,
                                 yStart + y * 16,
                                 FIELD_BUTTON_TEXTURE,
-                                button -> board.applyTool(selectedTool.tool, finalX, finalY),
-                                board.getTextureUpdaterForCell(x, y));
+                                button ->
+                                        boardGetter
+                                                .get()
+                                                .applyTool(selectedTool.tool, finalX, finalY),
+                                boardGetter.get().getTextureUpdaterForCell(x, y));
                 addButton(fieldButton);
             }
         }
@@ -88,7 +92,7 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
                         193,
                         19,
                         GUI_BACKGROUND_TEXTURE,
-                        button -> board.switchSchemeActive()));
+                        button -> boardGetter.get().switchSchemeActive()));
     }
 
     /** Добавляет новую кнопку на GUI */

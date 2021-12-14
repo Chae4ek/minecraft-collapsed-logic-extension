@@ -1,10 +1,12 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
-import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
+import java.util.Collections;
+import java.util.Map;
+import ru.omsu.collapsedlogicextension.logicblock.board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
-public class OperatorXor extends CellState {
+public class OperatorXor implements CellState {
 
     private Direction2D input1 = Direction2D.LEFT;
     private Direction2D input2 = Direction2D.RIGHT;
@@ -12,18 +14,14 @@ public class OperatorXor extends CellState {
 
     private boolean firstInputActive, secondInputActive, outputActive;
 
-    public OperatorXor(final Cell parent) {
-        super(parent);
-    }
-
     @Override
-    public CombinedTextureRegions getTexture() {
+    public CombinedTextureRegions getTexture(final Map<Direction2D, Cell> neighbors) {
         return new CombinedTextureRegions(51, 17 * output.id);
     }
 
     @Override
     public CellState getRotated() {
-        final OperatorXor newState = new OperatorXor(parent);
+        final OperatorXor newState = new OperatorXor();
         newState.output = output.rotate();
         newState.input1 = input1.rotate();
         newState.input2 = input2.rotate();
@@ -31,39 +29,44 @@ public class OperatorXor extends CellState {
     }
 
     @Override
-    public void update() {
-        firstInputActive = parent.getCell(input1).isActivate(input1.opposite());
-        secondInputActive = parent.getCell(input2).isActivate(input2.opposite());
-        outputActive = firstInputActive ^ secondInputActive;
-        if (outputActive) forceActivate();
-        else forceDeactivate();
+    public Map<Direction2D, Boolean> update(final Map<Direction2D, Cell> neighbors) {
+        firstInputActive = neighbors.get(input1).isActivate(input1.opposite());
+        secondInputActive = neighbors.get(input2).isActivate(input2.opposite());
+        if (firstInputActive ^ secondInputActive) return forceActivate();
+        return forceDeactivate();
     }
 
     @Override
-    public void activate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
         final Direction2D fromThisTo = fromToThis.opposite();
-        if (fromThisTo == input1 && !firstInputActive) update();
-        else if (fromThisTo == input2 && !secondInputActive) update();
+        if (fromThisTo == input1 && !firstInputActive) firstInputActive = true;
+        else if (fromThisTo == input2 && !secondInputActive) secondInputActive = true;
+
+        if (firstInputActive ^ secondInputActive) return forceActivate();
+        return forceDeactivate();
     }
 
     @Override
-    public void forceActivate() {
+    public Map<Direction2D, Boolean> forceActivate() {
         outputActive = true;
-        parent.getCell(output).activate(output);
+        return Collections.singletonMap(output, true);
     }
 
     @Override
-    public void deactivate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
         final Direction2D fromThisTo = fromToThis.opposite();
-        if (fromThisTo == input1 && firstInputActive) update();
-        else if (fromThisTo == input2 && secondInputActive) update();
-        else if (fromThisTo == output && outputActive) forceActivate();
+        if (fromThisTo == input1 && firstInputActive) firstInputActive = false;
+        else if (fromThisTo == input2 && secondInputActive) secondInputActive = false;
+        else if (fromThisTo == output && outputActive) return forceActivate();
+
+        if (firstInputActive ^ secondInputActive) return forceActivate();
+        return forceDeactivate();
     }
 
     @Override
-    public void forceDeactivate() {
+    public Map<Direction2D, Boolean> forceDeactivate() {
         outputActive = false;
-        parent.getCell(output).deactivate(output);
+        return Collections.singletonMap(output, false);
     }
 
     @Override

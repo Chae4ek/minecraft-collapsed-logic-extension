@@ -1,19 +1,17 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
-import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
+import java.util.Collections;
+import java.util.Map;
+import ru.omsu.collapsedlogicextension.logicblock.board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
-public class EmptyCell extends CellState {
+public class EmptyCell implements CellState {
 
     private static final CombinedTextureRegions texture = new CombinedTextureRegions(0, 0);
 
-    public EmptyCell(final Cell parent) {
-        super(parent);
-    }
-
     @Override
-    public CombinedTextureRegions getTexture() {
+    public CombinedTextureRegions getTexture(final Map<Direction2D, Cell> neighbors) {
         return texture;
     }
 
@@ -23,19 +21,29 @@ public class EmptyCell extends CellState {
     }
 
     @Override
-    public void update() {}
+    public Map<Direction2D, Boolean> update(final Map<Direction2D, Cell> neighbors) {
+        return Collections.emptyMap();
+    }
 
     @Override
-    public void activate(final Direction2D fromToThis) {}
+    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+        return Collections.emptyMap();
+    }
 
     @Override
-    public void forceActivate() {}
+    public Map<Direction2D, Boolean> forceActivate() {
+        return Collections.emptyMap();
+    }
 
     @Override
-    public void deactivate(final Direction2D fromToThis) {}
+    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+        return Collections.emptyMap();
+    }
 
     @Override
-    public void forceDeactivate() {}
+    public Map<Direction2D, Boolean> forceDeactivate() {
+        return Collections.emptyMap();
+    }
 
     @Override
     public boolean isActivate(final Direction2D fromThisTo) {

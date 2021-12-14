@@ -1,59 +1,61 @@
 package ru.omsu.collapsedlogicextension.logicblock.board.cellstates;
 
-import ru.omsu.collapsedlogicextension.logicblock.board.Board.Cell;
+import java.util.Collections;
+import java.util.Map;
+import ru.omsu.collapsedlogicextension.logicblock.board.Cell;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
-public class OperatorNot extends CellState {
+public class OperatorNot implements CellState {
 
     private Direction2D output = Direction2D.UP;
     private Direction2D input = Direction2D.DOWN;
     private boolean outputActive;
 
-    public OperatorNot(final Cell parent) {
-        super(parent);
-    }
-
     @Override
-    public CombinedTextureRegions getTexture() {
+    public CombinedTextureRegions getTexture(final Map<Direction2D, Cell> neighbors) {
         return new CombinedTextureRegions(68, 17 * output.id);
     }
 
     @Override
     public CellState getRotated() {
-        final OperatorNot newState = new OperatorNot(parent);
+        final OperatorNot newState = new OperatorNot();
         newState.input = input.rotate();
         newState.output = output.rotate();
         return newState;
     }
 
     @Override
-    public void update() {
-        if (parent.getCell(input).isActivate(input.opposite())) forceDeactivate();
-        else forceActivate();
+    public Map<Direction2D, Boolean> update(final Map<Direction2D, Cell> neighbors) {
+        return neighbors.get(input).isActivate(input.opposite())
+                ? forceDeactivate()
+                : forceActivate();
     }
 
     @Override
-    public void activate(final Direction2D fromToThis) {
-        if (outputActive && fromToThis.opposite() == input) forceDeactivate();
+    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+        return outputActive && fromToThis.opposite() == input
+                ? forceDeactivate()
+                : Collections.emptyMap();
     }
 
     @Override
-    public void forceActivate() {
+    public Map<Direction2D, Boolean> forceActivate() {
         outputActive = true;
-        parent.getCell(output).activate(output);
+        return Collections.singletonMap(output, true);
     }
 
     @Override
-    public void deactivate(final Direction2D fromToThis) {
-        if (!outputActive && fromToThis.opposite() == input) forceActivate();
-        else if (outputActive && fromToThis.opposite() == output) forceActivate();
+    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+        if (!outputActive && fromToThis.opposite() == input) return forceActivate();
+        else if (outputActive && fromToThis.opposite() == output) return forceActivate();
+        return Collections.emptyMap();
     }
 
     @Override
-    public void forceDeactivate() {
+    public Map<Direction2D, Boolean> forceDeactivate() {
         outputActive = false;
-        parent.getCell(output).deactivate(output);
+        return Collections.singletonMap(output, false);
     }
 
     @Override

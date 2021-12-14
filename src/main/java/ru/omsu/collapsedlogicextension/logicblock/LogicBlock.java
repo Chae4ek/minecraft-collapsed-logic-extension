@@ -9,19 +9,11 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -31,10 +23,6 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class LogicBlock extends Block {
-
-    private static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
-    private static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    private static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private final Supplier<TileEntityType<?>> creator;
     private TileEntity tileEntity;
@@ -60,27 +48,6 @@ public class LogicBlock extends Block {
             return tileEntity;
         }
         return null;
-    }
-
-    @Override
-    public final BlockState mirror(final BlockState state, final Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-    }
-
-    @Override
-    public BlockState rotate(final BlockState state, final Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
-    }
-
-    @Override
-    public BlockState getStateForPlacement(final BlockItemUseContext context) {
-        return getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
-    }
-
-    @Override
-    protected void fillStateContainer(final Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
-        builder.add(FACING, POWER, POWERED);
     }
 
     /** Вызывается при активации блока (нажатием ПКМ) */
