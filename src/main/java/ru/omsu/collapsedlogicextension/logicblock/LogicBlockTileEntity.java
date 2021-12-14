@@ -44,7 +44,7 @@ public class LogicBlockTileEntity extends TileEntity
             customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
         if (compound.contains("Board", Constants.NBT.TAG_STRING)) {
-            board = gson.fromJson(compound.getString("Board"), Board.class);
+            board = new Board(gson.fromJson(compound.getString("Board"), Board.class));
         }
     }
 
