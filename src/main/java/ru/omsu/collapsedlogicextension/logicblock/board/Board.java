@@ -13,7 +13,7 @@ import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
 public class Board {
 
-    /** Фантомная клетка для активации начальной */
+    /** Стартовая клетка для активации схемы */
     private final Cell activator = new Cell();
 
     private final int activatorX = -1, activatorY = 4;
@@ -31,8 +31,8 @@ public class Board {
     }
 
     public Board(final Board board){
-        this.cells = board.cells;
-        this.deferredCellUpdate = board.deferredCellUpdate;
+        cells = board.cells;
+        deferredCellUpdate = board.deferredCellUpdate;
     }
 
     public void applyTool(final Tool tool, final int x, final int y) {

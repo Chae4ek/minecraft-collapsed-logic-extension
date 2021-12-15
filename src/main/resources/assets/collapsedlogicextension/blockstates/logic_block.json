@@ -1,19 +1,7 @@
 {
   "variants": {
-    "facing=north": {
+    "": {
       "model": "collapsedlogicextension:block/logic_block"
-    },
-    "facing=south": {
-      "model": "collapsedlogicextension:block/logic_block",
-      "y": 180
-    },
-    "facing=east": {
-      "model": "collapsedlogicextension:block/logic_block",
-      "y": 90
-    },
-    "facing=west": {
-      "model": "collapsedlogicextension:block/logic_block",
-      "y": 270
     }
   }
 }
