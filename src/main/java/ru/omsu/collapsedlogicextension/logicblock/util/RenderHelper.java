@@ -15,19 +15,12 @@ public class RenderHelper {
     private int y;
     private int width;
     private int height;
-    private int x$plus$width;
-    private int y$plus$height;
-    private int blitOffset;
 
-    public void setSettings(
-            final int x, final int y, final int width, final int height, final int blitOffset) {
+    public void setSettings(final int x, final int y, final int width, final int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.blitOffset = blitOffset;
-        x$plus$width = x + width;
-        y$plus$height = y + height;
     }
 
     public void begin() {
@@ -50,9 +43,9 @@ public class RenderHelper {
         final float maxU = ((float) texture.x + (float) width) / (float) textureWidth;
         final float minV = (float) texture.y / (float) textureHeight;
         final float maxV = ((float) texture.y + (float) height) / (float) textureHeight;
-        bufferbuilder.pos(x, y$plus$height, blitOffset).tex(minU, maxV).endVertex();
-        bufferbuilder.pos(x$plus$width, y$plus$height, blitOffset).tex(maxU, maxV).endVertex();
-        bufferbuilder.pos(x$plus$width, y, blitOffset).tex(maxU, minV).endVertex();
-        bufferbuilder.pos(x, y, blitOffset).tex(minU, minV).endVertex();
+        bufferbuilder.pos(x, y + height, 0).tex(minU, maxV).endVertex();
+        bufferbuilder.pos(x + width, y + height, 0).tex(maxU, maxV).endVertex();
+        bufferbuilder.pos(x + width, y, 0).tex(maxU, minV).endVertex();
+        bufferbuilder.pos(x, y, 0).tex(minU, minV).endVertex();
     }
 }

@@ -41,7 +41,7 @@ public class FieldButton extends Button {
         RenderSystem.disableDepthTest();
 
         final RenderHelper renderHelper = new RenderHelper();
-        renderHelper.setSettings(x, y, width, height, getBlitOffset());
+        renderHelper.setSettings(x, y, width, height);
         renderHelper.begin();
 
         for (final TextureRegion textureRegion : textureUpdater.get().getParts()) {
