@@ -18,6 +18,28 @@ import ru.omsu.collapsedlogicextension.logicblock.util.FieldButton;
 /** Отрисовка GUI блока */
 public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
 
+    private static final int TOOLS_X_POSITION = 225;
+    private static final int TOOLS_Y_POSITION = 18;
+    private static final int TOOL_BUTTON_WIDTH = 19;
+    private static final int TOOL_BUTTON_HEIGHT = 18;
+    private static final int TOOL_TEXTURE_START_X = 21;
+    private static final int TOOL_TEXTURE_START_Y = 193;
+    private static final int TOOL_TEXTURE_OFFSET = 19;
+
+    private static final int FIELD_X_START_POSITION = 5;
+    private static final int FIELD_Y_START_POSITION = 18;
+
+    private static final int ACTIVATION_BUTTON_X_POSITION = -13;
+    private static final int ACTIVATION_BUTTON_Y_POSITION = 81;
+    private static final int ACTIVATION_BUTTON_WIDTH = 21;
+    private static final int ACTIVATION_BUTTON_HEIGHT = 18;
+    private static final int ACTIVATION_TEXTURE_START_X = 155;
+    private static final int ACTIVATION_TEXTURE_START_Y = 193;
+    private static final int ACTIVATION_TEXTURE_OFFSET = 19;
+
+    private static final int START_NAME_X = 150;
+    private static final int START_NAME_Y = 7;
+
     private static final ResourceLocation GUI_BACKGROUND_TEXTURE =
             new ResourceLocation(ModInit.MOD_ID, "textures/gui/collapsed_logic_block_gui.png");
     private static final ResourceLocation FIELD_BUTTON_TEXTURE =
@@ -49,28 +71,26 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
             final CombinedTextureRegions texture = toolEnum.tool.getTexture();
             addButton(
                     new ImageButton(
-                            225,
-                            18 + 18 * i++,
-                            19,
-                            18,
-                            21 + texture.getParts().get(0).x,
-                            193 + texture.getParts().get(0).y,
-                            19,
+                            TOOLS_X_POSITION,
+                            TOOLS_Y_POSITION + 18 * i++,
+                            TOOL_BUTTON_WIDTH,
+                            TOOL_BUTTON_HEIGHT,
+                            TOOL_TEXTURE_START_X + texture.getPartsOfTexture().get(0).x,
+                            TOOL_TEXTURE_START_Y + texture.getPartsOfTexture().get(0).y,
+                            TOOL_TEXTURE_OFFSET,
                             GUI_BACKGROUND_TEXTURE,
                             button -> selectedTool = toolEnum));
         }
 
         // поле клеток
-        final int xStart = 5;
-        final int yStart = 18;
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 13; x++) {
                 final int finalX = x;
                 final int finalY = y;
                 final FieldButton fieldButton =
                         new FieldButton(
-                                xStart + x * 16,
-                                yStart + y * 16,
+                                FIELD_X_START_POSITION + x * 16,
+                                FIELD_Y_START_POSITION + y * 16,
                                 FIELD_BUTTON_TEXTURE,
                                 button ->
                                         boardGetter
@@ -84,13 +104,13 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
         // кнопка активации тока
         addButton(
                 new ImageButton(
-                        -13,
-                        81,
-                        21,
-                        18,
-                        155,
-                        193,
-                        19,
+                        ACTIVATION_BUTTON_X_POSITION,
+                        ACTIVATION_BUTTON_Y_POSITION,
+                        ACTIVATION_BUTTON_WIDTH,
+                        ACTIVATION_BUTTON_HEIGHT,
+                        ACTIVATION_TEXTURE_START_X,
+                        ACTIVATION_TEXTURE_START_Y,
+                        ACTIVATION_TEXTURE_OFFSET,
                         GUI_BACKGROUND_TEXTURE,
                         button -> boardGetter.get().switchSchemeActive()));
     }
@@ -116,7 +136,11 @@ public class LogicBlockScreen extends ContainerScreen<LogicBlockContainer> {
     protected void drawGuiContainerForegroundLayer(final int mouseX, final int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         font.drawString(title.getFormattedText(), 8.0f, 8.0f, 0x404040);
-        font.drawStringWithShadow(selectedTool.name.getFormattedText(), 150, 7, Color.RED.getRGB());
+        font.drawStringWithShadow(
+                selectedTool.name.getFormattedText(),
+                START_NAME_X,
+                START_NAME_Y,
+                Color.RED.getRGB());
     }
 
     @Override

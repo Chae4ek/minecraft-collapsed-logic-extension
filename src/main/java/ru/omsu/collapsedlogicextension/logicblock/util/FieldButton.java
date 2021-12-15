@@ -44,7 +44,7 @@ public class FieldButton extends Button {
         renderHelper.setSettings(x, y, width, height);
         renderHelper.begin();
 
-        for (final TextureRegion textureRegion : textureUpdater.get().getParts()) {
+        for (final TextureRegion textureRegion : textureUpdater.get().getPartsOfTexture()) {
             renderHelper.draw(textureRegion, textureWidth, textureHeight);
         }
 

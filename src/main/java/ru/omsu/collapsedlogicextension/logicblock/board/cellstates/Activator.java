@@ -9,11 +9,16 @@ import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
 public class Activator implements CellState {
 
+    private static final int ATLAS_TEXTURE_X = 153;
+    private static final int ATLAS_TEXTURE_ACTIVE_Y = 17;
+    private static final int ATLAS_TEXTURE_DEACTIVE_Y = 0;
+
     private boolean isActive;
 
     @Override
     public CombinedTextureRegions getTexture(final Map<Direction2D, Cell> neighbors) {
-        return new CombinedTextureRegions(153, isActive ? 17 : 0);
+        return new CombinedTextureRegions(
+                ATLAS_TEXTURE_X, isActive ? ATLAS_TEXTURE_ACTIVE_Y : ATLAS_TEXTURE_DEACTIVE_Y);
     }
 
     @Override
@@ -22,36 +27,36 @@ public class Activator implements CellState {
     }
 
     @Override
-    public Map<Direction2D, Boolean> update(final Map<Direction2D, Cell> neighbors) {
-        if (isActive) return forceActivate();
-        return forceDeactivate();
+    public Map<Direction2D, Boolean> getUpdatedEvents(final Map<Direction2D, Cell> neighbors) {
+        return isActive ? getForceActivatedEvents() : getForceDeactivatedEvents();
     }
 
     @Override
-    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> getActivatedEvents(final Direction2D fromToThis) {
         return Collections.emptyMap();
     }
 
     @Override
-    public Map<Direction2D, Boolean> forceActivate() {
+    public Map<Direction2D, Boolean> getForceActivatedEvents() {
         isActive = true;
-        final Map<Direction2D, Boolean> map = new EnumMap<>(Direction2D.class);
-        for (final Direction2D direction : Direction2D.values()) map.put(direction, true);
-        return map;
+        final Map<Direction2D, Boolean> events = new EnumMap<>(Direction2D.class);
+        for (final Direction2D direction : Direction2D.values()) events.put(direction, true);
+        return events;
     }
 
     @Override
-    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
-        if (isActive) return Collections.singletonMap(fromToThis.opposite(), true);
-        return Collections.emptyMap();
+    public Map<Direction2D, Boolean> getDeactivatedEvents(final Direction2D fromToThis) {
+        return isActive
+                ? Collections.singletonMap(fromToThis.opposite(), true)
+                : Collections.emptyMap();
     }
 
     @Override
-    public Map<Direction2D, Boolean> forceDeactivate() {
+    public Map<Direction2D, Boolean> getForceDeactivatedEvents() {
         isActive = false;
-        final Map<Direction2D, Boolean> map = new EnumMap<>(Direction2D.class);
-        for (final Direction2D direction : Direction2D.values()) map.put(direction, false);
-        return map;
+        final Map<Direction2D, Boolean> events = new EnumMap<>(Direction2D.class);
+        for (final Direction2D direction : Direction2D.values()) events.put(direction, false);
+        return events;
     }
 
     @Override

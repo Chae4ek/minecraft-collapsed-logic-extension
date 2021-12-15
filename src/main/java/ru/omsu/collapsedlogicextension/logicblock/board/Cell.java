@@ -1,15 +1,14 @@
 package ru.omsu.collapsedlogicextension.logicblock.board;
 
-import java.util.Collections;
 import java.util.Map;
 import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.CellState;
-import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.EmptyCell;
+import ru.omsu.collapsedlogicextension.logicblock.board.cellstates.EmptyCellState;
 import ru.omsu.collapsedlogicextension.logicblock.util.CombinedTextureRegions;
 import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
 public class Cell {
 
-    private CellState cellState = new EmptyCell();
+    private CellState cellState = new EmptyCellState();
 
     /** @return текстура клетки */
     public CombinedTextureRegions getTexture(final Map<Direction2D, Cell> neighbors) {
@@ -21,35 +20,32 @@ public class Cell {
         return cellState.getRotated();
     }
 
+    /** @return true, если состояния равны без учета активности входов/выходов */
+    public boolean equalsWithoutActive(final CellState state) {
+        return cellState.equalsWithoutActive(state);
+    }
+
     /** Устанавливает новое состояние этой клетке */
-    public Map<Direction2D, Boolean> setCellState(final CellState newCellState) {
-        if (!cellState.equalsWithoutActive(newCellState)) {
-            final Map<Direction2D, Boolean> map = cellState.forceDeactivate();
-            cellState = newCellState;
-            return map;
-        }
-        return Collections.emptyMap();
+    public void setCellState(final CellState newCellState) {
+        cellState = newCellState;
     }
 
-    public Map<Direction2D, Boolean> forceActivate() {
-        return cellState.forceActivate();
+    public Map<Direction2D, Boolean> getForceActivatedEvents() {
+        return cellState.getForceActivatedEvents();
     }
 
-    public Map<Direction2D, Boolean> forceDeactivate() {
-        return cellState.forceDeactivate();
+    public Map<Direction2D, Boolean> getForceDeactivatedEvents() {
+        return cellState.getForceDeactivatedEvents();
     }
 
-    /** Активирует клетку */
-    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
-        return cellState.activate(fromToThis);
+    public Map<Direction2D, Boolean> getActivatedEvents(final Direction2D fromToThis) {
+        return cellState.getActivatedEvents(fromToThis);
     }
 
-    /** Деактивирует клетку */
-    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
-        return cellState.deactivate(fromToThis);
+    public Map<Direction2D, Boolean> getDeactivatedEvents(final Direction2D fromToThis) {
+        return cellState.getDeactivatedEvents(fromToThis);
     }
 
-    /** @return true, если клетка активирована */
     public boolean isActivate(final Direction2D fromThisTo) {
         return cellState.isActivate(fromThisTo);
     }

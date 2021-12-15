@@ -13,20 +13,20 @@ public interface CellState {
     /** @return новое состояние клетки, повернутой по часовой стрелке на 90 градусов */
     CellState getRotated();
 
-    /** Активирует или деактивирует клетку в зависимости от соседних клеток */
-    Map<Direction2D, Boolean> update(Map<Direction2D, Cell> neighbors);
+    /** @return события для активации или деактивации клетки в зависимости от соседних клеток */
+    Map<Direction2D, Boolean> getUpdatedEvents(Map<Direction2D, Cell> neighbors);
 
-    /** Активирует клетку */
-    Map<Direction2D, Boolean> activate(Direction2D fromToThis);
+    /** @return события для активации клетки */
+    Map<Direction2D, Boolean> getActivatedEvents(Direction2D fromToThis);
 
-    /** Активирует клетку и клетки, в которые из этой идет ток */
-    Map<Direction2D, Boolean> forceActivate();
+    /** @return события для насильной активации клетки */
+    Map<Direction2D, Boolean> getForceActivatedEvents();
 
-    /** Деактивирует клетку */
-    Map<Direction2D, Boolean> deactivate(Direction2D fromToThis);
+    /** @return события для деактивации клетки */
+    Map<Direction2D, Boolean> getDeactivatedEvents(Direction2D fromToThis);
 
-    /** Деактивирует клетку и клетки, в которые из этой идет ток */
-    Map<Direction2D, Boolean> forceDeactivate();
+    /** @return события для насильной деактивации клетки */
+    Map<Direction2D, Boolean> getForceDeactivatedEvents();
 
     /** @return true, если клетка активирует клетку в заданном направлении */
     boolean isActivate(Direction2D fromThisTo);

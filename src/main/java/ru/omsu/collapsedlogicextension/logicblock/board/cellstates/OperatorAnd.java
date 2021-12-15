@@ -8,65 +8,69 @@ import ru.omsu.collapsedlogicextension.logicblock.util.Direction2D;
 
 public class OperatorAnd implements CellState {
 
-    private Direction2D input1 = Direction2D.LEFT;
-    private Direction2D input2 = Direction2D.RIGHT;
+    private static final int ATLAS_TEXTURE_X = 17;
+    private static final int ATLAS_TEXTURE_Y = 17;
+
+    private Direction2D inputLeft = Direction2D.LEFT;
+    private Direction2D inputRight = Direction2D.RIGHT;
     private Direction2D output = Direction2D.UP;
 
     private boolean firstInputActive, secondInputActive, outputActive;
 
     @Override
     public CombinedTextureRegions getTexture(final Map<Direction2D, Cell> neighbors) {
-        return new CombinedTextureRegions(17, 17 * output.id);
+        final int ATLAS_TEXTURE_WITH_ROTATION = ATLAS_TEXTURE_Y * output.id;
+        return new CombinedTextureRegions(ATLAS_TEXTURE_X, ATLAS_TEXTURE_WITH_ROTATION);
     }
 
     @Override
     public CellState getRotated() {
         final OperatorAnd newState = new OperatorAnd();
         newState.output = output.rotate();
-        newState.input1 = input1.rotate();
-        newState.input2 = input2.rotate();
+        newState.inputLeft = inputLeft.rotate();
+        newState.inputRight = inputRight.rotate();
         return newState;
     }
 
     @Override
-    public Map<Direction2D, Boolean> update(final Map<Direction2D, Cell> neighbors) {
-        firstInputActive = neighbors.get(input1).isActivate(input1.opposite());
-        secondInputActive = neighbors.get(input2).isActivate(input2.opposite());
-        if (firstInputActive && secondInputActive) return forceActivate();
-        return forceDeactivate();
+    public Map<Direction2D, Boolean> getUpdatedEvents(final Map<Direction2D, Cell> neighbors) {
+        firstInputActive = neighbors.get(inputLeft).isActivate(inputLeft.opposite());
+        secondInputActive = neighbors.get(inputRight).isActivate(inputRight.opposite());
+        outputActive = firstInputActive && secondInputActive;
+        return outputActive ? getForceActivatedEvents() : getForceDeactivatedEvents();
     }
 
     @Override
-    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> getActivatedEvents(final Direction2D fromToThis) {
         final Direction2D fromThisTo = fromToThis.opposite();
 
-        if (fromThisTo == input1 && !firstInputActive) firstInputActive = true;
-        else if (fromThisTo == input2 && !secondInputActive) secondInputActive = true;
+        if (fromThisTo == inputLeft && !firstInputActive) firstInputActive = true;
+        else if (fromThisTo == inputRight && !secondInputActive) secondInputActive = true;
 
-        if (firstInputActive && secondInputActive) return forceActivate();
-        return forceDeactivate();
+        outputActive = firstInputActive && secondInputActive;
+        return outputActive ? getForceActivatedEvents() : getForceDeactivatedEvents();
     }
 
     @Override
-    public Map<Direction2D, Boolean> forceActivate() {
+    public Map<Direction2D, Boolean> getForceActivatedEvents() {
         outputActive = true;
         return Collections.singletonMap(output, true);
     }
 
     @Override
-    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> getDeactivatedEvents(final Direction2D fromToThis) {
         final Direction2D fromThisTo = fromToThis.opposite();
 
-        if (fromThisTo == input1 && firstInputActive) firstInputActive = false;
-        else if (fromThisTo == input2 && secondInputActive) secondInputActive = false;
-        else if (fromThisTo == output && outputActive) return forceActivate();
+        if (fromThisTo == inputLeft && firstInputActive) firstInputActive = false;
+        else if (fromThisTo == inputRight && secondInputActive) secondInputActive = false;
+        else if (fromThisTo == output && outputActive) return getForceActivatedEvents();
 
-        if (firstInputActive && secondInputActive) return forceActivate();
-        return forceDeactivate();
+        outputActive = firstInputActive && secondInputActive;
+        return outputActive ? getForceActivatedEvents() : getForceDeactivatedEvents();
     }
 
     @Override
-    public Map<Direction2D, Boolean> forceDeactivate() {
+    public Map<Direction2D, Boolean> getForceDeactivatedEvents() {
         outputActive = false;
         return Collections.singletonMap(output, false);
     }
@@ -79,7 +83,7 @@ public class OperatorAnd implements CellState {
     @Override
     public boolean canBeConnected(final Direction2D fromToThis) {
         final Direction2D fromThisTo = fromToThis.opposite();
-        return fromThisTo == output || fromThisTo == input1 || fromThisTo == input2;
+        return fromThisTo == output || fromThisTo == inputLeft || fromThisTo == inputRight;
     }
 
     @Override
@@ -87,6 +91,8 @@ public class OperatorAnd implements CellState {
         if (this == state) return true;
         if (state == null || getClass() != state.getClass()) return false;
         final OperatorAnd that = (OperatorAnd) state;
-        return input1 == that.input1 && input2 == that.input2 && output == that.output;
+        return inputLeft == that.inputLeft
+                && inputRight == that.inputRight
+                && output == that.output;
     }
 }

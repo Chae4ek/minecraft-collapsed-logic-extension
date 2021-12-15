@@ -24,6 +24,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class LogicBlock extends Block {
 
+    private static final int HARDNESS_AND_RESISTANCE = 3;
+
     private final Supplier<TileEntityType<?>> creator;
     private TileEntity tileEntity;
 
@@ -31,7 +33,7 @@ public class LogicBlock extends Block {
         super(
                 Properties.create(Material.ROCK)
                         .harvestTool(ToolType.PICKAXE)
-                        .hardnessAndResistance(3));
+                        .hardnessAndResistance(HARDNESS_AND_RESISTANCE));
         this.creator = creator;
     }
 

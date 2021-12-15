@@ -12,16 +12,36 @@ import ru.omsu.collapsedlogicextension.logicblock.util.TextureRegion;
 
 public class Wire implements CellState {
 
+    private static final int ATLAS_TEXTURE_X = 85;
+    private static final int ATLAS_TEXTURE_ACTIVE_Y = 17;
+    private static final int ATLAS_TEXTURE_DEACTIVE_Y = 0;
+
+    private static final int ATLAS_TEXTURE_EDGE_ACTIVE_X = 119;
+    private static final int ATLAS_TEXTURE_EDGE_DEACTIVE_X = 102;
+    private static final int ATLAS_TEXTURE_PART_Y = 17;
+
+    private static final int TEXTURE_PARTS_COUNT = 5;
+
     private boolean isActive;
 
     @Override
     public CombinedTextureRegions getTexture(final Map<Direction2D, Cell> neighbors) {
-        final List<TextureRegion> parts = new ArrayList<>(5);
-        parts.add(new TextureRegion(85, isActive ? 17 : 0));
+        final List<TextureRegion> parts = new ArrayList<>(TEXTURE_PARTS_COUNT);
+        parts.add(
+                new TextureRegion(
+                        ATLAS_TEXTURE_X,
+                        isActive ? ATLAS_TEXTURE_ACTIVE_Y : ATLAS_TEXTURE_DEACTIVE_Y));
 
-        for (final Map.Entry<Direction2D, Cell> entry : neighbors.entrySet()) {
-            if (entry.getValue().canBeConnected(entry.getKey())) {
-                parts.add(new TextureRegion(102 + (isActive ? 17 : 0), 17 * entry.getKey().id));
+        for (final Map.Entry<Direction2D, Cell> DirectionToneighbor : neighbors.entrySet()) {
+            if (DirectionToneighbor.getValue().canBeConnected(DirectionToneighbor.getKey())) {
+                final int ATLAS_TEXTURE_WITH_ROTATION =
+                        ATLAS_TEXTURE_PART_Y * DirectionToneighbor.getKey().id;
+                parts.add(
+                        new TextureRegion(
+                                isActive
+                                        ? ATLAS_TEXTURE_EDGE_ACTIVE_X
+                                        : ATLAS_TEXTURE_EDGE_DEACTIVE_X,
+                                ATLAS_TEXTURE_WITH_ROTATION));
             }
         }
 
@@ -34,66 +54,66 @@ public class Wire implements CellState {
     }
 
     @Override
-    public Map<Direction2D, Boolean> update(final Map<Direction2D, Cell> neighbors) {
+    public Map<Direction2D, Boolean> getUpdatedEvents(final Map<Direction2D, Cell> neighbors) {
         for (final Direction2D connectedDirection : Direction2D.values()) {
             final Cell connectedCell = neighbors.get(connectedDirection);
             if (connectedCell.isActivate(connectedDirection.opposite())) {
-                return forceActivate();
+                return getForceActivatedEvents();
             }
         }
-        return forceDeactivate();
+        return getForceDeactivatedEvents();
     }
 
     @Override
-    public Map<Direction2D, Boolean> activate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> getActivatedEvents(final Direction2D fromToThis) {
         if (!isActive) {
             isActive = true;
             final Direction2D from = fromToThis.opposite();
-            final Map<Direction2D, Boolean> map = new EnumMap<>(Direction2D.class);
+            final Map<Direction2D, Boolean> events = new EnumMap<>(Direction2D.class);
             for (final Direction2D direction : Direction2D.values()) {
                 if (direction != from) {
-                    map.put(direction, true);
+                    events.put(direction, true);
                 }
             }
-            return map;
+            return events;
         }
         return Collections.emptyMap();
     }
 
     @Override
-    public Map<Direction2D, Boolean> forceActivate() {
+    public Map<Direction2D, Boolean> getForceActivatedEvents() {
         isActive = true;
-        final Map<Direction2D, Boolean> map = new EnumMap<>(Direction2D.class);
+        final Map<Direction2D, Boolean> events = new EnumMap<>(Direction2D.class);
         for (final Direction2D direction : Direction2D.values()) {
-            map.put(direction, true);
+            events.put(direction, true);
         }
-        return map;
+        return events;
     }
 
     @Override
-    public Map<Direction2D, Boolean> deactivate(final Direction2D fromToThis) {
+    public Map<Direction2D, Boolean> getDeactivatedEvents(final Direction2D fromToThis) {
         if (isActive) {
             isActive = false;
             final Direction2D from = fromToThis.opposite();
-            final Map<Direction2D, Boolean> map = new EnumMap<>(Direction2D.class);
+            final Map<Direction2D, Boolean> events = new EnumMap<>(Direction2D.class);
             for (final Direction2D direction : Direction2D.values()) {
                 if (direction != from) {
-                    map.put(direction, false);
+                    events.put(direction, false);
                 }
             }
-            return map;
+            return events;
         }
         return Collections.emptyMap();
     }
 
     @Override
-    public Map<Direction2D, Boolean> forceDeactivate() {
+    public Map<Direction2D, Boolean> getForceDeactivatedEvents() {
         isActive = false;
-        final Map<Direction2D, Boolean> map = new EnumMap<>(Direction2D.class);
+        final Map<Direction2D, Boolean> events = new EnumMap<>(Direction2D.class);
         for (final Direction2D direction : Direction2D.values()) {
-            map.put(direction, false);
+            events.put(direction, false);
         }
-        return map;
+        return events;
     }
 
     @Override
