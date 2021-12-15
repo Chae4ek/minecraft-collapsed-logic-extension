@@ -18,7 +18,7 @@ public class Board {
 
     private final int activatorX = -1, activatorY = 4;
 
-    private Cell[][] cells = new Cell[9][13];
+    private final Cell[][] cells = new Cell[9][13];
     private Queue<Runnable> deferredCellUpdate = new LinkedList<>();
 
     public Board() {
@@ -28,11 +28,6 @@ public class Board {
                 cells[y][x] = new Cell();
             }
         }
-    }
-
-    public Board(final Board board){
-        cells = board.cells;
-        deferredCellUpdate = board.deferredCellUpdate;
     }
 
     public void applyTool(final Tool tool, final int x, final int y) {
